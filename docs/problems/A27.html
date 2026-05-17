@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A27: 最大公約数(ユークリッド互除法) | 鉄則77 Python解説</title>
+<meta name="description" content="A27: 最大公約数(ユークリッド互除法) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">Chapter 5: 数学的問題</span> /
+    <strong>A27</strong>
+  </nav>
+
+  <span class="id-pill">A27</span>
+  <h1>最大公約数(ユークリッド互除法)</h1>
+
+  <div class="summary">ユークリッド互除法で GCD を求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">Chapter 5: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">数学</span><span class="tag">GCD</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap05/answer_A27.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A27.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A27: 最大公約数 (ユークリッド互除法)
+# ---------------------------------------------------------------------
+# 【概要】2 つの正整数 A, B の最大公約数 (GCD) を求める。
+# 【アルゴリズム】ユークリッド互除法
+#   gcd(A, B) = gcd(B, A mod B)  という性質を使い、
+#   どちらかが 0 になるまで A, B を更新し続ける。
+# 【計算量】O(log min(A, B))
+# 【補足】Python 標準には math.gcd(A, B) があるが、勉強のため手書き実装。
+# =====================================================================
+
+def GCD(A, B):
+    # どちらも 1 以上の間、大きい方を mod で小さく更新し続ける。
+    while A &gt;= 1 and B &gt;= 1:
+        if A &gt;= B:
+            A = A % B
+        else:
+            B = B % A
+    # 片方が 0 になった時点で、もう片方が GCD。
+    if A &gt;= 1:
+        return A
+    return B
+
+
+# --- 入力・出力 -----------------------------------------------------
+A, B = map(int, input().split())
+print(GCD(A, B))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A26.html"><div class="nav-label">前の問題</div><div class="nav-title">A26: 素数判定</div></a>
+    <a class="next" href="A28.html"><div class="nav-label">次の問題</div><div class="nav-title">A28: 余りの計算</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

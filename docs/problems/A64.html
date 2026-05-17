@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A64: ダイクストラ法 | 鉄則77 Python解説</title>
+<meta name="description" content="A64: ダイクストラ法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A64</strong>
+  </nav>
+
+  <span class="id-pill">A64</span>
+  <h1>ダイクストラ法</h1>
+
+  <div class="summary">ヒープを使ったダイクストラ法で重み付き最短経路を求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">ダイクストラ</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A64.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A64.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A64: ダイクストラ法 (重み付き最短距離)
+# ---------------------------------------------------------------------
+# 【概要】非負重みグラフで頂点 1 から各頂点までの最短距離を求める。
+#         到達できない頂点は -1 を出力。
+# 【アルゴリズム】ダイクストラ法 (優先度付きキューを使う実装)
+#   - 確定: 既に最短距離が確定した頂点
+#   - 未確定の中から最小距離の頂点を取り出し、隣接頂点を更新する
+# 【計算量】O((N + M) log N)
+# 【ポイント】既に確定済みの頂点をキューから取り出したらスキップする。
+# =====================================================================
+
+import heapq
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+# --- 隣接リスト (重み付き) ----------------------------------------
+G = [list() for _ in range(N + 1)]
+for a, b, c in edges:
+    G[a].append((b, c))
+    G[b].append((a, c))
+
+# --- 初期化 -------------------------------------------------------
+INF = 10 ** 10
+kakutei = [False] * (N + 1)  # True なら最短距離が確定
+cur = [INF] * (N + 1)        # 暫定的な最短距離
+cur[1] = 0
+Q = []
+heapq.heappush(Q, (cur[1], 1))  # (距離, 頂点番号)
+
+# --- ダイクストラ法 ------------------------------------------------
+while len(Q) &gt;= 1:
+    # 最小値を取り出す
+    pos = heapq.heappop(Q)[1]
+
+    # 既に確定済みの頂点ならスキップ
+    if kakutei[pos] == True:
+        continue
+
+    kakutei[pos] = True
+    # 隣接頂点の暫定距離を更新
+    for e in G[pos]:
+        if cur[e[0]] &gt; cur[pos] + e[1]:
+            cur[e[0]] = cur[pos] + e[1]
+            heapq.heappush(Q, (cur[e[0]], e[0]))
+
+# --- 出力 -----------------------------------------------------------
+for i in range(1, N + 1):
+    if cur[i] != INF:
+        print(cur[i])
+    else:
+        print(&quot;-1&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A63.html"><div class="nav-label">前の問題</div><div class="nav-title">A63: 幅優先探索(BFS)</div></a>
+    <a class="next" href="A65.html"><div class="nav-label">次の問題</div><div class="nav-title">A65: 木上のDP</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

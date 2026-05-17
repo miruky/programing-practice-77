@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A39: 区間スケジューリング | 鉄則77 Python解説</title>
+<meta name="description" content="A39: 区間スケジューリング ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">Chapter 6: 考察テクニック</span> /
+    <strong>A39</strong>
+  </nav>
+
+  <span class="id-pill">A39</span>
+  <h1>区間スケジューリング</h1>
+
+  <div class="summary">終了時刻でソートし貪欲に選ぶ古典問題。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #a855f7">Chapter 6: 考察テクニック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">貪欲</span><span class="tag">区間スケジューリング</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap06/answer_A39.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A39.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A39: 区間スケジューリング
+# ---------------------------------------------------------------------
+# 【概要】N 個の区間 [l, r] から、できるだけ多くの非重複区間を選ぶ。
+# 【アルゴリズム】終了時刻でソートして貪欲に選択する古典問題。
+#   &quot;終了時刻が早い区間ほど後の選択肢を残せる&quot; という直観が根拠。
+# 【計算量】O(N log N)
+# =====================================================================
+
+# --- 入力 (タプル順を (r, l) にして終了時刻で昇順ソートしやすくする) -----
+N = int(input())
+A = []
+for i in range(N):
+    l, r = map(int, input().split())
+    A.append([r, l])
+
+# 終了時刻 r の昇順にソート (l は 2 番目の要素なので副次的)
+A.sort()
+
+# --- 貪欲: 直前の終了時刻以降に始まる区間を順に採用 ----------------
+CurrentTime = 0
+Answer = 0
+for i in range(N):
+    if CurrentTime &lt;= A[i][1]:  # i 番目の区間の開始時刻 &gt;= 現在時刻
+        CurrentTime = A[i][0]   # 区間の終了時刻に更新
+        Answer += 1
+
+# --- 出力 -----------------------------------------------------------
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A38.html"><div class="nav-label">前の問題</div><div class="nav-title">A38: 区間の上限値</div></a>
+    <a class="next" href="A40.html"><div class="nav-label">次の問題</div><div class="nav-title">A40: 個数集計</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

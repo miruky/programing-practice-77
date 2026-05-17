@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A49_greedy1: A49: 貪欲法(基本) | 鉄則77 Python解説</title>
+<meta name="description" content="A49_greedy1: A49: 貪欲法(基本) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">Chapter 7: ヒューリスティック</span> /
+    <strong>A49_greedy1</strong>
+  </nav>
+
+  <span class="id-pill">A49_greedy1</span>
+  <h1>A49: 貪欲法(基本)</h1>
+
+  <div class="summary">本書 266ページ前半の貪欲解。37454 点。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ec4899">Chapter 7: ヒューリスティック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">貪欲</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap07/answer_A49_greedy1.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A49_greedy1.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A49 (補足版): 貪欲法 (基本) ─ 37454 点
+# ---------------------------------------------------------------------
+# 【概要】各ターンで「次のスコアが大きくなる方」を貪欲に選択する解法。
+# 【特徴】将来を考慮しないため最適性は弱いが、実装が単純。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+T = int(input())
+P = [None] * T
+Q = [None] * T
+R = [None] * T
+for i in range(T):
+    P[i], Q[i], R[i] = map(int, input().split())
+    P[i] -= 1  # 0-indexed に
+    Q[i] -= 1
+    R[i] -= 1
+
+# 配列 A の初期化 (操作のたびに増減する 20 要素配列)
+A = [0] * 20
+
+# --- 貪欲法 ---------------------------------------------------------
+CurrentScore = 0
+for i in range(T):
+    # パターン A を試したときのスコア
+    ScoreA = CurrentScore
+    PatA = [0] * 20
+    for j in range(20):
+        PatA[j] = A[j]
+    PatA[P[i]] += 1
+    PatA[Q[i]] += 1
+    PatA[R[i]] += 1
+    for j in range(20):
+        if PatA[j] == 0:
+            ScoreA += 1
+
+    # パターン B を試したときのスコア
+    ScoreB = CurrentScore
+    PatB = [0] * 20
+    for j in range(20):
+        PatB[j] = A[j]
+    PatB[P[i]] -= 1
+    PatB[Q[i]] -= 1
+    PatB[R[i]] -= 1
+    for j in range(20):
+        if PatB[j] == 0:
+            ScoreB += 1
+
+    # スコアが大きい方を採用
+    if ScoreA &gt;= ScoreB:
+        print(&quot;A&quot;)
+        CurrentScore = ScoreA
+        for j in range(20):
+            A[j] = PatA[j]
+    else:
+        print(&quot;B&quot;)
+        CurrentScore = ScoreB
+        for j in range(20):
+            A[j] = PatB[j]
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A49.html"><div class="nav-label">前の問題</div><div class="nav-title">A49: ビームサーチ</div></a>
+    <a class="next" href="A49_greedy2.html"><div class="nav-label">次の問題</div><div class="nav-title">A49_greedy2: A49: 貪欲法(評価関数)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

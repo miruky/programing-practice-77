@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A29: 繰り返し二乗法 | 鉄則77 Python解説</title>
+<meta name="description" content="A29: 繰り返し二乗法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">Chapter 5: 数学的問題</span> /
+    <strong>A29</strong>
+  </nav>
+
+  <span class="id-pill">A29</span>
+  <h1>繰り返し二乗法</h1>
+
+  <div class="summary">a^b mod m を O(log b) で求める繰り返し二乗法。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">Chapter 5: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">数学</span><span class="tag">繰り返し二乗法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap05/answer_A29.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A29.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A29: 繰り返し二乗法
+# ---------------------------------------------------------------------
+# 【概要】a^b mod m を高速に求める。
+# 【アルゴリズム】繰り返し二乗法 (Fast Exponentiation)
+#   b を 2 進数表記すると b = Σ (2^i * bit_i)。
+#   a^(2^i) を二乗で次々作り、bit_i = 1 のときだけ掛け合わせる。
+# 【計算量】O(log b)
+# 【補足】Python 標準には pow(a, b, m) があり、これと同じ動作。
+# =====================================================================
+
+def Power(a, b, m):
+    p = a       # 現在 a の 2^i 乗を保持する変数
+    Answer = 1  # 結果。初期値は乗法単位元の 1
+    for i in range(30):
+        wari = 2 ** i
+        if (b // wari) % 2 == 1:
+            # b の 2^i の位が 1 のとき、答えに a^(2^i) を掛ける。
+            Answer = (Answer * p) % m
+        # 次のループのため p を二乗して p = a^(2^(i+1)) にする。
+        p = (p * p) % m
+    return Answer
+
+
+# --- 入力・出力 -----------------------------------------------------
+a, b = map(int, input().split())
+print(Power(a, b, 1000000007))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A28.html"><div class="nav-label">前の問題</div><div class="nav-title">A28: 余りの計算</div></a>
+    <a class="next" href="A30.html"><div class="nav-label">次の問題</div><div class="nav-title">A30: 二項係数 mod p</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

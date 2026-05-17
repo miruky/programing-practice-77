@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A07: いもす法 | 鉄則77 Python解説</title>
+<meta name="description" content="A07: いもす法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">Chapter 2: 累積和</span> /
+    <strong>A07</strong>
+  </nav>
+
+  <span class="id-pill">A07</span>
+  <h1>いもす法</h1>
+
+  <div class="summary">区間加算を端点だけで処理し、累積和で復元するテクニック。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #06b6d4">Chapter 2: 累積和</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">累積和</span><span class="tag">いもす法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap02/answer_A07.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A07.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A07: いもす法 (区間加算 → 各日の参加人数)
+# ---------------------------------------------------------------------
+# 【概要】N 人の参加者が [L[i], R[i]] の期間中に参加する。
+#         各日 d (1〜D) の参加人数を求める。
+# 【アルゴリズム】&quot;いもす法&quot;
+#   1. 差分配列 B に L[i] で +1、R[i]+1 で -1 を加える。
+#   2. B の累積和を取れば、各日の参加人数になる。
+# 【計算量】O(N + D)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+D = int(input())
+N = int(input())
+L = [None] * N
+R = [None] * N
+for i in range(N):
+    L[i], R[i] = map(int, input().split())
+
+# --- 差分配列に区間加算をエンコード -------------------------------
+# 配列を D+2 確保しておくと R[i]+1 へのアクセスでも安全。
+B = [0] * (D + 2)
+for i in range(N):
+    B[L[i]] += 1      # 参加開始日: +1
+    B[R[i] + 1] -= 1  # 参加終了日の翌日: -1 (打ち消し)
+
+# --- 累積和で各日の参加人数を復元 -----------------------------------
+Answer = [None] * (D + 2)
+Answer[0] = 0
+for d in range(1, D + 1):
+    Answer[d] = Answer[d - 1] + B[d]
+
+# --- 出力 -----------------------------------------------------------
+for d in range(1, D + 1):
+    print(Answer[d])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A06.html"><div class="nav-label">前の問題</div><div class="nav-title">A06: 1次元累積和</div></a>
+    <a class="next" href="A08.html"><div class="nav-label">次の問題</div><div class="nav-title">A08: 2次元累積和</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

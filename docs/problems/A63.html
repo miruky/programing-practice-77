@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A63: 幅優先探索(BFS) | 鉄則77 Python解説</title>
+<meta name="description" content="A63: 幅優先探索(BFS) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A63</strong>
+  </nav>
+
+  <span class="id-pill">A63</span>
+  <h1>幅優先探索(BFS)</h1>
+
+  <div class="summary">BFS で重みなしグラフの最短距離を求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">BFS</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A63.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A63.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A63: 幅優先探索 (BFS) ─ 重みなし最短距離
+# ---------------------------------------------------------------------
+# 【概要】頂点 1 から各頂点までの最短距離を求める。
+# 【アルゴリズム】BFS
+#   キューから頂点を取り出し、未訪問の隣接頂点に距離 +1 を入れる。
+#   重みなしグラフでは BFS が最短距離を保証する。
+# 【計算量】O(N + M)
+# 【ポイント】未訪問判定に dist[i] == -1 を使うと初期化と兼ねられる。
+# =====================================================================
+
+from collections import deque
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+# --- 隣接リスト ---------------------------------------------------
+G = [list() for _ in range(N + 1)]
+for a, b in edges:
+    G[a].append(b)
+    G[b].append(a)
+
+# --- BFS の初期化 -------------------------------------------------
+dist = [-1] * (N + 1)
+dist[1] = 0
+Q = deque()
+Q.append(1)
+
+# --- BFS -----------------------------------------------------------
+while len(Q) &gt;= 1:
+    pos = Q.popleft()  # 先頭から取り出す
+    for nex in G[pos]:
+        if dist[nex] == -1:
+            dist[nex] = dist[pos] + 1  # 1 ステップ進めて距離 +1
+            Q.append(nex)
+
+# --- 出力 (頂点 1 → i の最短距離) ----------------------------------
+for i in range(1, N + 1):
+    print(dist[i])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A62.html"><div class="nav-label">前の問題</div><div class="nav-title">A62: 深さ優先探索(DFS)</div></a>
+    <a class="next" href="A64.html"><div class="nav-label">次の問題</div><div class="nav-title">A64: ダイクストラ法</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

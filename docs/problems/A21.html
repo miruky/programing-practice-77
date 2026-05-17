@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A21: 区間DP | 鉄則77 Python解説</title>
+<meta name="description" content="A21: 区間DP ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">Chapter 4: 動的計画法</span> /
+    <strong>A21</strong>
+  </nav>
+
+  <span class="id-pill">A21</span>
+  <h1>区間DP</h1>
+
+  <div class="summary">区間 [l,r] を状態にとる典型 DP（ブロック取りゲーム）。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">Chapter 4: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">区間DP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap04/answer_A21.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A21.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A21: 区間 DP (ブロック取りゲーム)
+# ---------------------------------------------------------------------
+# 【概要】N 個のブロックがあり、それぞれに P[i] と A[i] の情報がある。
+#         ブロックを両端から取り除くタイプの最大スコア問題。
+# 【アルゴリズム】区間 DP
+#   dp[l][r] = &quot;現在残っている区間が [l, r]&quot; のときの最大累積スコア
+#   遷移は両端の取り外しを試す典型形。
+# 【計算量】O(N^2)
+# 【ポイント】区間長 LEN を外ループ、左端 l を内ループにする発想。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+P = [None] * (N + 1)
+A = [None] * (N + 1)
+for i in range(1, N + 1):
+    P[i], A[i] = map(int, input().split())
+
+# --- DP 配列の初期化 -------------------------------------------------
+# dp[1][N] = 0: まだ何も取り除いていない状態
+dp = [[None] * (N + 1) for _ in range(N + 1)]
+dp[1][N] = 0
+
+# 区間長を表す LEN を大きい方から小さい方へ動かす (区間を縮めていく)。
+for LEN in reversed(range(0, N - 1)):
+    for l in range(1, N - LEN + 1):
+        r = l + LEN
+
+        # score1: l-1 番目を「取り外す」ときに得られる得点
+        # 条件 l&lt;=P[l-1]&lt;=r は「外す位置が現在の区間内にある」ということ
+        score1 = 0
+        if l &gt;= 2 and l &lt;= P[l - 1] and P[l - 1] &lt;= r:
+            score1 = A[l - 1]
+
+        # score2: r+1 番目を「取り外す」ときに得られる得点
+        score2 = 0
+        if r &lt;= N - 1 and l &lt;= P[r + 1] and P[r + 1] &lt;= r:
+            score2 = A[r + 1]
+
+        # 左端を縮める / 右端を縮める のうち最大値を採用
+        if l == 1:
+            dp[l][r] = dp[l][r + 1] + score2
+        elif r == N:
+            dp[l][r] = dp[l - 1][r] + score1
+        else:
+            dp[l][r] = max(dp[l - 1][r] + score1, dp[l][r + 1] + score2)
+
+# --- 出力 (1 マスだけ残った状態のうち最大) --------------------------
+Answer = 0
+for i in range(1, N + 1):
+    Answer = max(Answer, dp[i][i])
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A20.html"><div class="nav-label">前の問題</div><div class="nav-title">A20: 最長共通部分列(LCS)</div></a>
+    <a class="next" href="A22.html"><div class="nav-label">次の問題</div><div class="nav-title">A22: すごろく</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

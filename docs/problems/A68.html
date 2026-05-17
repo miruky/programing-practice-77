@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A68: 最大フロー(Ford-Fulkerson) | 鉄則77 Python解説</title>
+<meta name="description" content="A68: 最大フロー(Ford-Fulkerson) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A68</strong>
+  </nav>
+
+  <span class="id-pill">A68</span>
+  <h1>最大フロー(Ford-Fulkerson)</h1>
+
+  <div class="summary">残余グラフへの DFS で増加路を見つけ、フローを増やす。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">最大フロー</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A68.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A68.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A68: 最大フロー (Ford-Fulkerson)
+# ---------------------------------------------------------------------
+# 【概要】頂点 1 から頂点 N までの最大フロー量を求める。
+# 【アルゴリズム】Ford-Fulkerson 法
+#   1. 残余グラフ G を構築。各辺 (a→b, 容量 c) に逆辺 (b→a, 容量 0) を追加。
+#   2. DFS で増加路 (s から t への容量 &gt;0 のパス) を 1 本見つけ、流す。
+#   3. 流せなくなるまで繰り返す。
+# 【計算量】Ford-Fulkerson は O(F * (N+M))。F は最大フロー値。
+# =====================================================================
+
+class maxflow_edge:
+    &quot;&quot;&quot;残余グラフの辺: to (相手), cap (残容量), rev (逆辺のインデックス)&quot;&quot;&quot;
+    def __init__(self, to, cap, rev):
+        self.to = to
+        self.cap = cap
+        self.rev = rev
+
+
+def dfs(pos, goal, F, G, used):
+    &quot;&quot;&quot;pos から goal への増加路を 1 本探す。流せた量を返す&quot;&quot;&quot;
+    if pos == goal:
+        return F
+    used[pos] = True
+    for e in G[pos]:
+        if e.cap &gt; 0 and not used[e.to]:
+            flow = dfs(e.to, goal, min(F, e.cap), G, used)
+            if flow &gt;= 1:
+                # 残余グラフの容量を更新
+                e.cap -= flow
+                G[e.to][e.rev].cap += flow  # 逆辺の容量を増やす
+                return flow
+    return 0  # 増加路が見つからなかった
+
+
+def maxflow(N, s, t, edges):
+    &quot;&quot;&quot;s から t への最大フロー量&quot;&quot;&quot;
+    G = [list() for _ in range(N + 1)]
+    for a, b, c in edges:
+        # 辺と逆辺をペアで追加
+        G[a].append(maxflow_edge(b, c, len(G[b])))
+        G[b].append(maxflow_edge(a, 0, len(G[a]) - 1))
+
+    INF = 10 ** 10
+    total_flow = 0
+    while True:
+        used = [False] * (N + 1)
+        F = dfs(s, t, INF, G, used)
+        if F &gt; 0:
+            total_flow += F
+        else:
+            break
+    return total_flow
+
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+# --- 最大フローを計算 --------------------------------------------
+answer = maxflow(N, 1, N, edges)
+print(answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A67.html"><div class="nav-label">前の問題</div><div class="nav-title">A67: 最小全域木(クラスカル法)</div></a>
+    <a class="next" href="A69.html"><div class="nav-label">次の問題</div><div class="nav-title">A69: 二部マッチング</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

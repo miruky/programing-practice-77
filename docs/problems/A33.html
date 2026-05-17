@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A33: ゲーム2(Nim) | 鉄則77 Python解説</title>
+<meta name="description" content="A33: ゲーム2(Nim) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">Chapter 5: 数学的問題</span> /
+    <strong>A33</strong>
+  </nav>
+
+  <span class="id-pill">A33</span>
+  <h1>ゲーム2(Nim)</h1>
+
+  <div class="summary">Nim ゲームは XOR が 0 でないとき先手必勝。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">Chapter 5: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ゲーム</span><span class="tag">Nim</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap05/answer_A33.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A33.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A33: Nim ゲーム
+# ---------------------------------------------------------------------
+# 【概要】N 個の山。各手番でいずれかの山から 1 個以上取る。取れない方が負け。
+# 【アルゴリズム】Nim 定理 (Sprague-Grundy)
+#   全部 XOR (ニム和) ≠ 0 ⇔ 先手必勝
+#   全部 XOR = 0          ⇔ 後手必勝
+# 【計算量】O(N)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+
+# --- ニム和を計算 --------------------------------------------------
+# ^ は Python の XOR 演算子。
+XOR_Sum = A[0]
+for i in range(1, N):
+    XOR_Sum = (XOR_Sum ^ A[i])
+
+# --- 出力 -----------------------------------------------------------
+if XOR_Sum &gt;= 1:
+    print(&quot;First&quot;)
+else:
+    print(&quot;Second&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A32.html"><div class="nav-label">前の問題</div><div class="nav-title">A32: ゲーム1(後退解析)</div></a>
+    <a class="next" href="A34.html"><div class="nav-label">次の問題</div><div class="nav-title">A34: ゲーム3(Grundy数)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

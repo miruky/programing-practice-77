@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A76: 区間DP高速化 | 鉄則77 Python解説</title>
+<meta name="description" content="A76: 区間DP高速化 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span> /
+    <strong>A76</strong>
+  </nav>
+
+  <span class="id-pill">A76</span>
+  <h1>区間DP高速化</h1>
+
+  <div class="summary">DP 遷移を累積和で O(1) 化することで全体を O(N log N) に。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">累積和</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A76.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A76.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A76: 川渡り (累積和を使った DP 高速化)
+# ---------------------------------------------------------------------
+# 【概要】足場 [0, X_1, ..., X_N, W] の上をジャンプ ([L, R] の範囲) で渡る。
+#         西岸 → 東岸 へ到達する経路数を 10^9+7 で割った余りで求める。
+# 【アルゴリズム】DP + 累積和
+#   dp[i] = 足場 i に到達する経路数
+#   dp[i] = sum(dp[k])   ただし足場 k から i にジャンプできる範囲
+#   素直に計算すると O(N^2) だが、累積和 dpsum を使うことで O(N log N) に。
+#   ジャンプ可能な範囲の端は二分探索 (bisect) で求める。
+# 【計算量】O(N log N)
+# =====================================================================
+
+import bisect
+
+# --- 入力 -----------------------------------------------------------
+N, W, L, R = map(int, input().split())
+X = list(map(int, input().split()))
+
+# 西岸を足場 0、東岸を足場 N+1 として X を拡張
+X = [0] + X + [W]
+
+# --- DP + 累積和 -------------------------------------------------
+MOD = 10 ** 9 + 7
+dp = [0] * (N + 2)
+dpsum = [0] * (N + 2)
+dp[0] = 1     # 西岸スタート
+dpsum[0] = 1
+
+for i in range(1, N + 2):
+    # 足場 i にジャンプ可能な始点 k の範囲を求める
+    # 条件: X[i] - R &lt;= X[k] &lt;= X[i] - L
+    posl = bisect.bisect_left(X, X[i] - R)       # 範囲の最左
+    posr = bisect.bisect_left(X, X[i] - L + 1) - 1  # 範囲の最右
+    # dp[i] = sum(dp[posl..posr]) = dpsum[posr] - dpsum[posl-1]
+    dp[i] = (dpsum[posr] if posr &gt;= 0 else 0) - (dpsum[posl - 1] if posl &gt;= 1 else 0)
+    dp[i] %= MOD
+    # 累積和を更新
+    dpsum[i] = dpsum[i - 1] + dp[i]
+    dpsum[i] %= MOD
+
+# --- 出力 -----------------------------------------------------------
+print(dp[N + 1])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A75.html"><div class="nav-label">前の問題</div><div class="nav-title">A75: 締切付きジョブDP</div></a>
+    <a class="next" href="A77.html"><div class="nav-label">次の問題</div><div class="nav-title">A77: 答えで二分探索(切り方)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

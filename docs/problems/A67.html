@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A67: 最小全域木(クラスカル法) | 鉄則77 Python解説</title>
+<meta name="description" content="A67: 最小全域木(クラスカル法) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A67</strong>
+  </nav>
+
+  <span class="id-pill">A67</span>
+  <h1>最小全域木(クラスカル法)</h1>
+
+  <div class="summary">辺を短い順にソートし Union-Find で MST を構築。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">MST</span><span class="tag">クラスカル</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A67.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A67.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A67: 最小全域木 (クラスカル法)
+# ---------------------------------------------------------------------
+# 【概要】N 頂点 M 辺の重み付き連結グラフから、すべての頂点を繋ぐ
+#         辺の重みの合計が最小となる &quot;最小全域木 (MST)&quot; を求める。
+# 【アルゴリズム】クラスカル法
+#   1. 辺を重みの昇順にソート。
+#   2. 各辺について、両端が異なる連結成分なら採用 (Union-Find で管理)。
+#   ループや余計な辺はスキップされ、N-1 本選ぶと MST が完成。
+# 【計算量】O(M log M)
+# =====================================================================
+
+class unionfind:
+    &quot;&quot;&quot;A66 と同じ Union-Find 実装&quot;&quot;&quot;
+    def __init__(self, n):
+        self.n = n
+        self.par = [-1] * (n + 1)
+        self.size = [1] * (n + 1)
+
+    def root(self, x):
+        while self.par[x] != -1:
+            x = self.par[x]
+        return x
+
+    def unite(self, u, v):
+        rootu = self.root(u)
+        rootv = self.root(v)
+        if rootu != rootv:
+            if self.size[rootu] &lt; self.size[rootv]:
+                self.par[rootu] = rootv
+                self.size[rootv] += self.size[rootu]
+            else:
+                self.par[rootv] = rootu
+                self.size[rootu] += self.size[rootv]
+
+    def same(self, u, v):
+        return self.root(u) == self.root(v)
+
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+# --- 辺を重みの昇順にソート --------------------------------------
+edges.sort(key=lambda x: x[2])
+
+# --- クラスカル法 --------------------------------------------------
+uf = unionfind(N)
+answer = 0
+for a, b, c in edges:
+    # 違うグループならこの辺を MST に追加
+    if not uf.same(a, b):
+        uf.unite(a, b)
+        answer += c
+
+print(answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A66.html"><div class="nav-label">前の問題</div><div class="nav-title">A66: Union-Find</div></a>
+    <a class="next" href="A68.html"><div class="nav-label">次の問題</div><div class="nav-title">A68: 最大フロー(Ford-Fulkerson)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A02: N枚のカード | 鉄則77 Python解説</title>
+<meta name="description" content="A02: N枚のカード ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span> /
+    <strong>A02</strong>
+  </nav>
+
+  <span class="id-pill">A02</span>
+  <h1>N枚のカード</h1>
+
+  <div class="summary">配列に X が含まれるかを線形探索で判定する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">全探索</span><span class="tag">線形探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap01/answer_A02.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A02.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A02: N枚のカード (線形探索)
+# ---------------------------------------------------------------------
+# 【概要】長さ N の数列 A の中に整数 X が含まれるかを判定し
+#         含まれていれば &quot;Yes&quot; を、そうでなければ &quot;No&quot; を出力する。
+# 【アルゴリズム】先頭から順に 1 つずつ調べる &quot;線形探索&quot;。
+# 【計算量】O(N) ─ 配列を一度だけ走査する。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+# 1 行目: 配列長 N と探したい整数 X が空白区切りで与えられる。
+# map(int, ...) で各トークンを int に変換する典型イディオム。
+N, X = map(int, input().split())
+
+# 2 行目: A[0], A[1], ..., A[N-1] が空白区切りで与えられる。
+# list(map(int, input().split())) は競プロで最頻出の配列入力パターン。
+A = list(map(int, input().split()))
+
+# --- 線形探索 -------------------------------------------------------
+# 「答えが見つかったか」を表すフラグ変数。初期値は False。
+Answer = False
+
+# A を頭から順に確認していく。i は 0, 1, ..., N-1 を取る。
+for i in range(N):
+    if A[i] == X:
+        # 一度でも一致すれば Answer を True にする。
+        # break しないのは「全要素を確認する」という説明的な実装にするため。
+        # 効率を求めるなら break しても同じ結果になる。
+        Answer = True
+
+# --- 出力 -----------------------------------------------------------
+# bool を直接 if で判定する Pythonic な書き方も可: `if Answer:`
+if Answer == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A01.html"><div class="nav-label">前の問題</div><div class="nav-title">A01: 2乗を計算しよう</div></a>
+    <a class="next" href="A03.html"><div class="nav-label">次の問題</div><div class="nav-title">A03: 二重ループの全探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

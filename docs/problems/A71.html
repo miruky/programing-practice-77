@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A71: ソートと貪欲 | 鉄則77 Python解説</title>
+<meta name="description" content="A71: ソートと貪欲 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span> /
+    <strong>A71</strong>
+  </nav>
+
+  <span class="id-pill">A71</span>
+  <h1>ソートと貪欲</h1>
+
+  <div class="summary">大小の積を最小化するときは昇順×降順の足し算が最小。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">貪欲</span><span class="tag">ソート</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A71.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A71.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A71: 並び替えによる積和の最小化
+# ---------------------------------------------------------------------
+# 【概要】2 つの長さ N の配列 A, B を並び替えて A[i]*B[i] の総和を
+#         最小化する。
+# 【アルゴリズム】貪欲法 (並び替え不等式)
+#   - 一方を昇順、もう一方を降順に並べると積和は最小。
+#   - 直観: 大きい数 × 大きい数 を作らない。
+# 【計算量】O(N log N)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+# --- 並び替え ---------------------------------------------------
+A.sort()                  # 昇順
+B.sort(reverse=True)      # 降順
+
+# --- 答えは A[i] * B[i] の総和 -----------------------------------
+print(sum([A[i] * B[i] for i in range(N)]))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A70_extra.html"><div class="nav-label">前の問題</div><div class="nav-title">A70_extra: A70: XOR高速化版</div></a>
+    <a class="next" href="A72.html"><div class="nav-label">次の問題</div><div class="nav-title">A72: 行ビット全探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A50: 差分計算+ヒューリスティック | 鉄則77 Python解説</title>
+<meta name="description" content="A50: 差分計算+ヒューリスティック ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">Chapter 7: ヒューリスティック</span> /
+    <strong>A50</strong>
+  </nav>
+
+  <span class="id-pill">A50</span>
+  <h1>差分計算+ヒューリスティック</h1>
+
+  <div class="summary">差分計算で評価を高速化し、numpy を活用するヒューリスティック。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ec4899">Chapter 7: ヒューリスティック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">numpy</span><span class="tag">差分計算</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap07/answer_A50.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A50.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A50: 山登り法 (numpy + 差分計算)
+# ---------------------------------------------------------------------
+# 【概要】配列 B 上のピラミッド型関数で配列 A を近似する。
+# 【アルゴリズム】山登り法 + numpy のベクトル演算
+#   - 各操作の (X, Y, H) を持つ。
+#   - 「小さな変更」をランダムに行い、スコアが改善すれば採用、悪化なら戻す。
+#   - 差分配列 delta を前計算して、加減を numpy で高速化する。
+# 【計算量】時間で打ち切り (TIME_LIMIT)。
+# =====================================================================
+
+import numpy as np
+import random
+import time
+import sys
+
+# --- 定数・入力 ----------------------------------------------------
+N = 100
+Q = 1000
+A = np.array([list(map(int, input().split())) for _ in range(N)])
+
+# --- 初期解を生成 -------------------------------------------------
+X = [random.randint(0, N - 1) for _ in range(Q)]
+Y = [random.randint(0, N - 1) for _ in range(Q)]
+H = [1] * Q
+B = np.zeros((3 * N, 3 * N))  # 端を超えても安全な広めの配列
+for i in range(Q):
+    B[Y[i]][X[i]] += 1
+
+# --- ピラミッド型関数の前計算 -------------------------------------
+# H = i のとき影響する範囲を numpy 配列 delta[i] として持つ。
+delta = [None] * (N + 1)
+for i in range(1, N + 1):
+    delta[i] = np.array([
+        [max(i - abs(y) - abs(x), 0) for x in range(-i + 1, i)]
+        for y in range(-i + 1, i)
+    ])
+
+
+def get_score():
+    &quot;&quot;&quot;現在のスコア (大きいほど良い)&quot;&quot;&quot;
+    return 200000000 - np.absolute(A - B[N:2 * N, N:2 * N]).sum()
+
+
+TIME_LIMIT = 5.4
+current_score = get_score()
+ti = time.time()
+
+# --- 山登り法 -----------------------------------------------------
+loops = 0
+while time.time() - ti &lt; TIME_LIMIT:
+    # ランダムな変更を試す
+    t = random.randint(0, Q - 1)
+    old_x, new_x = X[t], X[t] + random.randint(-9, +9)
+    old_y, new_y = Y[t], Y[t] + random.randint(-9, +9)
+    old_h, new_h = H[t], H[t] + random.randint(-19, +19)
+    if new_x &lt; 0 or new_x &gt;= N or new_y &lt; 0 or new_y &gt;= N or new_h &lt;= 0 or new_h &gt; N:
+        continue
+
+    # 変更を適用 (古い分を引いて新しい分を足す)
+    B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] -= delta[H[t]]
+    X[t], Y[t], H[t] = new_x, new_y, new_h
+    B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] += delta[H[t]]
+
+    new_score = get_score()
+
+    if current_score &lt; new_score:
+        # 採用
+        current_score = new_score
+    else:
+        # 不採用: 元に戻す
+        B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] -= delta[H[t]]
+        X[t], Y[t], H[t] = old_x, old_y, old_h
+        B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] += delta[H[t]]
+    loops += 1
+
+# --- 出力 ----------------------------------------------------------
+print(Q)
+for i in range(Q):
+    print(X[i], Y[i], H[i])
+print(&quot;score =&quot;, current_score, file=sys.stderr)
+print(&quot;loops =&quot;, loops, file=sys.stderr)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A49_greedy2.html"><div class="nav-label">前の問題</div><div class="nav-title">A49_greedy2: A49: 貪欲法(評価関数)</div></a>
+    <a class="next" href="A50_extra.html"><div class="nav-label">次の問題</div><div class="nav-title">A50_extra: A50: 焼きなまし法版</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

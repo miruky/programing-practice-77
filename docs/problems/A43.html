@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A43: 東西の島 | 鉄則77 Python解説</title>
+<meta name="description" content="A43: 東西の島 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">Chapter 6: 考察テクニック</span> /
+    <strong>A43</strong>
+  </nav>
+
+  <span class="id-pill">A43</span>
+  <h1>東西の島</h1>
+
+  <div class="summary">各物体の最短距離の上限を考え、最大を答える。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #a855f7">Chapter 6: 考察テクニック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">考察</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap06/answer_A43.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A43.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A43: 東西移動の上限
+# ---------------------------------------------------------------------
+# 【概要】長さ L の道路上に N 人がいて、それぞれ東 (E) か西 (W) へ歩く。
+#         最後に出会う 2 人の組がいる最大時間を求める。
+# 【アルゴリズム】考察
+#   - 西向きの最大値 max(A[i])  と
+#   - 東向きの「L - A[i]」の最大値
+#   のうち、大きい方が答え。
+# 【計算量】O(N)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, L = map(int, input().split())
+A = [None] * N
+B = [None] * N
+for i in range(N):
+    A[i], B[i] = input().split()
+    A[i] = int(A[i])  # 位置
+
+# --- 各方向ごとに最大時間を更新 -----------------------------------
+Answer = 0
+for i in range(N):
+    if B[i] == &#x27;E&#x27;:
+        Answer = max(Answer, L - A[i])  # 東向き: 端 L までの距離
+    if B[i] == &#x27;W&#x27;:
+        Answer = max(Answer, A[i])      # 西向き: 端 0 までの距離
+
+# --- 出力 -----------------------------------------------------------
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A42.html"><div class="nav-label">前の問題</div><div class="nav-title">A42: K以内の全探索</div></a>
+    <a class="next" href="A44.html"><div class="nav-label">次の問題</div><div class="nav-title">A44: 操作の遅延処理</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A03: 二重ループの全探索 | 鉄則77 Python解説</title>
+<meta name="description" content="A03: 二重ループの全探索 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span> /
+    <strong>A03</strong>
+  </nav>
+
+  <span class="id-pill">A03</span>
+  <h1>二重ループの全探索</h1>
+
+  <div class="summary">2つの配列から合計が K になる組を二重ループで探す。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">全探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap01/answer_A03.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A03.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A03: 二重ループの全探索
+# ---------------------------------------------------------------------
+# 【概要】2 つの配列 P, Q から 1 つずつ取り出した和を K にできるか判定。
+# 【アルゴリズム】(x, y) の組合せを二重ループで全列挙する全探索。
+# 【計算量】O(N^2) ─ N が 1000 程度までなら現実的に動く。
+# 【別解】Q を集合 (set) に入れて O(N) で判定する方法もある。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, K = map(int, input().split())
+P = list(map(int, input().split()))  # カードの組 1
+Q = list(map(int, input().split()))  # カードの組 2
+Answer = False
+
+# --- 全探索 ---------------------------------------------------------
+# x: P から選ぶカードのインデックス
+# y: Q から選ぶカードのインデックス
+# すべての組合せを試し、和が K と一致するかを判定する。
+for x in range(N):
+    for y in range(N):
+        if P[x] + Q[y] == K:
+            Answer = True  # 1 つでも見つかれば True を立てて続行する
+
+# --- 出力 -----------------------------------------------------------
+if Answer == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A02.html"><div class="nav-label">前の問題</div><div class="nav-title">A02: N枚のカード</div></a>
+    <a class="next" href="A04.html"><div class="nav-label">次の問題</div><div class="nav-title">A04: 10進数を2進数へ</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

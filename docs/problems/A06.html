@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A06: 1次元累積和 | 鉄則77 Python解説</title>
+<meta name="description" content="A06: 1次元累積和 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">Chapter 2: 累積和</span> /
+    <strong>A06</strong>
+  </nav>
+
+  <span class="id-pill">A06</span>
+  <h1>1次元累積和</h1>
+
+  <div class="summary">累積和を前計算しておくことで区間和クエリを O(1) で答える。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #06b6d4">Chapter 2: 累積和</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">累積和</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap02/answer_A06.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A06.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A06: 1次元累積和
+# ---------------------------------------------------------------------
+# 【概要】配列 A に対して Q 個の区間和クエリ [L, R] に答える。
+# 【アルゴリズム】累積和 S[i] = A[0] + ... + A[i-1] を前計算。
+#                 区間 [L, R] の和は S[R] - S[L-1] で O(1) で求まる。
+# 【計算量】前計算 O(N) + クエリ O(Q)。各クエリ O(1)。
+# 【ポイント】先頭に S[0] = 0 を入れ、1-indexed で持つと境界処理が楽。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, Q = map(int, input().split())
+A = list(map(int, input().split()))
+
+# 各クエリの左右端を読む。L[j], R[j] は 1-indexed で与えられる。
+L = [None] * Q
+R = [None] * Q
+for j in range(Q):
+    L[j], R[j] = map(int, input().split())
+
+# --- 累積和の前計算 -------------------------------------------------
+# S[i] = A[0] + A[1] + ... + A[i-1]
+# 番兵 (S[0]=0) を 1 つ前に置くことで、区間和を S[R]-S[L-1] と引き算で書ける。
+S = [None] * (N + 1)
+S[0] = 0
+for i in range(N):
+    S[i + 1] = S[i] + A[i]
+
+# --- クエリ処理 -----------------------------------------------------
+# 区間 [L[j], R[j]] の総和を O(1) で返す。
+for j in range(Q):
+    print(S[R[j]] - S[L[j] - 1])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A05.html"><div class="nav-label">前の問題</div><div class="nav-title">A05: 三重ループ全探索</div></a>
+    <a class="next" href="A07.html"><div class="nav-label">次の問題</div><div class="nav-title">A07: いもす法</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A49: ビームサーチ | 鉄則77 Python解説</title>
+<meta name="description" content="A49: ビームサーチ ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">Chapter 7: ヒューリスティック</span> /
+    <strong>A49</strong>
+  </nav>
+
+  <span class="id-pill">A49</span>
+  <h1>ビームサーチ</h1>
+
+  <div class="summary">状態を幅 W に絞り込み、評価関数で各層を選ぶビームサーチ。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ec4899">Chapter 7: ヒューリスティック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">ビームサーチ</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap07/answer_A49.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A49.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A49: ビームサーチ
+# ---------------------------------------------------------------------
+# 【概要】各ターンで操作 A または B を選び、最終的なスコアを最大化する。
+# 【アルゴリズム】ビームサーチ
+#   各ターンの &quot;良さげな状態&quot; を高々 WIDTH 個に絞って探索を進める。
+#   貪欲法より広く、全探索より絞った中間的な戦略。
+# 【計算量】O(T * WIDTH * log(WIDTH))
+# =====================================================================
+
+import copy
+
+
+# 1 ターンの操作 (3 つのインデックス)
+class round:
+    def __init__(self, p, q, r):
+        self.p = p
+        self.q = q
+        self.r = r
+
+
+# 盤面の状態
+class state:
+    def __init__(self, n):
+        self.score = 0      # スコア
+        self.x = [0] * n    # 配列 X の値
+        self.lastmove = &#x27;?&#x27;  # この状態に至った操作 (&#x27;A&#x27; or &#x27;B&#x27;)
+        self.lastpos = -1    # 1 つ前の状態の位置 (経路復元用)
+
+
+def beam_search(N, T, rounds):
+    WIDTH = 10000
+    # beam[i] = i 手目時点の候補状態リスト
+    beam = [list() for _ in range(T + 1)]
+    beam[0].append(state(N))
+
+    for i in range(T):
+        candidate = list()
+        for j in range(len(beam[i])):
+            # --- 操作 A の場合 ---
+            sousa_a = copy.deepcopy(beam[i][j])
+            sousa_a.lastmove = &#x27;A&#x27;
+            sousa_a.lastpos = j
+            sousa_a.x[rounds[i].p] += 1
+            sousa_a.x[rounds[i].q] += 1
+            sousa_a.x[rounds[i].r] += 1
+            # 配列 x のうち 0 の個数をスコアに足す
+            sousa_a.score += sousa_a.x.count(0)
+
+            # --- 操作 B の場合 ---
+            sousa_b = copy.deepcopy(beam[i][j])
+            sousa_b.lastmove = &#x27;B&#x27;
+            sousa_b.lastpos = j
+            sousa_b.x[rounds[i].p] -= 1
+            sousa_b.x[rounds[i].q] -= 1
+            sousa_b.x[rounds[i].r] -= 1
+            sousa_b.score += sousa_b.x.count(0)
+
+            candidate.append(sousa_a)
+            candidate.append(sousa_b)
+
+        # スコアの高い順にソートし、上位 WIDTH 件だけを残す
+        candidate.sort(key=lambda s: -s.score)
+        beam[i + 1] = copy.deepcopy(candidate[:WIDTH])
+
+    # --- 復元: スコア最大の終端から逆方向にたどる -------------------
+    current_place = 0  # ビームは score 降順なので先頭が最良
+    answer = [None] * T
+    for i in range(T, 0, -1):
+        answer[i - 1] = beam[i][current_place].lastmove
+        current_place = beam[i][current_place].lastpos
+    return answer
+
+
+# --- 入力 -----------------------------------------------------------
+T = int(input())
+rounds = [None] * T
+for i in range(T):
+    p, q, r = map(int, input().split())
+    rounds[i] = round(p - 1, q - 1, r - 1)  # 0-indexed に直す
+
+# --- ビームサーチを実行 ---------------------------------------------
+answer = beam_search(20, T, rounds)
+
+for c in answer:
+    print(c)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A48_extra.html"><div class="nav-label">前の問題</div><div class="nav-title">A48_extra: A48: 焼きなまし法(差分計算版)</div></a>
+    <a class="next" href="A49_greedy1.html"><div class="nav-label">次の問題</div><div class="nav-title">A49_greedy1: A49: 貪欲法(基本)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

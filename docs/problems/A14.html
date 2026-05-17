@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A14: 半分全列挙 | 鉄則77 Python解説</title>
+<meta name="description" content="A14: 半分全列挙 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">Chapter 3: 二分探索</span> /
+    <strong>A14</strong>
+  </nav>
+
+  <span class="id-pill">A14</span>
+  <h1>半分全列挙</h1>
+
+  <div class="summary">4 つの集合の組合せを 2 つに分け、和の集合を二分探索で照合する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #10b981">Chapter 3: 二分探索</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">二分探索</span><span class="tag">半分全列挙</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A14.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A14.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A14: 半分全列挙 (4箱問題)
+# ---------------------------------------------------------------------
+# 【概要】4 つの配列 A, B, C, D から 1 つずつ選んだ和が K になる
+#         組合せがあるかを判定する。
+# 【アルゴリズム】&quot;半分全列挙&quot;
+#   1. 全 4 つの組合せ (N^4 通り) は爆発するので、2 つずつに分解する。
+#   2. P = { A[x]+B[y] }, Q = { C[z]+D[w] } を作る (どちらも N^2 通り)。
+#   3. Q をソートし、P[i] ごとに K - P[i] が Q にあるか二分探索する。
+# 【計算量】O(N^2 log N)
+# =====================================================================
+
+import bisect
+import sys
+
+# --- 入力 -----------------------------------------------------------
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+C = list(map(int, input().split()))
+D = list(map(int, input().split()))
+
+# --- 半分 1: A と B の和 (N^2 個) ---------------------------------
+P = []
+for x in range(N):
+    for y in range(N):
+        P.append(A[x] + B[y])
+
+# --- 半分 2: C と D の和 (N^2 個) ---------------------------------
+Q = []
+for z in range(N):
+    for w in range(N):
+        Q.append(C[z] + D[w])
+
+# 二分探索のため Q をソートしておく。
+Q.sort()
+
+# --- 各 P[i] について K - P[i] が Q に含まれるかを二分探索 --------
+for i in range(len(P)):
+    # bisect_left は「ソート順を保ったまま挿入できる最も左の位置」を返す。
+    pos1 = bisect.bisect_left(Q, K - P[i])
+    if pos1 &lt; N * N and Q[pos1] == K - P[i]:
+        print(&quot;Yes&quot;)
+        sys.exit(0)  # 見つかった時点で終了
+
+# どの P[i] についても見つからなかった
+print(&quot;No&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A13.html"><div class="nav-label">前の問題</div><div class="nav-title">A13: しゃくとり法</div></a>
+    <a class="next" href="A15.html"><div class="nav-label">次の問題</div><div class="nav-title">A15: 座標圧縮</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

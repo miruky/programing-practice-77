@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A13: しゃくとり法 | 鉄則77 Python解説</title>
+<meta name="description" content="A13: しゃくとり法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">Chapter 3: 二分探索</span> /
+    <strong>A13</strong>
+  </nav>
+
+  <span class="id-pill">A13</span>
+  <h1>しゃくとり法</h1>
+
+  <div class="summary">右端を尺取り虫のように動かして区間長を効率的に列挙する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #10b981">Chapter 3: 二分探索</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">しゃくとり法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A13.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A13.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A13: しゃくとり法 (近いペアの数え上げ)
+# ---------------------------------------------------------------------
+# 【概要】ソート済み配列 A から、差 A[j]-A[i] が K 以下となる (i, j) (i&lt;j)
+#         のペア数を求める。
+# 【アルゴリズム】しゃくとり法 (Two pointers / Sliding window)
+#   i が右に進むほど、対応する R[i] (= 条件を満たす最大 j) も単調に増える。
+#   したがって R は戻さずに前進だけする → 全体 O(N)。
+# 【計算量】O(N)
+# 【ポイント】L を i, R を「i から見て条件を満たす一番遠い右端」とする。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+
+# R[i] := i から見て A[R[i]] - A[i] &lt;= K を満たす最大の R
+R = [None] * N
+
+# --- しゃくとり法 ---------------------------------------------------
+for i in range(0, N - 1):
+    # R は単調なので、R[i-1] からスタートしてよい (戻る必要がない)。
+    if i == 0:
+        R[i] = 0
+    else:
+        R[i] = R[i - 1]
+
+    # 限界まで右端を進める。
+    while R[i] &lt; N - 1 and A[R[i] + 1] - A[i] &lt;= K:
+        R[i] += 1
+
+# --- 答え --------------------------------------------------------
+# 各 i に対して、相手は i+1 〜 R[i] の (R[i] - i) 個。
+Answer = 0
+for i in range(0, N - 1):
+    Answer += (R[i] - i)
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A12.html"><div class="nav-label">前の問題</div><div class="nav-title">A12: 答えで二分探索</div></a>
+    <a class="next" href="A14.html"><div class="nav-label">次の問題</div><div class="nav-title">A14: 半分全列挙</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

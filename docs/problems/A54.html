@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A54: 連想配列(Map) | 鉄則77 Python解説</title>
+<meta name="description" content="A54: 連想配列(Map) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span> /
+    <strong>A54</strong>
+  </nav>
+
+  <span class="id-pill">A54</span>
+  <h1>連想配列(Map)</h1>
+
+  <div class="summary">辞書で名前→点数の対応を保持する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">辞書</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap08/answer_A54.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A54.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A54: 連想配列 (Map / dict)
+# ---------------------------------------------------------------------
+# 【概要】2 種類のクエリ:
+#   &quot;1 name score&quot;: name の点数を score にセット
+#   &quot;2 name&quot;:       name の点数を出力
+# 【データ構造】Python の dict (ハッシュテーブル)
+# 【計算量】各クエリ平均 O(1)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+Q = int(input())
+queries = [input().split() for _ in range(Q)]
+
+# --- クエリ処理 -----------------------------------------------------
+Map = {}
+for q in queries:
+    if q[0] == &quot;1&quot;:
+        Map[q[1]] = q[2]   # 登録または更新
+    if q[0] == &quot;2&quot;:
+        print(Map[q[1]])   # 参照
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A53.html"><div class="nav-label">前の問題</div><div class="nav-title">A53: 優先度付きキュー</div></a>
+    <a class="next" href="A55.html"><div class="nav-label">次の問題</div><div class="nav-title">A55: 順序付き集合</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

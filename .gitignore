@@ -1,0 +1,14 @@
+# Cloned source repository (do not commit; users should clone separately)
+source-repo/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A30: 二項係数 mod p | 鉄則77 Python解説</title>
+<meta name="description" content="A30: 二項係数 mod p ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">Chapter 5: 数学的問題</span> /
+    <strong>A30</strong>
+  </nav>
+
+  <span class="id-pill">A30</span>
+  <h1>二項係数 mod p</h1>
+
+  <div class="summary">フェルマーの小定理で逆元を求め、nCr を計算する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">Chapter 5: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">数学</span><span class="tag">modular逆元</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap05/answer_A30.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A30.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A30: 二項係数 mod p
+# ---------------------------------------------------------------------
+# 【概要】nCr を 10^9+7 で割った余りを求める。
+# 【アルゴリズム】フェルマーの小定理によるモジュラ逆元
+#   - p が素数のとき a^(p-1) ≡ 1 (mod p) なので、 a^(p-2) が a の逆元。
+#   - nCr = n! / (r! * (n-r)!) を、逆元を使った乗算で計算する。
+# 【計算量】O(n + log p)
+# =====================================================================
+
+# a^b mod m
+def Power(a, b, m):
+    p = a
+    Answer = 1
+    for i in range(30):
+        wari = 2 ** i
+        if (b // wari) % 2 == 1:
+            Answer = (Answer * p) % m
+        p = (p * p) % m
+    return Answer
+
+
+# a / b mod m  (b の逆元を a に掛ける)
+def Division(a, b, m):
+    return (a * Power(b, m - 2, m)) % m
+
+
+# --- 入力 -----------------------------------------------------------
+n, r = map(int, input().split())
+M = 1000000007
+
+# --- 分子 n! を mod M で計算 ----------------------------------------
+a = 1
+for i in range(1, n + 1):
+    a = (a * i) % M
+
+# --- 分母 r! * (n-r)! を mod M で計算 ------------------------------
+b = 1
+for i in range(1, r + 1):
+    b = (b * i) % M
+for i in range(1, n - r + 1):
+    b = (b * i) % M
+
+# --- 答え (a / b) mod M --------------------------------------------
+print(Division(a, b, M))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A29.html"><div class="nav-label">前の問題</div><div class="nav-title">A29: 繰り返し二乗法</div></a>
+    <a class="next" href="A31.html"><div class="nav-label">次の問題</div><div class="nav-title">A31: 3か5の倍数</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A73: 重み2成分ダイクストラ | 鉄則77 Python解説</title>
+<meta name="description" content="A73: 重み2成分ダイクストラ ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span> /
+    <strong>A73</strong>
+  </nav>
+
+  <span class="id-pill">A73</span>
+  <h1>重み2成分ダイクストラ</h1>
+
+  <div class="summary">距離と本数の 2 評価を 10000 倍テクニックでまとめてダイクストラ。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ダイクストラ</span><span class="tag">テクニック</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A73.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A73.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A73: 2 目的のダイクストラ (距離 + 木の本数)
+# ---------------------------------------------------------------------
+# 【概要】複数の道路で N 頂点を結ぶ。距離の最小化を最優先、
+#         同距離の中で木の本数 (d=1 の本数) も最少化したい。
+# 【アルゴリズム】&quot;重み = 距離 * 10000 - (木の有無)&quot; として 1 本のダイクストラに集約。
+#   - 距離は最大 10000 倍されるため、最優先の評価基準として効く。
+#   - その下位ビットで木の有無を表現する。
+# 【計算量】O((N+M) log N)
+# =====================================================================
+
+import heapq
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+roads = [list(map(int, input().split())) for _ in range(M)]
+
+# --- グラフ構築 -------------------------------------------------
+# d == 1 (木がある) なら 10000c - 1, そうでなければ 10000c に
+G = [list() for _ in range(N + 1)]
+for a, b, c, d in roads:
+    if d == 1:
+        G[a].append((b, 10000 * c - 1))
+        G[b].append((a, 10000 * c - 1))
+    else:
+        G[a].append((b, 10000 * c))
+        G[b].append((a, 10000 * c))
+
+# --- ダイクストラ (詳細は A64 参照) ------------------------------
+INF = 10 ** 10
+kakutei = [False] * (N + 1)
+cur = [INF] * (N + 1)
+cur[1] = 0
+Q = []
+heapq.heappush(Q, (cur[1], 1))
+while len(Q) &gt;= 1:
+    pos = heapq.heappop(Q)[1]
+    if kakutei[pos] == True:
+        continue
+    kakutei[pos] = True
+    for e in G[pos]:
+        if cur[e[0]] &gt; cur[pos] + e[1]:
+            cur[e[0]] = cur[pos] + e[1]
+            heapq.heappush(Q, (cur[e[0]], e[0]))
+
+# --- 結果の解読 -------------------------------------------------
+# distance = 上位 (10000 で割って切り上げ)
+# num_trees = 下位 ((distance * 10000) と cur[N] の差)
+distance = (cur[N] + 9999) // 10000
+num_trees = distance * 10000 - cur[N]
+print(distance, num_trees)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A72.html"><div class="nav-label">前の問題</div><div class="nav-title">A72: 行ビット全探索</div></a>
+    <a class="next" href="A74.html"><div class="nav-label">次の問題</div><div class="nav-title">A74: 転倒数による最小操作</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

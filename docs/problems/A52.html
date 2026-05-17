@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A52: キュー | 鉄則77 Python解説</title>
+<meta name="description" content="A52: キュー ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span> /
+    <strong>A52</strong>
+  </nav>
+
+  <span class="id-pill">A52</span>
+  <h1>キュー</h1>
+
+  <div class="summary">FIFO のキューを deque で実装。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">キュー</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap08/answer_A52.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A52.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A52: キュー (FIFO)
+# ---------------------------------------------------------------------
+# 【概要】3 種類のクエリ:
+#   &quot;1 x&quot;: 末尾に追加 / &quot;2&quot;: 先頭を表示 / &quot;3&quot;: 先頭を取り除く
+# 【データ構造】collections.deque (両端から O(1) で操作可能)
+#   list は popleft が O(N) で遅いため deque を使う。
+# 【計算量】各クエリ O(1)
+# =====================================================================
+
+from collections import deque
+
+# --- 入力 -----------------------------------------------------------
+Q = int(input())
+queries = [input().split() for _ in range(Q)]
+
+# --- クエリ処理 -----------------------------------------------------
+T = deque()
+for q in queries:
+    if q[0] == &quot;1&quot;:
+        T.append(q[1])    # enqueue (末尾追加)
+    if q[0] == &quot;2&quot;:
+        print(T[0])       # front (先頭参照)
+    if q[0] == &quot;3&quot;:
+        T.popleft()       # dequeue (先頭削除)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A51.html"><div class="nav-label">前の問題</div><div class="nav-title">A51: スタック</div></a>
+    <a class="next" href="A53.html"><div class="nav-label">次の問題</div><div class="nav-title">A53: 優先度付きキュー</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

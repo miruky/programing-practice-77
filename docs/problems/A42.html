@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A42: K以内の全探索 | 鉄則77 Python解説</title>
+<meta name="description" content="A42: K以内の全探索 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">Chapter 6: 考察テクニック</span> /
+    <strong>A42</strong>
+  </nav>
+
+  <span class="id-pill">A42</span>
+  <h1>K以内の全探索</h1>
+
+  <div class="summary">(a,b) を全探索し、各組に対して条件を満たす要素を数える。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #a855f7">Chapter 6: 考察テクニック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">全探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap06/answer_A42.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A42.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A42: 2 軸を全探索
+# ---------------------------------------------------------------------
+# 【概要】点 (A[i], B[i]) があり、矩形 [a, a+K] x [b, b+K] に
+#         含まれる点数の最大値を求める。
+# 【アルゴリズム】(a, b) を 100x100 通り全探索し、各組で点数を数える。
+# 【計算量】O(101^2 * N)
+# =====================================================================
+
+def GetScore(a, b, A, B, K):
+    &quot;&quot;&quot;矩形 [a, a+K] x [b, b+K] に含まれる点数&quot;&quot;&quot;
+    cnt = 0
+    for i in range(N):
+        if a &lt;= A[i] and A[i] &lt;= a + K and b &lt;= B[i] and B[i] &lt;= b + K:
+            cnt += 1
+    return cnt
+
+
+# --- 入力 -----------------------------------------------------------
+N, K = map(int, input().split())
+A = [None] * N
+B = [None] * N
+for i in range(N):
+    A[i], B[i] = map(int, input().split())
+
+# --- (a, b) を全探索して最大点数を求める ----------------------------
+Answer = 0
+for a in range(1, 101):
+    for b in range(1, 101):
+        Score = GetScore(a, b, A, B, K)
+        Answer = max(Answer, Score)
+
+# --- 出力 -----------------------------------------------------------
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A41.html"><div class="nav-label">前の問題</div><div class="nav-title">A41: 3連続パターン検出</div></a>
+    <a class="next" href="A43.html"><div class="nav-label">次の問題</div><div class="nav-title">A43: 東西の島</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

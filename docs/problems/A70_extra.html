@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A70_extra: A70: XOR高速化版 | 鉄則77 Python解説</title>
+<meta name="description" content="A70_extra: A70: XOR高速化版 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A70_extra</strong>
+  </nav>
+
+  <span class="id-pill">A70_extra</span>
+  <h1>A70: XOR高速化版</h1>
+
+  <div class="summary">ランプ反転を XOR 1 回で表現し、A70 を約 1/5 の実行時間に。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">BFS</span><span class="tag">XOR</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A70_extra.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A70_extra.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A70 (補足版): XOR を使った高速版
+# ---------------------------------------------------------------------
+# 【概要】A70 の状態 BFS の高速版。
+# 【高速化の鍵】「ビット k を反転する」 = 「2^k を XOR する」
+#   つまり get_next 関数を単純な XOR 1 つに置き換えられる:
+#     nex = pos ^ (1 &lt;&lt; x) ^ (1 &lt;&lt; y) ^ (1 &lt;&lt; z)
+#   さらにグラフを実体化せず、BFS 内で直接遷移を計算する。
+# 【計算量】A70 と同じだが定数倍が約 1/5 と高速。
+# =====================================================================
+
+from collections import deque
+
+# --- 入力 -----------------------------------------------------------
+N, M = map(int, input().split())
+A = list(map(int, input().split()))
+actions = [list(map(lambda x: int(x) - 1, input().split())) for _ in range(M)]
+
+# --- スタート・ゴール ----------------------------------------------
+start = sum(A[i] * (2 ** i) for i in range(N))
+goal = 2 ** N - 1
+
+# --- BFS の初期化 -------------------------------------------------
+dist = [-1] * (2 ** N)
+dist[start] = 0
+Q = deque()
+Q.append(start)
+
+# --- BFS (グラフを持たず、その場で遷移を計算) ---------------------
+while len(Q) &gt;= 1:
+    pos = Q.popleft()
+    for x, y, z in actions:
+        # 3 ビット同時反転 = 3 つの 2^k を XOR
+        nex = pos ^ (1 &lt;&lt; x) ^ (1 &lt;&lt; y) ^ (1 &lt;&lt; z)
+        if dist[nex] == -1:
+            dist[nex] = dist[pos] + 1
+            Q.append(nex)
+
+print(dist[goal])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A70.html"><div class="nav-label">前の問題</div><div class="nav-title">A70: ランプ点灯(状態BFS)</div></a>
+    <a class="next" href="A71.html"><div class="nav-label">次の問題</div><div class="nav-title">A71: ソートと貪欲</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

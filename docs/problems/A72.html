@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A72: 行ビット全探索 | 鉄則77 Python解説</title>
+<meta name="description" content="A72: 行ビット全探索 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span> /
+    <strong>A72</strong>
+  </nav>
+
+  <span class="id-pill">A72</span>
+  <h1>行ビット全探索</h1>
+
+  <div class="summary">行の選び方を 2^H 通り全探索し、列は貪欲に処理する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">全探索</span><span class="tag">貪欲</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A72.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A72.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A72: 行のビット全探索 + 列の貪欲法
+# ---------------------------------------------------------------------
+# 【概要】H×W のグリッドを K 回の &quot;行/列まるごと黒く塗る&quot; 操作で塗り、
+#         黒マスを最大化する。
+# 【アルゴリズム】H が小さいので、行の使い方は 2^H 通り全探索。
+#   - 行に対する選び方を固定したら、残り操作数で塗る列を貪欲に選ぶ
+#     (列ごとの白マス数が多いものから順に塗ると総黒マス数が最大)。
+# 【計算量】O(2^H * H * W * log W)
+# =====================================================================
+
+import itertools
+
+
+def paint_row(H, W, d, remaining_steps):
+    &quot;&quot;&quot;残り操作回数 remaining_steps を列に消費して、最終的な黒マス数を返す&quot;&quot;&quot;
+    # 各列に対して (白マスの個数, 列の番号) を作り、白が多い順にソート
+    column = [
+        ([d[i][j] for i in range(H)].count(&#x27;.&#x27;), j)
+        for j in range(W)
+    ]
+    column.sort(reverse=True)
+
+    # 上位 remaining_steps 個を塗る
+    for j in range(remaining_steps):
+        idx = column[j][1]
+        for i in range(H):
+            d[i][idx] = &#x27;#&#x27;
+
+    # 最終的な黒マス数
+    return sum(map(lambda l: l.count(&#x27;#&#x27;), d))
+
+
+# --- 入力 -----------------------------------------------------------
+H, W, K = map(int, input().split())
+c = [input() for _ in range(H)]
+
+# --- 行の塗り方を 2^H 通り全探索 ----------------------------------
+# v[i] == 1: 行 i を黒く塗る
+answer = 0
+for v in itertools.product([0, 1], repeat=H):
+    # 元のグリッドをコピー (mutable な 2 次元リスト)
+    d = [list(c[i]) for i in range(H)]
+    remaining_steps = K
+    for i in range(H):
+        if v[i] == 1:
+            d[i] = [&#x27;#&#x27;] * W
+            remaining_steps -= 1
+    # 操作回数を超えていなければ、残りで列を貪欲に塗る
+    if remaining_steps &gt;= 0:
+        subanswer = paint_row(H, W, d, remaining_steps)
+        answer = max(answer, subanswer)
+
+print(answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A71.html"><div class="nav-label">前の問題</div><div class="nav-title">A71: ソートと貪欲</div></a>
+    <a class="next" href="A73.html"><div class="nav-label">次の問題</div><div class="nav-title">A73: 重み2成分ダイクストラ</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A15: 座標圧縮 | 鉄則77 Python解説</title>
+<meta name="description" content="A15: 座標圧縮 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">Chapter 3: 二分探索</span> /
+    <strong>A15</strong>
+  </nav>
+
+  <span class="id-pill">A15</span>
+  <h1>座標圧縮</h1>
+
+  <div class="summary">重複を除いてソートし、各値の順位に置き換えるテクニック。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #10b981">Chapter 3: 二分探索</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">座標圧縮</span><span class="tag">二分探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A15.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A15.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A15: 座標圧縮
+# ---------------------------------------------------------------------
+# 【概要】配列 A の各要素について、A 全体での &quot;順位&quot; (1 始まり) を求める。
+# 【アルゴリズム】座標圧縮
+#   1. A から重複を取り除いてソートした配列 T を作る。
+#   2. T 内での A[i] の位置 (二分探索) +1 がその順位となる。
+# 【計算量】O(N log N)
+# 【用途】後段でセグメント木・BIT を使う前処理として頻出。
+# =====================================================================
+
+import bisect
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+
+# --- 重複を除去してソート -----------------------------------------
+# set() で重複除去、その後 sort() で昇順に並べる。
+T = list(set(A))
+T.sort()
+
+# --- 各値の順位を二分探索で求める ---------------------------------
+B = [None] * N
+for i in range(N):
+    B[i] = bisect.bisect_left(T, A[i])  # T 内での位置 (0-indexed)
+    B[i] += 1                           # 1-indexed に直す
+
+# --- 空白区切りで出力 ------------------------------------------------
+Answer = [str(i) for i in B]
+print(&quot; &quot;.join(Answer))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A14.html"><div class="nav-label">前の問題</div><div class="nav-title">A14: 半分全列挙</div></a>
+    <a class="next" href="A16.html"><div class="nav-label">次の問題</div><div class="nav-title">A16: ダンジョン1</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

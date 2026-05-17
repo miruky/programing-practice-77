@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A18: 部分和問題 | 鉄則77 Python解説</title>
+<meta name="description" content="A18: 部分和問題 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">Chapter 4: 動的計画法</span> /
+    <strong>A18</strong>
+  </nav>
+
+  <span class="id-pill">A18</span>
+  <h1>部分和問題</h1>
+
+  <div class="summary">選んだカードの合計を S にできるかを 2 次元 DP で判定する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">Chapter 4: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">部分和</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap04/answer_A18.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A18.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A18: 部分和問題
+# ---------------------------------------------------------------------
+# 【概要】N 枚のカード (値 A[i]) から、合計を S にできるかを判定する。
+# 【アルゴリズム】2 次元 DP
+#   dp[i][j] = 最初の i 枚から合計 j を作れるか (True/False)
+#   遷移: dp[i][j] = dp[i-1][j]  (i 枚目を選ばない)
+#         dp[i][j] = dp[i-1][j-A[i-1]]  (i 枚目を選ぶ; j&gt;=A[i-1])
+# 【計算量】O(NS)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, S = map(int, input().split())
+A = list(map(int, input().split()))
+
+# --- DP テーブル初期化 ----------------------------------------------
+# dp[i][j] : i 枚から合計 j を作れるか
+dp = [[None] * (S + 1) for _ in range(N + 1)]
+
+# 0 枚で 0 は作れる (空和)、それ以外は不可。
+dp[0][0] = True
+for i in range(1, S + 1):
+    dp[0][i] = False
+
+# --- DP 遷移 -------------------------------------------------------
+for i in range(1, N + 1):
+    for j in range(0, S + 1):
+        if j &lt; A[i - 1]:
+            # j が A[i-1] より小さい → i 番目は選べない
+            dp[i][j] = dp[i - 1][j]
+        if j &gt;= A[i - 1]:
+            # 選ぶ・選ばないの両方を試して OR を取る
+            if dp[i - 1][j] == True or dp[i - 1][j - A[i - 1]] == True:
+                dp[i][j] = True
+            else:
+                dp[i][j] = False
+
+# --- 出力 -----------------------------------------------------------
+if dp[N][S] == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A17.html"><div class="nav-label">前の問題</div><div class="nav-title">A17: ダンジョン2(復元)</div></a>
+    <a class="next" href="A19.html"><div class="nav-label">次の問題</div><div class="nav-title">A19: ナップサック問題</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A17: ダンジョン2(復元) | 鉄則77 Python解説</title>
+<meta name="description" content="A17: ダンジョン2(復元) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">Chapter 4: 動的計画法</span> /
+    <strong>A17</strong>
+  </nav>
+
+  <span class="id-pill">A17</span>
+  <h1>ダンジョン2(復元)</h1>
+
+  <div class="summary">DP で求めた最短距離をもとに、経路を復元する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">Chapter 4: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">経路復元</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap04/answer_A17.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A17.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A17: ダンジョン2 (DP + 経路復元)
+# ---------------------------------------------------------------------
+# 【概要】A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を求める。
+# 【アルゴリズム】DP 後に逆方向にトレースバックする経路復元の典型手法。
+#   ゴールから出発し、dp の値と一致する遷移をたどり直す。
+# 【計算量】O(N)
+# =====================================================================
+
+# --- 入力・DP (A16 と同じ) -----------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+dp = [None] * (N + 1)
+dp[1] = 0
+dp[2] = A[0]
+for i in range(3, N + 1):
+    dp[i] = min(dp[i - 1] + A[i - 2], dp[i - 2] + B[i - 3])
+
+# --- 経路復元 ------------------------------------------------------
+# Place は現在位置。ゴール N から始めて部屋 1 まで遡る。
+# 例: 入力例 1 の場合、Place は 5 → 4 → 2 → 1 と変化する。
+Answer = []
+Place = N
+while True:
+    Answer.append(Place)
+    if Place == 1:
+        break
+    # 「どちらの遷移で来たか」を dp 値から逆算する。
+    # dp[Place-1] + A[Place-2] == dp[Place] ならば 1 個前から来た。
+    if dp[Place - 1] + A[Place - 2] == dp[Place]:
+        Place = Place - 1
+    else:
+        Place = Place - 2
+Answer.reverse()  # スタート→ゴール の順に並べ直す
+
+# --- 出力 -----------------------------------------------------------
+Answer2 = [str(i) for i in Answer]
+print(len(Answer))
+print(&quot; &quot;.join(Answer2))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A16.html"><div class="nav-label">前の問題</div><div class="nav-title">A16: ダンジョン1</div></a>
+    <a class="next" href="A18.html"><div class="nav-label">次の問題</div><div class="nav-title">A18: 部分和問題</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

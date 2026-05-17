@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A48: 焼きなまし法 | 鉄則77 Python解説</title>
+<meta name="description" content="A48: 焼きなまし法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">Chapter 7: ヒューリスティック</span> /
+    <strong>A48</strong>
+  </nav>
+
+  <span class="id-pill">A48</span>
+  <h1>焼きなまし法</h1>
+
+  <div class="summary">確率的に悪化を受理する焼きなまし法で局所最適から抜け出す。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ec4899">Chapter 7: ヒューリスティック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">焼きなまし</span><span class="tag">TSP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap07/answer_A48.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A48.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A48: 焼きなまし法 (Simulated Annealing)
+# ---------------------------------------------------------------------
+# 【概要】TSP に対する焼きなまし法。山登りより強力。
+# 【アルゴリズム】焼きなまし法
+#   山登り法を拡張し、悪化する解も確率 exp(ΔE / T) で受理する。
+#   温度 T を時間とともに下げると、最初は探索的、後半は山登り的になる。
+# 【計算量】1 ループ O(N)。
+# =====================================================================
+
+import math
+import random
+
+
+class point2d:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def dist(self, p):
+        return ((self.x - p.x) ** 2 + (self.y - p.y) ** 2) ** 0.5
+
+
+def get_score(n, points, P):
+    score = 0
+    for i in range(n):
+        score += points[P[i]].dist(points[P[i + 1]])
+    return score
+
+
+def simulated_annealing(n, points):
+    P = [i % n for i in range(n + 1)]
+    current_score = get_score(n, points, P)
+    NUM_LOOPS = 40000
+    for t in range(NUM_LOOPS):
+        # 反転する区間を選ぶ
+        l = random.randint(1, n - 1)
+        r = random.randint(1, n - 1)
+        if l &gt; r:
+            l, r = r, l
+        # 試しに反転
+        P[l:r + 1] = reversed(P[l:r + 1])
+        new_score = get_score(n, points, P)
+        # 温度 T を時間と共に下げる
+        T = 30 - 28 * (t / NUM_LOOPS)
+        # 受理確率: 改善なら 1、悪化なら exp((current-new)/T)
+        probability = math.exp(min((current_score - new_score) / T, 0))
+        if random.random() &lt; probability:
+            current_score = new_score
+        else:
+            # 不採用: 元に戻す
+            P[l:r + 1] = reversed(P[l:r + 1])
+    return P
+
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+points = [None] * N
+for i in range(N):
+    x, y = map(int, input().split())
+    points[i] = point2d(x, y)
+
+answer = simulated_annealing(N, points)
+for i in answer:
+    print(i + 1)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A47.html"><div class="nav-label">前の問題</div><div class="nav-title">A47: 山登り法</div></a>
+    <a class="next" href="A48_extra.html"><div class="nav-label">次の問題</div><div class="nav-title">A48_extra: A48: 焼きなまし法(差分計算版)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

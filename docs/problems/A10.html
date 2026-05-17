@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A10: 区間最大値クエリ | 鉄則77 Python解説</title>
+<meta name="description" content="A10: 区間最大値クエリ ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">Chapter 2: 累積和</span> /
+    <strong>A10</strong>
+  </nav>
+
+  <span class="id-pill">A10</span>
+  <h1>区間最大値クエリ</h1>
+
+  <div class="summary">左右からの累積最大値を前計算し、抜き取り後の最大値を求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #06b6d4">Chapter 2: 累積和</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">累積和</span><span class="tag">区間クエリ</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap02/answer_A10.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A10.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A10: 区間最大値クエリ (累積max)
+# ---------------------------------------------------------------------
+# 【概要】配列 A に対して、ある 1 区間 [L, R] を抜いた残りの最大値を
+#         Q 個の (L, R) に対して答える。
+# 【アルゴリズム】&quot;前方累積 max&quot; P と &quot;後方累積 max&quot; Q を前計算しておく。
+#   - P[i] = A[0..i] の最大値
+#   - Q[i] = A[i..N-1] の最大値
+#   削除区間 [L, R] の外側の最大値は max(P[L-2], Q[R]) で求められる。
+# 【計算量】前計算 O(N) + クエリ O(D)。
+# =====================================================================
+
+N = int(input())
+A = list(map(int, input().split()))
+D = int(input())
+L = [None] * D
+R = [None] * D
+for d in range(D):
+    L[d], R[d] = map(int, input().split())
+
+# --- 前方累積 max: P[i] = max(A[0..i]) ----------------------------
+P = [None] * N
+P[0] = A[0]
+for i in range(1, N):
+    P[i] = max(P[i - 1], A[i])
+
+# --- 後方累積 max: Q[i] = max(A[i..N-1]) --------------------------
+# reversed(range(0, N-1)) で i = N-2, N-3, ..., 0 を逆順に回す。
+Q = [None] * N
+Q[N - 1] = A[N - 1]
+for i in reversed(range(0, N - 1)):
+    Q[i] = max(Q[i + 1], A[i])
+
+# --- クエリ処理 ---------------------------------------------------
+# 入力は 1-indexed なので、配列の 0-indexed に合わせて -1 する。
+# 削除区間の左外側: P[(L-1)-1] = P[L-2]
+# 削除区間の右外側: Q[(R+1)-1] = Q[R]
+for d in range(D):
+    print(max(P[(L[d] - 1) - 1], Q[(R[d] + 1) - 1]))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A09.html"><div class="nav-label">前の問題</div><div class="nav-title">A09: 2次元いもす法</div></a>
+    <a class="next" href="A11.html"><div class="nav-label">次の問題</div><div class="nav-title">A11: 二分探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

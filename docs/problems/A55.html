@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A55: 順序付き集合 | 鉄則77 Python解説</title>
+<meta name="description" content="A55: 順序付き集合 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span> /
+    <strong>A55</strong>
+  </nav>
+
+  <span class="id-pill">A55</span>
+  <h1>順序付き集合</h1>
+
+  <div class="summary">lower_bound 相当を含む順序付き集合のクエリ処理。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">二分探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/cpp/chap08/answer_A55.cpp" target="_blank" rel="noopener noreferrer">GitHub で C++ 原文を見る ↗ (Python は当サイト独自実装)</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A55.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A55: 集合(順序付き) クエリ処理
+# ---------------------------------------------------------------------
+# 【概要】整数集合に対する 3 種類のクエリを処理する:
+#   &quot;1 x&quot;: 集合に x を追加 (重複は無視)
+#   &quot;2 x&quot;: 集合から x を削除
+#   &quot;3 x&quot;: 集合内で x 以上の最小要素を出力 (なければ -1)
+# 【データ構造】Python では順序付き集合の標準ライブラリがないため、
+#   ソート済みリスト (sortedcontainers.SortedList) や、
+#   組込み set + bisect を組合せて実装する。
+#   ここでは &quot;並び順をキープしたリスト + bisect&quot; のアプローチを採る。
+# 【計算量】挿入/削除 O(N) (リストの shift)、検索 O(log N)
+# 【別解】sortedcontainers.SortedList を使うと挿入/削除も O(log N)。
+# 【補足】原典リポジトリには Python 実装がなく、C++ 版 (set) を
+#   参考に当サイトで Python に書き起こした。
+# =====================================================================
+
+import bisect
+
+# --- 入力 -----------------------------------------------------------
+Q = int(input())
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
+# --- ソート済みリストでの実装 ---------------------------------------
+S = []
+for tp, x in queries:
+    if tp == 1:
+        # 挿入位置を二分探索 → 重複なら何もしない
+        pos = bisect.bisect_left(S, x)
+        if pos &gt;= len(S) or S[pos] != x:
+            S.insert(pos, x)
+    elif tp == 2:
+        pos = bisect.bisect_left(S, x)
+        if pos &lt; len(S) and S[pos] == x:
+            S.pop(pos)
+    elif tp == 3:
+        # x 以上の最小要素 = lower_bound に相当
+        pos = bisect.bisect_left(S, x)
+        if pos == len(S):
+            print(-1)
+        else:
+            print(S[pos])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A54.html"><div class="nav-label">前の問題</div><div class="nav-title">A54: 連想配列(Map)</div></a>
+    <a class="next" href="A56.html"><div class="nav-label">次の問題</div><div class="nav-title">A56: ローリングハッシュ</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

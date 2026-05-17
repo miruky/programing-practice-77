@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A74: 転倒数による最小操作 | 鉄則77 Python解説</title>
+<meta name="description" content="A74: 転倒数による最小操作 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span> /
+    <strong>A74</strong>
+  </nav>
+
+  <span class="id-pill">A74</span>
+  <h1>転倒数による最小操作</h1>
+
+  <div class="summary">行と列の独立な並べ替えに分解し、転倒数の和が答え。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">Chapter 10: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">転倒数</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A74.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A74.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A74: 転倒数に分解 (スライドパズル)
+# ---------------------------------------------------------------------
+# 【概要】N×N の盤面上のスライドパズルで、目標配置にする最小操作回数を求める。
+# 【アルゴリズム】考察 (分解)
+#   - 操作は行と列で独立: 行を並べ替える操作と列を並べ替える操作。
+#   - 各操作は隣接スワップなので、各方向の最小操作数は &quot;転倒数&quot;。
+#   - 行と列に分け、転倒数を独立に計算して合計するのが答え。
+# 【計算量】O(N^2)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+P = [list(map(int, input().split())) for _ in range(N)]
+
+# --- 行・列に分解 -------------------------------------------------
+# 0 でない値を持つ行・列が一意に決まる (一直線に並んでいる構造)
+X = [None] * N
+Y = [None] * N
+for i in range(N):
+    for j in range(N):
+        if P[i][j] != 0:
+            X[i] = P[i][j]  # 行 i の代表値
+            Y[j] = P[i][j]  # 列 j の代表値
+
+
+def inversion(A):
+    &quot;&quot;&quot;配列 A の転倒数 (i&lt;j で A[i]&gt;A[j] となる組数)&quot;&quot;&quot;
+    answer = 0
+    for i in range(len(A)):
+        for j in range(i + 1, len(A)):
+            if A[i] &gt; A[j]:
+                answer += 1
+    return answer
+
+
+# --- 行転倒数 + 列転倒数 = 必要操作回数 ----------------------------
+print(inversion(X) + inversion(Y))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A73.html"><div class="nav-label">前の問題</div><div class="nav-title">A73: 重み2成分ダイクストラ</div></a>
+    <a class="next" href="A75.html"><div class="nav-label">次の問題</div><div class="nav-title">A75: 締切付きジョブDP</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

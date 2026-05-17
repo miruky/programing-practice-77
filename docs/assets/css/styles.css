@@ -1,0 +1,468 @@
+/* =====================================================================
+   競技プログラミングの鉄則77 ─ Python 実装解説サイト
+   モダンなダーク UI スタイルシート
+   ===================================================================== */
+
+:root {
+  --bg-0: #0b0f1a;
+  --bg-1: #111827;
+  --bg-2: #1f2937;
+  --bg-3: #2a3447;
+  --border: #2f3a4f;
+  --text-0: #e6ecf5;
+  --text-1: #b6c2d4;
+  --text-2: #8a94a8;
+  --accent: #6366f1;
+  --accent-2: #06b6d4;
+  --pink: #ec4899;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --transition: 0.18s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 0% 0%, #1a2238 0%, var(--bg-0) 60%) fixed;
+  color: var(--text-0);
+  font-family: "Inter", "Hiragino Sans", "Noto Sans JP", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent-2);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover { color: var(--pink); }
+
+/* ─── ヘッダー ─── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  background: rgba(11, 15, 26, 0.78);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.site-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--text-0);
+}
+.site-header .brand .logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.45);
+}
+.site-header .brand small {
+  display: block;
+  font-weight: 400;
+  font-size: 11.5px;
+  color: var(--text-2);
+  letter-spacing: 0.05em;
+}
+.site-header nav {
+  margin-left: auto;
+  display: flex;
+  gap: 18px;
+  font-size: 13.5px;
+}
+.site-header nav a {
+  color: var(--text-1);
+}
+.site-header nav a:hover { color: var(--text-0); }
+
+/* ─── ヒーロー ─── */
+.hero {
+  padding: 56px 32px 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: 0.02em;
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, #fff 30%, #b6c2d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero p.lead {
+  font-size: 16.5px;
+  color: var(--text-1);
+  margin: 0 0 24px;
+  max-width: 760px;
+}
+.hero .stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+}
+.stat-chip {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-1);
+}
+.stat-chip strong {
+  color: var(--text-0);
+  font-weight: 700;
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+/* ─── 検索バー ─── */
+.search-wrap {
+  position: sticky;
+  top: 64px;
+  z-index: 40;
+  padding: 12px 32px;
+  background: rgba(11, 15, 26, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.search-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-input {
+  flex: 1 1 240px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-0);
+  padding: 10px 14px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+.chapter-filter {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chapter-filter button {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-1);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: all var(--transition);
+}
+.chapter-filter button:hover { color: var(--text-0); border-color: var(--text-2); }
+.chapter-filter button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ─── 章セクション ─── */
+.chapters {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px 80px;
+}
+.chapter-section {
+  margin-top: 38px;
+}
+.chapter-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+.chapter-head .num {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--text-2);
+  text-transform: uppercase;
+}
+.chapter-head h2 {
+  font-size: 22px;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.chapter-head .summary {
+  margin-left: auto;
+  color: var(--text-2);
+  font-size: 13px;
+  max-width: 60%;
+  text-align: right;
+}
+.chapter-section .accent-bar {
+  width: 36px;
+  height: 4px;
+  border-radius: 4px;
+}
+
+/* ─── 問題カードグリッド ─── */
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.problem-card {
+  display: block;
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 18px 16px;
+  color: var(--text-0);
+  text-decoration: none;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.problem-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent);
+}
+.problem-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+.problem-card .pid {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  color: var(--text-2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.problem-card h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+  color: var(--text-0);
+  font-weight: 700;
+}
+.problem-card p {
+  margin: 0 0 12px;
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.problem-card .tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 11px;
+  background: var(--bg-3);
+  color: var(--text-1);
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-family: "JetBrains Mono", "Courier New", monospace;
+}
+
+/* 問題詳細ページ */
+.problem-detail {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 18px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.breadcrumb a { color: var(--text-1); }
+.problem-detail h1 {
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-weight: 800;
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+}
+.problem-detail .id-pill {
+  display: inline-block;
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.problem-detail .summary {
+  font-size: 16px;
+  color: var(--text-1);
+  margin: 14px 0 22px;
+  background: var(--bg-2);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+}
+.problem-detail .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  color: var(--text-1);
+}
+.problem-detail .meta .meta-item strong {
+  display: block;
+  font-size: 11px;
+  color: var(--text-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.code-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 8px 14px;
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.code-actions button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.code-actions button:hover {
+  color: var(--text-0);
+  border-color: var(--accent);
+}
+pre[class*="language-"] {
+  margin: 0 !important;
+  border-radius: 0 0 var(--radius) var(--radius) !important;
+  border: 1px solid var(--border) !important;
+  font-size: 13.5px !important;
+  background: #0d1117 !important;
+  padding: 18px 20px !important;
+  line-height: 1.55 !important;
+}
+code[class*="language-"] {
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace !important;
+}
+
+/* ナビ (prev/next) */
+.nav-arrows {
+  margin-top: 36px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nav-arrows a {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  color: var(--text-0);
+  transition: all var(--transition);
+  display: block;
+}
+.nav-arrows a:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.nav-arrows .nav-label {
+  font-size: 11px;
+  color: var(--text-2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.nav-arrows .nav-title {
+  font-size: 14px;
+  color: var(--text-0);
+  font-weight: 600;
+}
+.nav-arrows a.next {
+  text-align: right;
+}
+.nav-arrows a.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+footer {
+  text-align: center;
+  padding: 30px 0 50px;
+  color: var(--text-2);
+  font-size: 12.5px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+}
+
+footer a { color: var(--text-1); }
+
+@media (max-width: 600px) {
+  .site-header { padding: 12px 18px; }
+  .hero, .chapters, .problem-detail { padding-left: 18px; padding-right: 18px; }
+  .search-wrap { padding-left: 18px; padding-right: 18px; top: 60px; }
+  .chapter-head .summary { display: none; }
+}

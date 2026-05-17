@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A47: 山登り法 | 鉄則77 Python解説</title>
+<meta name="description" content="A47: 山登り法 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">Chapter 7: ヒューリスティック</span> /
+    <strong>A47</strong>
+  </nav>
+
+  <span class="id-pill">A47</span>
+  <h1>山登り法</h1>
+
+  <div class="summary">ランダムな区間反転で改善した場合のみ受理する局所探索。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ec4899">Chapter 7: ヒューリスティック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">山登り</span><span class="tag">TSP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap07/answer_A47.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A47.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A47: 山登り法 (2-opt)
+# ---------------------------------------------------------------------
+# 【概要】TSP の経路を局所探索 (山登り法) で改善する。
+# 【アルゴリズム】山登り法 (Hill Climbing)
+#   ランダムに区間 [l, r] を選び、その区間を反転 (2-opt move)。
+#   反転後にスコア (経路長) が改善すれば採用、悪化したら戻す。
+# 【計算量】1 ループ O(N)。NUM_LOOPS 回繰り返す。
+# 【ポイント】Python ではループ回数が制限されるため PyPy3 推奨。
+# =====================================================================
+
+import random
+
+
+class point2d:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def dist(self, p):
+        return ((self.x - p.x) ** 2 + (self.y - p.y) ** 2) ** 0.5
+
+
+def get_score(n, points, P):
+    &quot;&quot;&quot;巡回路 P の合計距離&quot;&quot;&quot;
+    score = 0
+    for i in range(n):
+        score += points[P[i]].dist(points[P[i + 1]])
+    return score
+
+
+def hill_climbing(n, points):
+    # 初期解: 0,1,...,n-1,0 (順番通り)
+    P = [i % n for i in range(n + 1)]
+    current_score = get_score(n, points, P)
+    NUM_LOOPS = 40000
+    for t in range(NUM_LOOPS):
+        # ランダムな区間 [l, r] を選ぶ
+        l = random.randint(1, n - 1)
+        r = random.randint(1, n - 1)
+        if l &gt; r:
+            l, r = r, l
+        # 区間を反転 (2-opt)
+        P[l:r + 1] = reversed(P[l:r + 1])
+        new_score = get_score(n, points, P)
+        if current_score &gt;= new_score:
+            # 改善 → 採用
+            current_score = new_score
+        else:
+            # 悪化 → 元に戻す
+            P[l:r + 1] = reversed(P[l:r + 1])
+    return P
+
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+points = [None] * N
+for i in range(N):
+    x, y = map(int, input().split())
+    points[i] = point2d(x, y)
+
+# --- 山登り法 ------------------------------------------------------
+answer = hill_climbing(N, points)
+
+# 1-indexed で出力
+for i in answer:
+    print(i + 1)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A46.html"><div class="nav-label">前の問題</div><div class="nav-title">A46: 貪欲法(最近傍)</div></a>
+    <a class="next" href="A48.html"><div class="nav-label">次の問題</div><div class="nav-title">A48: 焼きなまし法</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

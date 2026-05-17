@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A59: セグメント木(RSQ) | 鉄則77 Python解説</title>
+<meta name="description" content="A59: セグメント木(RSQ) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span> /
+    <strong>A59</strong>
+  </nav>
+
+  <span class="id-pill">A59</span>
+  <h1>セグメント木(RSQ)</h1>
+
+  <div class="summary">区間和クエリのセグメント木。RMQ から演算を変えるだけ。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #14b8a6">Chapter 8: データ構造とクエリ処理</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">セグメント木</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap08/answer_A59.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A59.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A59: セグメント木 (区間和)
+# ---------------------------------------------------------------------
+# 【概要】A58 の &quot;max&quot; を &quot;sum&quot; に置き換えた版。
+#   &quot;1 pos x&quot;: A[pos] = x に更新
+#   &quot;2 l r&quot;:   A[l..r-1] の合計を出力
+# 【アルゴリズム】演算子と単位元が違うだけで同じ構造。
+#   - max → sum
+#   - 単位元 -∞ → 0
+#   - 結合演算 max(a,b) → a+b
+# 【計算量】更新 O(log N), クエリ O(log N)
+# =====================================================================
+
+class segtree:
+    def __init__(self, n):
+        self.size = 1
+        while self.size &lt; n:
+            self.size *= 2
+        self.dat = [0] * (self.size * 2)
+
+    def update(self, pos, x):
+        pos += self.size
+        self.dat[pos] = x
+        while pos &gt;= 2:
+            pos //= 2
+            # 親ノード = 子の和
+            self.dat[pos] = self.dat[pos * 2] + self.dat[pos * 2 + 1]
+
+    def query(self, l, r, a, b, u):
+        if r &lt;= a or b &lt;= l:
+            return 0           # 単位元 (加算なので 0)
+        if l &lt;= a and b &lt;= r:
+            return self.dat[u]
+        m = (a + b) // 2
+        answerl = self.query(l, r, a, m, u * 2)
+        answerr = self.query(l, r, m, b, u * 2 + 1)
+        return answerl + answerr
+
+
+# --- 入力 -----------------------------------------------------------
+N, Q = map(int, input().split())
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
+# --- クエリ処理 ---------------------------------------------------
+Z = segtree(N)
+for q in queries:
+    tp, *cont = q
+    if tp == 1:
+        pos, x = cont
+        Z.update(pos - 1, x)
+    if tp == 2:
+        l, r = cont
+        answer = Z.query(l - 1, r - 1, 0, Z.size, 1)
+        print(answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A58.html"><div class="nav-label">前の問題</div><div class="nav-title">A58: セグメント木(RMQ)</div></a>
+    <a class="next" href="A60.html"><div class="nav-label">次の問題</div><div class="nav-title">A60: スタックの活用</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

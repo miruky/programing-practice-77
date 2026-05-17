@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A11: 二分探索 | 鉄則77 Python解説</title>
+<meta name="description" content="A11: 二分探索 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">Chapter 3: 二分探索</span> /
+    <strong>A11</strong>
+  </nav>
+
+  <span class="id-pill">A11</span>
+  <h1>二分探索</h1>
+
+  <div class="summary">ソート済み配列から目的の整数の位置を二分探索で求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #10b981">Chapter 3: 二分探索</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">二分探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A11.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A11.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A11: 二分探索 (1から始まる位置を返す)
+# ---------------------------------------------------------------------
+# 【概要】昇順にソートされた配列 A の中から、整数 X の位置を求める。
+#         位置は 1-indexed で出力する。
+# 【アルゴリズム】古典的な二分探索 (binary search)
+#   範囲 [L, R] を半分に絞り続け、A[M] と x を比較する。
+# 【計算量】O(log N) ─ 配列を毎回半分にするため。
+# 【補足】Python では bisect モジュールでも同じことができる。
+# =====================================================================
+
+# 整数 x の位置 (0-indexed) を返す。見つからなければ -1。
+def search(x, A):
+    L = 0
+    R = N - 1
+    while L &lt;= R:
+        M = (L + R) // 2  # 中央のインデックス
+        if x &lt; A[M]:
+            R = M - 1     # 探索範囲を左半分に
+        if x == A[M]:
+            return M      # 見つかった!
+        if x &gt; A[M]:
+            L = M + 1     # 探索範囲を右半分に
+    return -1             # 見つからなかった (この問題では発生しない)
+
+
+# --- 入力 -----------------------------------------------------------
+N, X = map(int, input().split())
+A = list(map(int, input().split()))
+
+# --- 二分探索の呼び出し ---------------------------------------------
+# 関数は 0-indexed で位置を返すので、最後に +1 して 1-indexed にする。
+Answer = search(X, A)
+print(Answer + 1)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A10.html"><div class="nav-label">前の問題</div><div class="nav-title">A10: 区間最大値クエリ</div></a>
+    <a class="next" href="A12.html"><div class="nav-label">次の問題</div><div class="nav-title">A12: 答えで二分探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

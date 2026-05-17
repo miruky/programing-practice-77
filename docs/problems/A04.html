@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A04: 10進数を2進数へ | 鉄則77 Python解説</title>
+<meta name="description" content="A04: 10進数を2進数へ ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span> /
+    <strong>A04</strong>
+  </nav>
+
+  <span class="id-pill">A04</span>
+  <h1>10進数を2進数へ</h1>
+
+  <div class="summary">整数を 10 桁の 2 進法表記で出力する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ビット</span><span class="tag">進法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap01/answer_A04.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A04.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A04: 10進数を2進数へ
+# ---------------------------------------------------------------------
+# 【概要】0 以上 1023 以下の整数 N を 10 桁の 2 進数表記で出力する。
+# 【アルゴリズム】2^x で割って 2 で割った余りを取り、上位桁から並べる。
+# 【計算量】O(log N) = O(10)。
+# 【Pythonic 別解】 `print(format(N, &quot;010b&quot;))` で同じ結果が得られる。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+
+# --- 各桁を上から下へ計算 -------------------------------------------
+# x = 9, 8, ..., 0 の順に &quot;2^x の位&quot; を取り出して連結出力する。
+#   wari = 2^x として N を wari で割った商の偶奇 (=その桁のビット) を求める。
+# print の end=&#x27;&#x27; により改行せず連結出力する。
+for x in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
+    wari = (2 ** x)
+    print((N // wari) % 2, end=&#x27;&#x27;)
+
+# 最後に改行する (end=&#x27;&#x27; で改行を抑制しているため明示的に必要)。
+print(&quot;&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A03.html"><div class="nav-label">前の問題</div><div class="nav-title">A03: 二重ループの全探索</div></a>
+    <a class="next" href="A05.html"><div class="nav-label">次の問題</div><div class="nav-title">A05: 三重ループ全探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

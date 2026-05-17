@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A05: 三重ループ全探索 | 鉄則77 Python解説</title>
+<meta name="description" content="A05: 三重ループ全探索 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span> /
+    <strong>A05</strong>
+  </nav>
+
+  <span class="id-pill">A05</span>
+  <h1>三重ループ全探索</h1>
+
+  <div class="summary">x+y+z=K となる組合せを三重ループで数える。計算量 O(N^3)。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #6366f1">Chapter 1: アルゴリズムと計算量</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">全探索</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap01/answer_A05.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A05.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A05: 三重ループ全探索
+# ---------------------------------------------------------------------
+# 【概要】x + y + z = K となる (x, y, z) の組数を数える。
+#         x, y, z は 1 以上 N 以下の整数。
+# 【アルゴリズム】二重ループで (x, y) を全探索し、z は K-x-y で確定。
+# 【計算量】O(N^2) ─ 内側で z を計算するだけなので 3 重ループ不要。
+# 【ポイント】&quot;自由度を 1 減らす&quot; のは競プロでの典型的なテクニック。
+# =====================================================================
+
+N, K = map(int, input().split())
+Answer = 0
+
+# x, y を全探索。z は K - x - y で一意に決まる。
+for x in range(1, N + 1):
+    for y in range(1, N + 1):
+        z = K - x - y
+        # z が範囲 [1, N] に収まるときだけカウントする。
+        if z &gt;= 1 and z &lt;= N:
+            Answer += 1
+
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A04.html"><div class="nav-label">前の問題</div><div class="nav-title">A04: 10進数を2進数へ</div></a>
+    <a class="next" href="A06.html"><div class="nav-label">次の問題</div><div class="nav-title">A06: 1次元累積和</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A41: 3連続パターン検出 | 鉄則77 Python解説</title>
+<meta name="description" content="A41: 3連続パターン検出 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">Chapter 6: 考察テクニック</span> /
+    <strong>A41</strong>
+  </nav>
+
+  <span class="id-pill">A41</span>
+  <h1>3連続パターン検出</h1>
+
+  <div class="summary">鳩ノ巣原理を背景に同じ文字の 3 連続を探す。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #a855f7">Chapter 6: 考察テクニック</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">考察</span><span class="tag">鳩ノ巣</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap06/answer_A41.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A41.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A41: 3 連続パターンの検出
+# ---------------------------------------------------------------------
+# 【概要】文字列 S 内に &quot;RRR&quot; または &quot;BBB&quot; が部分文字列として現れるか。
+# 【アルゴリズム】長さ 3 の窓で線形に走査する。
+# 【計算量】O(N)
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+S = input()
+
+# --- 走査 -----------------------------------------------------------
+Answer = False
+for i in range(0, N - 2):
+    if S[i] == &#x27;R&#x27; and S[i + 1] == &#x27;R&#x27; and S[i + 2] == &#x27;R&#x27;:
+        Answer = True
+    if S[i] == &#x27;B&#x27; and S[i + 1] == &#x27;B&#x27; and S[i + 2] == &#x27;B&#x27;:
+        Answer = True
+
+# --- 出力 -----------------------------------------------------------
+if Answer == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A40.html"><div class="nav-label">前の問題</div><div class="nav-title">A40: 個数集計</div></a>
+    <a class="next" href="A42.html"><div class="nav-label">次の問題</div><div class="nav-title">A42: K以内の全探索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

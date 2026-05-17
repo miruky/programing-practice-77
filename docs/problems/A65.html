@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A65: 木上のDP | 鉄則77 Python解説</title>
+<meta name="description" content="A65: 木上のDP ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span> /
+    <strong>A65</strong>
+  </nav>
+
+  <span class="id-pill">A65</span>
+  <h1>木上のDP</h1>
+
+  <div class="summary">木の葉から根へ向かって部下数を集計する木 DP。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #0ea5e9">Chapter 9: グラフアルゴリズム</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">グラフ</span><span class="tag">木DP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A65.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A65.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A65: 木上の DP (部下数を数える)
+# ---------------------------------------------------------------------
+# 【概要】社員 1 を根とする木が与えられ、各社員の部下の総数を求める。
+# 【アルゴリズム】木 DP (葉から根に向かって集計)
+#   dp[i] = 社員 i の (直接 + 間接) 部下の数
+#   dp[i] = Σ (dp[子] + 1)
+#   全社員を i=N から 1 へ逆順に走査するだけで葉から計算できる
+#   (上司 &lt; 部下 という入力の性質を利用)。
+# 【計算量】O(N)
+# =====================================================================
+
+# --- 入力 (A[2..N] が「i の上司」を表す) -----------------------------
+N = int(input())
+# A[0], A[1] はダミー (社員 1 には上司なし)
+A = [0] * 2 + list(map(int, input().split()))
+
+# --- 隣接リストの構築 (上司 → 部下) -------------------------------
+G = [list() for _ in range(N + 1)]
+for i in range(2, N + 1):
+    G[A[i]].append(i)
+
+# --- 木 DP (逆順で葉から計算) -------------------------------------
+dp = [0] * (N + 1)
+for i in range(N, 0, -1):
+    for j in G[i]:
+        dp[i] += (dp[j] + 1)  # +1 は子自身を含めるため
+
+# --- 出力 (dp[1..N] を空白区切り) ---------------------------------
+print(*dp[1:])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A64.html"><div class="nav-label">前の問題</div><div class="nav-title">A64: ダイクストラ法</div></a>
+    <a class="next" href="A66.html"><div class="nav-label">次の問題</div><div class="nav-title">A66: Union-Find</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

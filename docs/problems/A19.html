@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A19: ナップサック問題 | 鉄則77 Python解説</title>
+<meta name="description" content="A19: ナップサック問題 ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">Chapter 4: 動的計画法</span> /
+    <strong>A19</strong>
+  </nav>
+
+  <span class="id-pill">A19</span>
+  <h1>ナップサック問題</h1>
+
+  <div class="summary">重量制限のもとで価値を最大化する典型 DP。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">Chapter 4: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">ナップサック</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap04/answer_A19.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A19.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A19: ナップサック問題
+# ---------------------------------------------------------------------
+# 【概要】N 個の品物 (重さ w[i], 価値 v[i]) から、重量制限 W 以下で
+#         価値合計を最大化する選び方を求める。
+# 【アルゴリズム】2 次元 DP
+#   dp[i][j] = 最初の i 個から合計重さ j を作れる時の最大価値
+#   選ばない: dp[i][j] = dp[i-1][j]
+#   選ぶ    : dp[i][j] = dp[i-1][j-w[i]] + v[i]   (j&gt;=w[i] のとき)
+# 【計算量】O(NW)
+# 【ポイント】到達不可能な状態は -∞ で初期化し、max が壊れないようにする。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, W = map(int, input().split())
+w = [None] * (N + 1)
+v = [None] * (N + 1)
+for i in range(1, N + 1):
+    w[i], v[i] = map(int, input().split())
+
+# --- DP テーブル初期化 ----------------------------------------------
+# 到達不能を「とても小さい値」で初期化する典型テクニック。
+dp = [[-10 ** 15] * (W + 1) for _ in range(N + 1)]
+dp[0][0] = 0
+
+# --- DP 遷移 -------------------------------------------------------
+for i in range(1, N + 1):
+    for j in range(0, W + 1):
+        if j &lt; w[i]:
+            # i 番目を選ぶ余裕がない
+            dp[i][j] = dp[i - 1][j]
+        if j &gt;= w[i]:
+            # 選ばない vs 選ぶ の大きい方を取る
+            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w[i]] + v[i])
+
+# --- 出力 (重量上限以内の最大価値) ----------------------------------
+print(max(dp[N]))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A18.html"><div class="nav-label">前の問題</div><div class="nav-title">A18: 部分和問題</div></a>
+    <a class="next" href="A20.html"><div class="nav-label">次の問題</div><div class="nav-title">A20: 最長共通部分列(LCS)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

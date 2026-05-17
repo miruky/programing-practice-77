@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A34: ゲーム3(Grundy数) | 鉄則77 Python解説</title>
+<meta name="description" content="A34: ゲーム3(Grundy数) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo">P</span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">Chapter 5: 数学的問題</span> /
+    <strong>A34</strong>
+  </nav>
+
+  <span class="id-pill">A34</span>
+  <h1>ゲーム3(Grundy数)</h1>
+
+  <div class="summary">複数山の独立ゲームを Grundy 数の XOR で解く。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">Chapter 5: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ゲーム</span><span class="tag">Grundy</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap05/answer_A34.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る ↗</a>
+    </div>
+  </div>
+
+  <div class="code-actions">
+    <span>📄 A34.py ─ Python 3</span>
+    <button id="copy-code">コードをコピー</button>
+  </div>
+  <pre class="line-numbers"><code class="language-python"># =====================================================================
+# A34: Grundy 数によるゲーム
+# ---------------------------------------------------------------------
+# 【概要】各山から X 個 or Y 個取るゲーム。複数山を XOR で合成。
+# 【アルゴリズム】Grundy 数
+#   grundy[i] = &quot;石 i 個の山&quot; の Grundy 数 (= mex 値)
+#   mex とは「遷移先に出ない最小の非負整数」のこと。
+#   全山の Grundy 値の XOR が 0 でなければ先手必勝。
+# 【計算量】O(maxA + N)
+# 【ポイント】1 手で 1 山から 2 通りしか動かないので Grundy は {0,1,2} に収まる。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, X, Y = map(int, input().split())
+A = list(map(int, input().split()))
+
+# --- Grundy 数の計算 ---------------------------------------------
+# Transit[k] = True ⇔ 遷移先に Grundy 値 k が存在する。
+grundy = [None] * 100001
+for i in range(100001):
+    Transit = [False, False, False]
+    if i &gt;= X:
+        Transit[grundy[i - X]] = True
+    if i &gt;= Y:
+        Transit[grundy[i - Y]] = True
+
+    # mex (Transit) を求める: 含まれない最小の非負整数
+    if Transit[0] == False:
+        grundy[i] = 0
+    elif Transit[1] == False:
+        grundy[i] = 1
+    else:
+        grundy[i] = 2
+
+# --- 全山の Grundy 値を XOR して勝敗判定 -------------------------
+XOR_Sum = 0
+for i in range(N):
+    XOR_Sum = (XOR_Sum ^ grundy[A[i]])
+
+if XOR_Sum &gt;= 1:
+    print(&quot;First&quot;)
+else:
+    print(&quot;Second&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A33.html"><div class="nav-label">前の問題</div><div class="nav-title">A33: ゲーム2(Nim)</div></a>
+    <a class="next" href="A35.html"><div class="nav-label">次の問題</div><div class="nav-title">A35: ゲーム4(交互最善)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>
