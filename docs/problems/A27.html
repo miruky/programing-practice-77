@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A27.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A27: 最大公約数 (ユークリッド互除法)
 # ---------------------------------------------------------------------
 # 【概要】2 つの正整数 A, B の最大公約数 (GCD) を求める。
@@ -85,6 +85,19 @@ def GCD(A, B):
 
 
 # --- 入力・出力 -----------------------------------------------------
+A, B = map(int, input().split())
+print(GCD(A, B))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def GCD(A, B):
+    while A &gt;= 1 and B &gt;= 1:
+        if A &gt;= B:
+            A = A % B
+        else:
+            B = B % A
+    if A &gt;= 1:
+        return A
+    return B
+
 A, B = map(int, input().split())
 print(GCD(A, B))
 </code></pre>

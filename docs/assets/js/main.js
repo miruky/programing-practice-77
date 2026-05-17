@@ -38,68 +38,50 @@
 })();
 
 // =====================================================================
-//  コードコピー / コメントトグル (問題詳細ページ用)
+//  コードコピー / コメント表示トグル (問題詳細ページ用)
+//  方針: ビルド時にコメント有り版 / 無し版の 2 つの <pre> を生成しておき、
+//        ボタンクリックで display を切替える。
+//        Prism は両方を初回ロード時にハイライト済みなので、再描画不要。
 // =====================================================================
 (function () {
-  const codeEl = document.querySelector('pre[class*="language-"] code');
-  if (!codeEl) return;
+  const fullBlock = document.querySelector('.code-block-full');
+  const strippedBlock = document.querySelector('.code-block-stripped');
+  if (!fullBlock || !strippedBlock) return;
 
-  // 初期コード (Prism がハイライト後でも textContent は元のコードを返す)
-  const originalCode = codeEl.textContent.replace(/\s+$/, '');
   let commentsHidden = false;
 
-  // # コメントを除去 (純コメント行は削除、行末コメントは切り詰め)
-  function stripComments(code) {
-    const lines = code.split('\n');
-    const out = [];
-    for (const line of lines) {
-      if (/^\s*#/.test(line)) {
-        continue; // 純コメント行は丸ごと削除
-      }
-      const idx = line.indexOf('#');
-      if (idx === -1) {
-        out.push(line);
-      } else {
-        // 行末コメントを削り、末尾の空白も除去
-        out.push(line.substring(0, idx).replace(/\s+$/, ''));
-      }
-    }
-    // 連続する空行を 1 行に圧縮
-    const collapsed = [];
-    for (const l of out) {
-      if (l.trim() === '' && collapsed.length && collapsed[collapsed.length - 1].trim() === '') {
-        continue;
-      }
-      collapsed.push(l);
-    }
-    return collapsed.join('\n').replace(/^\n+/, '').replace(/\n+$/, '');
-  }
-
-  function rerender() {
-    const code = commentsHidden ? stripComments(originalCode) : originalCode;
-    codeEl.textContent = code;
-    if (window.Prism) {
-      Prism.highlightElement(codeEl);
+  function applyState() {
+    if (commentsHidden) {
+      fullBlock.hidden = true;
+      strippedBlock.hidden = false;
+    } else {
+      fullBlock.hidden = false;
+      strippedBlock.hidden = true;
     }
   }
 
-  // コメント切替ボタン
+  // ----- コメント表示トグル -----
   const toggleBtn = document.getElementById('toggle-comments');
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
       commentsHidden = !commentsHidden;
       toggleBtn.textContent = commentsHidden ? '💬 コメントを表示' : '🚫 コメントを非表示';
       toggleBtn.classList.toggle('active', commentsHidden);
-      rerender();
+      applyState();
     });
   }
 
-  // コードコピー
+  // ----- コードコピー (現在表示している方をコピー) -----
   const copyBtn = document.getElementById('copy-code');
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
-      const code = commentsHidden ? stripComments(originalCode) : originalCode;
-      navigator.clipboard.writeText(code).then(() => {
+      const visible = commentsHidden ? strippedBlock : fullBlock;
+      const codeEl = visible.querySelector('code');
+      if (!codeEl) return;
+      // Prism がハイライトした後の textContent は元のコード本文 + 行番号ダミー (空)
+      // 行番号プラグインの span は textContent に影響しない
+      const text = codeEl.textContent;
+      navigator.clipboard.writeText(text).then(() => {
         const orig = copyBtn.textContent;
         copyBtn.textContent = '✓ コピーしました!';
         setTimeout(() => (copyBtn.textContent = orig), 1500);

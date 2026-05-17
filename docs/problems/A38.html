@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A38.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A38: 区間の上限値
 # ---------------------------------------------------------------------
 # 【概要】各日に対して複数の上限制約があり、各日の許容最大値の合計を答える。
@@ -84,6 +84,23 @@ for i in range(N):
         LIM[j] = min(LIM[j], H[i])
 
 # --- 合計を出力 -----------------------------------------------------
+Answer = 0
+for i in range(1, D + 1):
+    Answer += LIM[i]
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">D, N = map(int, input().split())
+L = [None] * N
+R = [None] * N
+H = [None] * N
+for i in range(N):
+    L[i], R[i], H[i] = map(int, input().split())
+
+LIM = [24] * (D + 1)
+for i in range(N):
+    for j in range(L[i], R[i] + 1):
+        LIM[j] = min(LIM[j], H[i])
+
 Answer = 0
 for i in range(1, D + 1):
     Answer += LIM[i]

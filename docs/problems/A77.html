@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A77.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A77: 答えで二分探索 (棒の切り方)
 # ---------------------------------------------------------------------
 # 【概要】長さ L の棒に N 個の &quot;印&quot; がある。そのうち K 個を選んで
@@ -100,6 +100,31 @@ while left &lt; right:
         right = mid - 1  # 答えは mid より小さい
     else:
         left = mid       # 答えは mid 以上
+
+print(left)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, L = map(int, input().split())
+K = int(input())
+A = list(map(int, input().split()))
+
+def check(x):
+    &quot;&quot;&quot;最小区間長を x 以上にできるかを判定する関数&quot;&quot;&quot;
+    cnt = 0
+    last_kireme = 0
+    for i in range(N):
+        if A[i] - last_kireme &gt;= x and L - A[i] &gt;= x:
+            cnt += 1
+            last_kireme = A[i]
+    return cnt &gt;= K
+
+left, right = 1, 10 ** 9
+while left &lt; right:
+    mid = (left + right + 1) // 2
+    answer = check(mid)
+    if answer == False:
+        right = mid - 1
+    else:
+        left = mid
 
 print(left)
 </code></pre>

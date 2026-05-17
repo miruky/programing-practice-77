@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A45.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A45: 色の保存量 (不変量を発見せよ)
 # ---------------------------------------------------------------------
 # 【概要】白(W), 黒(B), 赤(R) の 3 色からなる文字列が、決まった操作の結果
@@ -87,6 +87,28 @@ for i in range(N):
         score += 2
 
 # --- mod 3 が一致するかで判定 ---------------------------------------
+if score % 3 == 0 and C == &#x27;W&#x27;:
+    print(&quot;Yes&quot;)
+elif score % 3 == 1 and C == &#x27;B&#x27;:
+    print(&quot;Yes&quot;)
+elif score % 3 == 2 and C == &#x27;R&#x27;:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, C = input().split()
+A = input()
+N = int(N)
+
+score = 0
+for i in range(N):
+    if A[i] == &#x27;W&#x27;:
+        score += 0
+    if A[i] == &#x27;B&#x27;:
+        score += 1
+    if A[i] == &#x27;R&#x27;:
+        score += 2
+
 if score % 3 == 0 and C == &#x27;W&#x27;:
     print(&quot;Yes&quot;)
 elif score % 3 == 1 and C == &#x27;B&#x27;:

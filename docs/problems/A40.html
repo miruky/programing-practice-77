@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A40.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A40: 個数集計と組合せ
 # ---------------------------------------------------------------------
 # 【概要】配列 A から、同じ値の 3 つの組 (i&lt;j&lt;k) の選び方の数を求める。
@@ -79,6 +79,18 @@ for i in range(N):
     cnt[A[i]] += 1
 
 # --- C(cnt[i], 3) の総和を答える ------------------------------------
+Answer = 0
+for i in range(1, 101):
+    Answer += cnt[i] * (cnt[i] - 1) * (cnt[i] - 2) // 6
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+
+cnt = [0] * 101
+for i in range(N):
+    cnt[A[i]] += 1
+
 Answer = 0
 for i in range(1, 101):
     Answer += cnt[i] * (cnt[i] - 1) * (cnt[i] - 2) // 6

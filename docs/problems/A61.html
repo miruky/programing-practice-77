@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A61.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A61: グラフの表現 (隣接リスト)
 # ---------------------------------------------------------------------
 # 【概要】N 頂点 M 辺の無向グラフを入力し、各頂点の隣接頂点を出力する。
@@ -85,6 +85,22 @@ for i in range(1, N + 1):
     output += str(i)
     output += &#x27;: {&#x27;
     # 隣接頂点を &quot;, &quot; 区切りで連結
+    output += &#x27;, &#x27;.join(map(str, G[i]))
+    output += &#x27;}&#x27;
+    print(output)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+G = [list() for _ in range(N + 1)]
+for a, b in edges:
+    G[a].append(b)
+    G[b].append(a)
+
+for i in range(1, N + 1):
+    output = &#x27;&#x27;
+    output += str(i)
+    output += &#x27;: {&#x27;
     output += &#x27;, &#x27;.join(map(str, G[i]))
     output += &#x27;}&#x27;
     print(output)

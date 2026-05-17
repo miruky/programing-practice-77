@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A68.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A68: 最大フロー (Ford-Fulkerson)
 # ---------------------------------------------------------------------
 # 【概要】頂点 1 から頂点 N までの最大フロー量を求める。
@@ -120,6 +120,51 @@ N, M = map(int, input().split())
 edges = [list(map(int, input().split())) for _ in range(M)]
 
 # --- 最大フローを計算 --------------------------------------------
+answer = maxflow(N, 1, N, edges)
+print(answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">class maxflow_edge:
+    &quot;&quot;&quot;残余グラフの辺: to (相手), cap (残容量), rev (逆辺のインデックス)&quot;&quot;&quot;
+    def __init__(self, to, cap, rev):
+        self.to = to
+        self.cap = cap
+        self.rev = rev
+
+def dfs(pos, goal, F, G, used):
+    &quot;&quot;&quot;pos から goal への増加路を 1 本探す。流せた量を返す&quot;&quot;&quot;
+    if pos == goal:
+        return F
+    used[pos] = True
+    for e in G[pos]:
+        if e.cap &gt; 0 and not used[e.to]:
+            flow = dfs(e.to, goal, min(F, e.cap), G, used)
+            if flow &gt;= 1:
+                e.cap -= flow
+                G[e.to][e.rev].cap += flow
+                return flow
+    return 0
+
+def maxflow(N, s, t, edges):
+    &quot;&quot;&quot;s から t への最大フロー量&quot;&quot;&quot;
+    G = [list() for _ in range(N + 1)]
+    for a, b, c in edges:
+        G[a].append(maxflow_edge(b, c, len(G[b])))
+        G[b].append(maxflow_edge(a, 0, len(G[a]) - 1))
+
+    INF = 10 ** 10
+    total_flow = 0
+    while True:
+        used = [False] * (N + 1)
+        F = dfs(s, t, INF, G, used)
+        if F &gt; 0:
+            total_flow += F
+        else:
+            break
+    return total_flow
+
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
 answer = maxflow(N, 1, N, edges)
 print(answer)
 </code></pre>

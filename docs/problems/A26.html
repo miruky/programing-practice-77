@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A26.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A26: 素数判定 (試し割り法)
 # ---------------------------------------------------------------------
 # 【概要】Q 個の整数について、それぞれが素数かどうか判定する。
@@ -86,6 +86,25 @@ for i in range(Q):
     X[i] = int(input())
 
 # --- 各クエリに答える -----------------------------------------------
+for i in range(Q):
+    Answer = isPrime(X[i])
+    if Answer == True:
+        print(&quot;Yes&quot;)
+    else:
+        print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def isPrime(N):
+    LIMIT = int(N ** 0.5)
+    for i in range(2, LIMIT + 1):
+        if N % i == 0:
+            return False
+    return True
+
+Q = int(input())
+X = [None] * Q
+for i in range(Q):
+    X[i] = int(input())
+
 for i in range(Q):
     Answer = isPrime(X[i])
     if Answer == True:

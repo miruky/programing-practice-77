@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A65.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A65: 木上の DP (部下数を数える)
 # ---------------------------------------------------------------------
 # 【概要】社員 1 を根とする木が与えられ、各社員の部下の総数を求める。
@@ -89,6 +89,20 @@ for i in range(N, 0, -1):
         dp[i] += (dp[j] + 1)  # +1 は子自身を含めるため
 
 # --- 出力 (dp[1..N] を空白区切り) ---------------------------------
+print(*dp[1:])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = [0] * 2 + list(map(int, input().split()))
+
+G = [list() for _ in range(N + 1)]
+for i in range(2, N + 1):
+    G[A[i]].append(i)
+
+dp = [0] * (N + 1)
+for i in range(N, 0, -1):
+    for j in G[i]:
+        dp[i] += (dp[j] + 1)
+
 print(*dp[1:])
 </code></pre>
 

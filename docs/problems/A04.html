@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A04.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A04: 10進数を2進数へ
 # ---------------------------------------------------------------------
 # 【概要】0 以上 1023 以下の整数 N を 10 桁の 2 進数表記で出力する。
@@ -81,6 +81,14 @@ for x in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
     print((N // wari) % 2, end=&#x27;&#x27;)
 
 # 最後に改行する (end=&#x27;&#x27; で改行を抑制しているため明示的に必要)。
+print(&quot;&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+
+for x in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
+    wari = (2 ** x)
+    print((N // wari) % 2, end=&#x27;&#x27;)
+
 print(&quot;&quot;)
 </code></pre>
 

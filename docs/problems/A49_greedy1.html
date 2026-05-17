@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A49_greedy1.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A49 (補足版): 貪欲法 (基本) ─ 37454 点
 # ---------------------------------------------------------------------
 # 【概要】各ターンで「次のスコアが大きくなる方」を貪欲に選択する解法。
@@ -109,6 +109,53 @@ for i in range(T):
             ScoreB += 1
 
     # スコアが大きい方を採用
+    if ScoreA &gt;= ScoreB:
+        print(&quot;A&quot;)
+        CurrentScore = ScoreA
+        for j in range(20):
+            A[j] = PatA[j]
+    else:
+        print(&quot;B&quot;)
+        CurrentScore = ScoreB
+        for j in range(20):
+            A[j] = PatB[j]
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">T = int(input())
+P = [None] * T
+Q = [None] * T
+R = [None] * T
+for i in range(T):
+    P[i], Q[i], R[i] = map(int, input().split())
+    P[i] -= 1
+    Q[i] -= 1
+    R[i] -= 1
+
+A = [0] * 20
+
+CurrentScore = 0
+for i in range(T):
+    ScoreA = CurrentScore
+    PatA = [0] * 20
+    for j in range(20):
+        PatA[j] = A[j]
+    PatA[P[i]] += 1
+    PatA[Q[i]] += 1
+    PatA[R[i]] += 1
+    for j in range(20):
+        if PatA[j] == 0:
+            ScoreA += 1
+
+    ScoreB = CurrentScore
+    PatB = [0] * 20
+    for j in range(20):
+        PatB[j] = A[j]
+    PatB[P[i]] -= 1
+    PatB[Q[i]] -= 1
+    PatB[R[i]] -= 1
+    for j in range(20):
+        if PatB[j] == 0:
+            ScoreB += 1
+
     if ScoreA &gt;= ScoreB:
         print(&quot;A&quot;)
         CurrentScore = ScoreA

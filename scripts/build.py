@@ -10,6 +10,7 @@
 """
 import json
 import html
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -71,6 +72,34 @@ ENTRIES_BY_ID = {e["id"]: e for e in ALL_ENTRIES}
 
 def esc(s):
     return html.escape(str(s), quote=True)
+
+
+def strip_python_comments(code: str) -> str:
+    """# コメント (純コメント行 + 行末コメント) を除去した Python コードを返す。
+
+    docstring (''' / \"\"\") はコメント扱いせず保持する。
+    連続する空行は 1 行に圧縮する。
+    """
+    out_lines = []
+    for line in code.split("\n"):
+        # 1) 純コメント行 (前空白の後すぐ #) は丸ごと削除
+        if re.match(r"^\s*#", line):
+            continue
+        # 2) 行末コメント: 最初の # から行末までを切り捨て (末尾の空白も除去)
+        #    ※鉄則本のコードでは # を含む文字列リテラルが存在しない前提
+        idx = line.find("#")
+        if idx >= 0:
+            line = line[:idx].rstrip()
+        out_lines.append(line)
+
+    # 連続する空行を 1 行に圧縮
+    collapsed = []
+    for l in out_lines:
+        if l.strip() == "" and collapsed and collapsed[-1].strip() == "":
+            continue
+        collapsed.append(l)
+
+    return "\n".join(collapsed).strip("\n") + "\n"
 
 
 def base_head(title, description="", favicon_path="assets/favicon.svg"):
@@ -224,6 +253,7 @@ def build_problem_pages():
 def build_problem_page(entry, prev_id, next_id):
     code_path = CODES_DIR / entry["code_file"]
     code = code_path.read_text(encoding="utf-8") if code_path.exists() else ""
+    stripped_code = strip_python_comments(code) if code else ""
     chapter = CHAPTER_BY_ID[entry["chapter"]]
 
     tags_html = "".join(f'<span class="tag">{esc(t)}</span>' for t in entry["tags"])
@@ -273,11 +303,12 @@ def build_problem_page(entry, prev_id, next_id):
   <div class="code-actions">
     <span>📄 {esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python">{esc(code)}</code></pre>
+  <pre class="line-numbers code-block-full"><code class="language-python">{esc(code)}</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">{esc(stripped_code)}</code></pre>
 
   <div class="nav-arrows">
     {prev_html}

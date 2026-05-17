@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A66.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A66: Union-Find (素集合データ構造)
 # ---------------------------------------------------------------------
 # 【概要】2 種類のクエリ:
@@ -106,6 +106,44 @@ N, Q = map(int, input().split())
 queries = [list(map(int, input().split())) for _ in range(Q)]
 
 # --- クエリ処理 ---------------------------------------------------
+uf = unionfind(N)
+for tp, u, v in queries:
+    if tp == 1:
+        uf.unite(u, v)
+    if tp == 2:
+        if uf.same(u, v):
+            print(&quot;Yes&quot;)
+        else:
+            print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">class unionfind:
+    def __init__(self, n):
+        self.n = n
+        self.par = [-1] * (n + 1)
+        self.size = [1] * (n + 1)
+
+    def root(self, x):
+        while self.par[x] != -1:
+            x = self.par[x]
+        return x
+
+    def unite(self, u, v):
+        rootu = self.root(u)
+        rootv = self.root(v)
+        if rootu != rootv:
+            if self.size[rootu] &lt; self.size[rootv]:
+                self.par[rootu] = rootv
+                self.size[rootv] += self.size[rootu]
+            else:
+                self.par[rootv] = rootu
+                self.size[rootu] += self.size[rootv]
+
+    def same(self, u, v):
+        return self.root(u) == self.root(v)
+
+N, Q = map(int, input().split())
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
 uf = unionfind(N)
 for tp, u, v in queries:
     if tp == 1:

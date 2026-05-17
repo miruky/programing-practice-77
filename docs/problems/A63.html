@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A63.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A63: 幅優先探索 (BFS) ─ 重みなし最短距離
 # ---------------------------------------------------------------------
 # 【概要】頂点 1 から各頂点までの最短距離を求める。
@@ -98,6 +98,31 @@ while len(Q) &gt;= 1:
             Q.append(nex)
 
 # --- 出力 (頂点 1 → i の最短距離) ----------------------------------
+for i in range(1, N + 1):
+    print(dist[i])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">from collections import deque
+
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+G = [list() for _ in range(N + 1)]
+for a, b in edges:
+    G[a].append(b)
+    G[b].append(a)
+
+dist = [-1] * (N + 1)
+dist[1] = 0
+Q = deque()
+Q.append(1)
+
+while len(Q) &gt;= 1:
+    pos = Q.popleft()
+    for nex in G[pos]:
+        if dist[nex] == -1:
+            dist[nex] = dist[pos] + 1
+            Q.append(nex)
+
 for i in range(1, N + 1):
     print(dist[i])
 </code></pre>

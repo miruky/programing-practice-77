@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A13.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A13: しゃくとり法 (近いペアの数え上げ)
 # ---------------------------------------------------------------------
 # 【概要】ソート済み配列 A から、差 A[j]-A[i] が K 以下となる (i, j) (i&lt;j)
@@ -93,6 +93,25 @@ for i in range(0, N - 1):
 
 # --- 答え --------------------------------------------------------
 # 各 i に対して、相手は i+1 〜 R[i] の (R[i] - i) 個。
+Answer = 0
+for i in range(0, N - 1):
+    Answer += (R[i] - i)
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, K = map(int, input().split())
+A = list(map(int, input().split()))
+
+R = [None] * N
+
+for i in range(0, N - 1):
+    if i == 0:
+        R[i] = 0
+    else:
+        R[i] = R[i - 1]
+
+    while R[i] &lt; N - 1 and A[R[i] + 1] - A[i] &lt;= K:
+        R[i] += 1
+
 Answer = 0
 for i in range(0, N - 1):
     Answer += (R[i] - i)

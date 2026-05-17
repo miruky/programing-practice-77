@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A12.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A12: 答えで二分探索 (印刷機問題)
 # ---------------------------------------------------------------------
 # 【概要】N 台のプリンタがそれぞれ A[i] 分に 1 枚印刷する。
@@ -98,6 +98,27 @@ while Left &lt; Right:
         Right = Mid      # Mid 分で OK → 答え &lt;= Mid
 
 # Left == Right となった時点でその値が答え。
+print(Left)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def check(x, N, K, A):
+    sum = 0
+    for i in range(N):
+        sum += x // A[i]
+    return sum &gt;= K
+
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+
+Left = 1
+Right = 10 ** 9
+while Left &lt; Right:
+    Mid = (Left + Right) // 2
+    Answer = check(Mid, N, K, A)
+    if Answer == False:
+        Left = Mid + 1
+    if Answer == True:
+        Right = Mid
+
 print(Left)
 </code></pre>
 

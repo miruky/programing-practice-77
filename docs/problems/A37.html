@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A37.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A37: 貢献度の独立計算
 # ---------------------------------------------------------------------
 # 【概要】N+M+1 種類のコストを組合せで合計するときの総和を求める。
@@ -87,6 +87,19 @@ for j in range(M):
     Answer += C[j] * N
 
 # --- 出力 -----------------------------------------------------------
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, M, B = map(int, input().split())
+A = list(map(int, input().split()))
+C = list(map(int, input().split()))
+
+Answer = 0
+for i in range(N):
+    Answer += A[i] * M
+Answer += B * N * M
+for j in range(M):
+    Answer += C[j] * N
+
 print(Answer)
 </code></pre>
 

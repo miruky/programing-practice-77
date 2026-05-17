@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A60.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A60: スタックで「直前の自分より大きい要素」を見つける
 # ---------------------------------------------------------------------
 # 【概要】株価列 A から、各日 i について「i 日より前で A[j] &gt; A[i] となる
@@ -99,6 +99,30 @@ for i in range(N):
         answer[i] = -1
 
 # --- 出力 -----------------------------------------------------------
+print(*answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">from collections import deque
+
+N = int(input())
+A = list(map(int, input().split()))
+
+answer = [None] * N
+level2 = deque()
+
+for i in range(N):
+    if i &gt;= 1:
+        level2.append((i, A[i - 1]))
+        while len(level2) &gt;= 1:
+            kabuka = level2[-1][1]
+            if kabuka &lt;= A[i]:
+                level2.pop()
+            else:
+                break
+    if len(level2) &gt;= 1:
+        answer[i] = level2[-1][0]
+    else:
+        answer[i] = -1
+
 print(*answer)
 </code></pre>
 

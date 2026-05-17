@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A10.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A10: 区間最大値クエリ (累積max)
 # ---------------------------------------------------------------------
 # 【概要】配列 A に対して、ある 1 区間 [L, R] を抜いた残りの最大値を
@@ -97,6 +97,27 @@ for i in reversed(range(0, N - 1)):
 # 入力は 1-indexed なので、配列の 0-indexed に合わせて -1 する。
 # 削除区間の左外側: P[(L-1)-1] = P[L-2]
 # 削除区間の右外側: Q[(R+1)-1] = Q[R]
+for d in range(D):
+    print(max(P[(L[d] - 1) - 1], Q[(R[d] + 1) - 1]))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+D = int(input())
+L = [None] * D
+R = [None] * D
+for d in range(D):
+    L[d], R[d] = map(int, input().split())
+
+P = [None] * N
+P[0] = A[0]
+for i in range(1, N):
+    P[i] = max(P[i - 1], A[i])
+
+Q = [None] * N
+Q[N - 1] = A[N - 1]
+for i in reversed(range(0, N - 1)):
+    Q[i] = max(Q[i + 1], A[i])
+
 for d in range(D):
     print(max(P[(L[d] - 1) - 1], Q[(R[d] + 1) - 1]))
 </code></pre>

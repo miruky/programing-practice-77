@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A29.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A29: 繰り返し二乗法
 # ---------------------------------------------------------------------
 # 【概要】a^b mod m を高速に求める。
@@ -85,6 +85,19 @@ def Power(a, b, m):
 
 
 # --- 入力・出力 -----------------------------------------------------
+a, b = map(int, input().split())
+print(Power(a, b, 1000000007))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def Power(a, b, m):
+    p = a
+    Answer = 1
+    for i in range(30):
+        wari = 2 ** i
+        if (b // wari) % 2 == 1:
+            Answer = (Answer * p) % m
+        p = (p * p) % m
+    return Answer
+
 a, b = map(int, input().split())
 print(Power(a, b, 1000000007))
 </code></pre>

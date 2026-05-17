@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A56.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A56: ローリングハッシュ
 # ---------------------------------------------------------------------
 # 【概要】文字列 S の部分列 S[l..r] と S[c..d] が一致するかをクエリで判定。
@@ -101,6 +101,35 @@ def hash_value(l, r):
 
 
 # --- クエリ処理 ---------------------------------------------------
+for a, b, c, d in queries:
+    hash1 = hash_value(a, b)
+    hash2 = hash_value(c, d)
+    if hash1 == hash2:
+        print(&quot;Yes&quot;)
+    else:
+        print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, Q = map(int, input().split())
+S = input()
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
+T = list(map(lambda c: ord(c) - ord(&#x27;a&#x27;) + 1, S))
+
+MOD = 2147483647
+power100 = [None] * (N + 1)
+power100[0] = 1
+for i in range(N):
+    power100[i + 1] = power100[i] * 100 % MOD
+
+H = [None] * (N + 1)
+H[0] = 0
+for i in range(N):
+    H[i + 1] = (H[i] * 100 + T[i]) % MOD
+
+def hash_value(l, r):
+    &quot;&quot;&quot;S[l..r] (1-indexed) のハッシュ値&quot;&quot;&quot;
+    return (H[r] - H[l - 1] * power100[r - l + 1]) % MOD
+
 for a, b, c, d in queries:
     hash1 = hash_value(a, b)
     hash2 = hash_value(c, d)

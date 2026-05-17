@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A57.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A57: ダブリング
 # ---------------------------------------------------------------------
 # 【概要】配列 A の各要素は「1 ステップ後の移動先」を表す。
@@ -94,6 +94,25 @@ for X, Y in queries:
         if ((Y &gt;&gt; d) &amp; 1) == 1:
             current_place = dp[d][current_place]
     print(current_place + 1)  # 1-indexed に戻して出力
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, Q = map(int, input().split())
+A = list(map(int, input().split()))
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
+LEVELS = 30
+dp = [[None] * N for _ in range(LEVELS)]
+for i in range(0, N):
+    dp[0][i] = A[i] - 1
+for d in range(1, LEVELS):
+    for i in range(0, N):
+        dp[d][i] = dp[d - 1][dp[d - 1][i]]
+
+for X, Y in queries:
+    current_place = X - 1
+    for d in range(29, -1, -1):
+        if ((Y &gt;&gt; d) &amp; 1) == 1:
+            current_place = dp[d][current_place]
+    print(current_place + 1)
 </code></pre>
 
   <div class="nav-arrows">

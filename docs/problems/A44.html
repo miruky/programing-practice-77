@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A44.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A44: 操作の遅延 (反転フラグの利用)
 # ---------------------------------------------------------------------
 # 【概要】配列に対して 3 種類のクエリ:
@@ -102,6 +102,36 @@ for i in range(Q):
             State = 1
 
     # [3] 取得
+    if int(Query[0]) == 3:
+        x = int(Query[1])
+        if State == 1:
+            print(E[x])
+        if State == 2:
+            print(E[N + 1 - x])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, Q = map(int, input().split())
+State = 1
+E = [None] * (N + 2)
+for i in range(1, N + 1):
+    E[i] = i
+
+for i in range(Q):
+    Query = input().split()
+
+    if int(Query[0]) == 1:
+        x = int(Query[1])
+        y = int(Query[2])
+        if State == 1:
+            E[x] = y
+        if State == 2:
+            E[N + 1 - x] = y
+
+    if int(Query[0]) == 2:
+        if State == 1:
+            State = 2
+        else:
+            State = 1
+
     if int(Query[0]) == 3:
         x = int(Query[1])
         if State == 1:

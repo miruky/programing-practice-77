@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A58.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A58: セグメント木 (区間最大値)
 # ---------------------------------------------------------------------
 # 【概要】配列に対して
@@ -118,6 +118,46 @@ for q in queries:
     if tp == 2:
         l, r = cont
         # 半開区間 [l-1, r-1)
+        answer = Z.query(l - 1, r - 1, 0, Z.size, 1)
+        print(answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">class segtree:
+    &quot;&quot;&quot;0-indexed の RMQ セグメント木&quot;&quot;&quot;
+
+    def __init__(self, n):
+        self.size = 1
+        while self.size &lt; n:
+            self.size *= 2
+        self.dat = [0] * (self.size * 2)
+
+    def update(self, pos, x):
+        pos += self.size
+        self.dat[pos] = x
+        while pos &gt;= 2:
+            pos //= 2
+            self.dat[pos] = max(self.dat[pos * 2], self.dat[pos * 2 + 1])
+
+    def query(self, l, r, a, b, u):
+        if r &lt;= a or b &lt;= l:
+            return -1000000000
+        if l &lt;= a and b &lt;= r:
+            return self.dat[u]
+        m = (a + b) // 2
+        answerl = self.query(l, r, a, m, u * 2)
+        answerr = self.query(l, r, m, b, u * 2 + 1)
+        return max(answerl, answerr)
+
+N, Q = map(int, input().split())
+queries = [list(map(int, input().split())) for _ in range(Q)]
+
+Z = segtree(N)
+for q in queries:
+    tp, *cont = q
+    if tp == 1:
+        pos, x = cont
+        Z.update(pos - 1, x)
+    if tp == 2:
+        l, r = cont
         answer = Z.query(l - 1, r - 1, 0, Z.size, 1)
         print(answer)
 </code></pre>

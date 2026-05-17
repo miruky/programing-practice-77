@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A35.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A35: 交互最善ゲーム DP (二人ゲーム木)
 # ---------------------------------------------------------------------
 # 【概要】N 段のピラミッドを上から下へ進み、最終的に達した値を競う。
@@ -93,6 +93,23 @@ for i in reversed(range(1, N)):
             dp[i][j] = min(dp[i + 1][j], dp[i + 1][j + 1])
 
 # --- 出力 -----------------------------------------------------------
+print(dp[1][1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+
+dp = [[None] * (N + 1) for _ in range(N + 1)]
+
+for j in range(1, N + 1):
+    dp[N][j] = A[j - 1]
+
+for i in reversed(range(1, N)):
+    for j in range(1, i + 1):
+        if i % 2 == 1:
+            dp[i][j] = max(dp[i + 1][j], dp[i + 1][j + 1])
+        if i % 2 == 0:
+            dp[i][j] = min(dp[i + 1][j], dp[i + 1][j + 1])
+
 print(dp[1][1])
 </code></pre>
 

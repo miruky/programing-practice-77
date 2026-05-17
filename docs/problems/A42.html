@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A42.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A42: 2 軸を全探索
 # ---------------------------------------------------------------------
 # 【概要】点 (A[i], B[i]) があり、矩形 [a, a+K] x [b, b+K] に
@@ -93,6 +93,28 @@ for a in range(1, 101):
         Answer = max(Answer, Score)
 
 # --- 出力 -----------------------------------------------------------
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def GetScore(a, b, A, B, K):
+    &quot;&quot;&quot;矩形 [a, a+K] x [b, b+K] に含まれる点数&quot;&quot;&quot;
+    cnt = 0
+    for i in range(N):
+        if a &lt;= A[i] and A[i] &lt;= a + K and b &lt;= B[i] and B[i] &lt;= b + K:
+            cnt += 1
+    return cnt
+
+N, K = map(int, input().split())
+A = [None] * N
+B = [None] * N
+for i in range(N):
+    A[i], B[i] = map(int, input().split())
+
+Answer = 0
+for a in range(1, 101):
+    for b in range(1, 101):
+        Score = GetScore(a, b, A, B, K)
+        Answer = max(Answer, Score)
+
 print(Answer)
 </code></pre>
 

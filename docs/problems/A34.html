@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A34.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A34: Grundy 数によるゲーム
 # ---------------------------------------------------------------------
 # 【概要】各山から X 個 or Y 個取るゲーム。複数山を XOR で合成。
@@ -95,6 +95,33 @@ for i in range(100001):
         grundy[i] = 2
 
 # --- 全山の Grundy 値を XOR して勝敗判定 -------------------------
+XOR_Sum = 0
+for i in range(N):
+    XOR_Sum = (XOR_Sum ^ grundy[A[i]])
+
+if XOR_Sum &gt;= 1:
+    print(&quot;First&quot;)
+else:
+    print(&quot;Second&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, X, Y = map(int, input().split())
+A = list(map(int, input().split()))
+
+grundy = [None] * 100001
+for i in range(100001):
+    Transit = [False, False, False]
+    if i &gt;= X:
+        Transit[grundy[i - X]] = True
+    if i &gt;= Y:
+        Transit[grundy[i - Y]] = True
+
+    if Transit[0] == False:
+        grundy[i] = 0
+    elif Transit[1] == False:
+        grundy[i] = 1
+    else:
+        grundy[i] = 2
+
 XOR_Sum = 0
 for i in range(N):
     XOR_Sum = (XOR_Sum ^ grundy[A[i]])

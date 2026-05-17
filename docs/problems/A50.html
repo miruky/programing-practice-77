@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A50.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A50: 山登り法 (numpy + 差分計算)
 # ---------------------------------------------------------------------
 # 【概要】配列 B 上のピラミッド型関数で配列 A を近似する。
@@ -137,6 +137,66 @@ while time.time() - ti &lt; TIME_LIMIT:
     loops += 1
 
 # --- 出力 ----------------------------------------------------------
+print(Q)
+for i in range(Q):
+    print(X[i], Y[i], H[i])
+print(&quot;score =&quot;, current_score, file=sys.stderr)
+print(&quot;loops =&quot;, loops, file=sys.stderr)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import numpy as np
+import random
+import time
+import sys
+
+N = 100
+Q = 1000
+A = np.array([list(map(int, input().split())) for _ in range(N)])
+
+X = [random.randint(0, N - 1) for _ in range(Q)]
+Y = [random.randint(0, N - 1) for _ in range(Q)]
+H = [1] * Q
+B = np.zeros((3 * N, 3 * N))
+for i in range(Q):
+    B[Y[i]][X[i]] += 1
+
+delta = [None] * (N + 1)
+for i in range(1, N + 1):
+    delta[i] = np.array([
+        [max(i - abs(y) - abs(x), 0) for x in range(-i + 1, i)]
+        for y in range(-i + 1, i)
+    ])
+
+def get_score():
+    &quot;&quot;&quot;現在のスコア (大きいほど良い)&quot;&quot;&quot;
+    return 200000000 - np.absolute(A - B[N:2 * N, N:2 * N]).sum()
+
+TIME_LIMIT = 5.4
+current_score = get_score()
+ti = time.time()
+
+loops = 0
+while time.time() - ti &lt; TIME_LIMIT:
+    t = random.randint(0, Q - 1)
+    old_x, new_x = X[t], X[t] + random.randint(-9, +9)
+    old_y, new_y = Y[t], Y[t] + random.randint(-9, +9)
+    old_h, new_h = H[t], H[t] + random.randint(-19, +19)
+    if new_x &lt; 0 or new_x &gt;= N or new_y &lt; 0 or new_y &gt;= N or new_h &lt;= 0 or new_h &gt; N:
+        continue
+
+    B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] -= delta[H[t]]
+    X[t], Y[t], H[t] = new_x, new_y, new_h
+    B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] += delta[H[t]]
+
+    new_score = get_score()
+
+    if current_score &lt; new_score:
+        current_score = new_score
+    else:
+        B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] -= delta[H[t]]
+        X[t], Y[t], H[t] = old_x, old_y, old_h
+        B[N + Y[t] - H[t] + 1:N + Y[t] + H[t], N + X[t] - H[t] + 1:N + X[t] + H[t]] += delta[H[t]]
+    loops += 1
+
 print(Q)
 for i in range(Q):
     print(X[i], Y[i], H[i])

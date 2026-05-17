@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A32.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A32: 後退解析ゲーム
 # ---------------------------------------------------------------------
 # 【概要】石が N 個。各手番で A 個か B 個取れる。取れない方が負け。
@@ -90,6 +90,23 @@ for i in range(N + 1):
         dp[i] = False
 
 # --- 出力 -----------------------------------------------------------
+if dp[N] == True:
+    print(&quot;First&quot;)
+else:
+    print(&quot;Second&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, A, B = map(int, input().split())
+
+dp = [None] * (N + 1)
+
+for i in range(N + 1):
+    if i &gt;= A and dp[i - A] == False:
+        dp[i] = True
+    elif i &gt;= B and dp[i - B] == False:
+        dp[i] = True
+    else:
+        dp[i] = False
+
 if dp[N] == True:
     print(&quot;First&quot;)
 else:

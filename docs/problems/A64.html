@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A64.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A64: ダイクストラ法 (重み付き最短距離)
 # ---------------------------------------------------------------------
 # 【概要】非負重みグラフで頂点 1 から各頂点までの最短距離を求める。
@@ -109,6 +109,41 @@ while len(Q) &gt;= 1:
             heapq.heappush(Q, (cur[e[0]], e[0]))
 
 # --- 出力 -----------------------------------------------------------
+for i in range(1, N + 1):
+    if cur[i] != INF:
+        print(cur[i])
+    else:
+        print(&quot;-1&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import heapq
+
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+G = [list() for _ in range(N + 1)]
+for a, b, c in edges:
+    G[a].append((b, c))
+    G[b].append((a, c))
+
+INF = 10 ** 10
+kakutei = [False] * (N + 1)
+cur = [INF] * (N + 1)
+cur[1] = 0
+Q = []
+heapq.heappush(Q, (cur[1], 1))
+
+while len(Q) &gt;= 1:
+    pos = heapq.heappop(Q)[1]
+
+    if kakutei[pos] == True:
+        continue
+
+    kakutei[pos] = True
+    for e in G[pos]:
+        if cur[e[0]] &gt; cur[pos] + e[1]:
+            cur[e[0]] = cur[pos] + e[1]
+            heapq.heappush(Q, (cur[e[0]], e[0]))
+
 for i in range(1, N + 1):
     if cur[i] != INF:
         print(cur[i])

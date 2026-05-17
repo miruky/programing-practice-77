@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A33.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A33: Nim ゲーム
 # ---------------------------------------------------------------------
 # 【概要】N 個の山。各手番でいずれかの山から 1 個以上取る。取れない方が負け。
@@ -81,6 +81,18 @@ for i in range(1, N):
     XOR_Sum = (XOR_Sum ^ A[i])
 
 # --- 出力 -----------------------------------------------------------
+if XOR_Sum &gt;= 1:
+    print(&quot;First&quot;)
+else:
+    print(&quot;Second&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+
+XOR_Sum = A[0]
+for i in range(1, N):
+    XOR_Sum = (XOR_Sum ^ A[i])
+
 if XOR_Sum &gt;= 1:
     print(&quot;First&quot;)
 else:

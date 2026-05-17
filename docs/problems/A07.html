@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A07.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A07: いもす法 (区間加算 → 各日の参加人数)
 # ---------------------------------------------------------------------
 # 【概要】N 人の参加者が [L[i], R[i]] の期間中に参加する。
@@ -93,6 +93,26 @@ for d in range(1, D + 1):
     Answer[d] = Answer[d - 1] + B[d]
 
 # --- 出力 -----------------------------------------------------------
+for d in range(1, D + 1):
+    print(Answer[d])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">D = int(input())
+N = int(input())
+L = [None] * N
+R = [None] * N
+for i in range(N):
+    L[i], R[i] = map(int, input().split())
+
+B = [0] * (D + 2)
+for i in range(N):
+    B[L[i]] += 1
+    B[R[i] + 1] -= 1
+
+Answer = [None] * (D + 2)
+Answer[0] = 0
+for d in range(1, D + 1):
+    Answer[d] = Answer[d - 1] + B[d]
+
 for d in range(1, D + 1):
     print(Answer[d])
 </code></pre>

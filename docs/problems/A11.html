@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A11.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A11: 二分探索 (1から始まる位置を返す)
 # ---------------------------------------------------------------------
 # 【概要】昇順にソートされた配列 A の中から、整数 X の位置を求める。
@@ -92,6 +92,25 @@ A = list(map(int, input().split()))
 
 # --- 二分探索の呼び出し ---------------------------------------------
 # 関数は 0-indexed で位置を返すので、最後に +1 して 1-indexed にする。
+Answer = search(X, A)
+print(Answer + 1)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">def search(x, A):
+    L = 0
+    R = N - 1
+    while L &lt;= R:
+        M = (L + R) // 2
+        if x &lt; A[M]:
+            R = M - 1
+        if x == A[M]:
+            return M
+        if x &gt; A[M]:
+            L = M + 1
+    return -1
+
+N, X = map(int, input().split())
+A = list(map(int, input().split()))
+
 Answer = search(X, A)
 print(Answer + 1)
 </code></pre>

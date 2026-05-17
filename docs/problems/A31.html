@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A31.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A31: 3 か 5 の倍数 (包除原理)
 # ---------------------------------------------------------------------
 # 【概要】1 から N までの整数のうち、3 か 5 で割り切れるものの個数を求める。
@@ -75,6 +75,12 @@ A1 = (N //  3)  # 3 の倍数の個数
 A2 = (N //  5)  # 5 の倍数の個数
 A3 = (N // 15)  # 3 かつ 5 の倍数 (= 15 の倍数) の個数
 # 包除で 2 重カウントぶんを引く
+print(A1 + A2 - A3)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A1 = (N //  3)
+A2 = (N //  5)
+A3 = (N // 15)
 print(A1 + A2 - A3)
 </code></pre>
 

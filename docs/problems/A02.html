@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A02.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A02: N枚のカード (線形探索)
 # ---------------------------------------------------------------------
 # 【概要】長さ N の数列 A の中に整数 X が含まれるかを判定し
@@ -92,6 +92,21 @@ for i in range(N):
 
 # --- 出力 -----------------------------------------------------------
 # bool を直接 if で判定する Pythonic な書き方も可: `if Answer:`
+if Answer == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, X = map(int, input().split())
+
+A = list(map(int, input().split()))
+
+Answer = False
+
+for i in range(N):
+    if A[i] == X:
+        Answer = True
+
 if Answer == True:
     print(&quot;Yes&quot;)
 else:

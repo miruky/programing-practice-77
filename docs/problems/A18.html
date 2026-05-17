@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A18.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A18: 部分和問題
 # ---------------------------------------------------------------------
 # 【概要】N 枚のカード (値 A[i]) から、合計を S にできるかを判定する。
@@ -98,6 +98,30 @@ for i in range(1, N + 1):
                 dp[i][j] = False
 
 # --- 出力 -----------------------------------------------------------
+if dp[N][S] == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, S = map(int, input().split())
+A = list(map(int, input().split()))
+
+dp = [[None] * (S + 1) for _ in range(N + 1)]
+
+dp[0][0] = True
+for i in range(1, S + 1):
+    dp[0][i] = False
+
+for i in range(1, N + 1):
+    for j in range(0, S + 1):
+        if j &lt; A[i - 1]:
+            dp[i][j] = dp[i - 1][j]
+        if j &gt;= A[i - 1]:
+            if dp[i - 1][j] == True or dp[i - 1][j - A[i - 1]] == True:
+                dp[i][j] = True
+            else:
+                dp[i][j] = False
+
 if dp[N][S] == True:
     print(&quot;Yes&quot;)
 else:

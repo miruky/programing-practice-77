@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A71.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A71: 並び替えによる積和の最小化
 # ---------------------------------------------------------------------
 # 【概要】2 つの長さ N の配列 A, B を並び替えて A[i]*B[i] の総和を
@@ -81,6 +81,15 @@ A.sort()                  # 昇順
 B.sort(reverse=True)      # 降順
 
 # --- 答えは A[i] * B[i] の総和 -----------------------------------
+print(sum([A[i] * B[i] for i in range(N)]))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+A.sort()
+B.sort(reverse=True)
+
 print(sum([A[i] * B[i] for i in range(N)]))
 </code></pre>
 

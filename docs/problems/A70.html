@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A70.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A70: 状態 BFS (ランプ点灯ゲーム)
 # ---------------------------------------------------------------------
 # 【概要】N 個のランプ (ON/OFF) の状態を頂点に持ち、M 種類の操作で
@@ -111,6 +111,49 @@ for i in range(N):
 goal = 2 ** N - 1  # 全 ON
 
 # --- BFS -----------------------------------------------------------
+dist = [-1] * (2 ** N)
+dist[start] = 0
+Q = deque()
+Q.append(start)
+while len(Q) &gt;= 1:
+    pos = Q.popleft()
+    for nex in G[pos]:
+        if dist[nex] == -1:
+            dist[nex] = dist[pos] + 1
+            Q.append(nex)
+
+print(dist[goal])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">from collections import deque
+
+N, M = map(int, input().split())
+A = list(map(int, input().split()))
+actions = [list(map(lambda x: int(x) - 1, input().split())) for _ in range(M)]
+
+def get_next(pos, x, y, z):
+    &quot;&quot;&quot;頂点 pos の状態から、ランプ x, y, z を反転した状態を返す&quot;&quot;&quot;
+    state = [(pos // (2 ** i)) % 2 for i in range(N)]
+    state[x] = 1 - state[x]
+    state[y] = 1 - state[y]
+    state[z] = 1 - state[z]
+    ret = 0
+    for i in range(N):
+        if state[i] == 1:
+            ret += 2 ** i
+    return ret
+
+G = [list() for _ in range(2 ** N)]
+for i in range(2 ** N):
+    for x, y, z in actions:
+        nextstate = get_next(i, x, y, z)
+        G[i].append(nextstate)
+
+start = 0
+for i in range(N):
+    if A[i] == 1:
+        start += 2 ** i
+goal = 2 ** N - 1
+
 dist = [-1] * (2 ** N)
 dist[start] = 0
 Q = deque()

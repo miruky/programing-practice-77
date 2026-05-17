@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A62.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A62: 深さ優先探索 (DFS) で連結判定
 # ---------------------------------------------------------------------
 # 【概要】無向グラフの頂点 1 から到達可能な頂点数で連結判定を行う。
@@ -99,6 +99,38 @@ dfs(1, G, visited)
 
 # --- 連結判定 ----------------------------------------------------
 # 全頂点 (1〜N) が訪問済みなら連結
+answer = True
+for i in range(1, N + 1):
+    if visited[i] == False:
+        answer = False
+
+if answer == True:
+    print(&quot;The graph is connected.&quot;)
+else:
+    print(&quot;The graph is not connected.&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import sys
+
+sys.setrecursionlimit(120000)
+
+def dfs(pos, G, visited):
+    &quot;&quot;&quot;頂点 pos を始点とする DFS で visited を更新&quot;&quot;&quot;
+    visited[pos] = True
+    for i in G[pos]:
+        if visited[i] == False:
+            dfs(i, G, visited)
+
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
+
+G = [list() for _ in range(N + 1)]
+for a, b in edges:
+    G[a].append(b)
+    G[b].append(a)
+
+visited = [False] * (N + 1)
+dfs(1, G, visited)
+
 answer = True
 for i in range(1, N + 1):
     if visited[i] == False:

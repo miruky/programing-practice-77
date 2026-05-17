@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A25.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A25: 経路数えあげ (DP)
 # ---------------------------------------------------------------------
 # 【概要】H×W のグリッドにおいて、左上 (0,0) から右下 (H-1,W-1) までの
@@ -95,6 +95,26 @@ for i in range(H):
                 dp[i][j] += dp[i][j - 1]
 
 # --- 出力 -----------------------------------------------------------
+print(dp[H - 1][W - 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">H, W = map(int, input().split())
+c = [None] * H
+for i in range(H):
+    c[i] = input()
+
+dp = [[0] * (W + 1) for _ in range(H + 1)]
+
+for i in range(H):
+    for j in range(W):
+        if i == 0 and j == 0:
+            dp[i][j] = 1
+        else:
+            dp[i][j] = 0
+            if i &gt;= 1 and c[i - 1][j] == &#x27;.&#x27;:
+                dp[i][j] += dp[i - 1][j]
+            if j &gt;= 1 and c[i][j - 1] == &#x27;.&#x27;:
+                dp[i][j] += dp[i][j - 1]
+
 print(dp[H - 1][W - 1])
 </code></pre>
 

@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A74.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A74: 転倒数に分解 (スライドパズル)
 # ---------------------------------------------------------------------
 # 【概要】N×N の盤面上のスライドパズルで、目標配置にする最小操作回数を求める。
@@ -97,6 +97,28 @@ def inversion(A):
 
 
 # --- 行転倒数 + 列転倒数 = 必要操作回数 ----------------------------
+print(inversion(X) + inversion(Y))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+P = [list(map(int, input().split())) for _ in range(N)]
+
+X = [None] * N
+Y = [None] * N
+for i in range(N):
+    for j in range(N):
+        if P[i][j] != 0:
+            X[i] = P[i][j]
+            Y[j] = P[i][j]
+
+def inversion(A):
+    &quot;&quot;&quot;配列 A の転倒数 (i&lt;j で A[i]&gt;A[j] となる組数)&quot;&quot;&quot;
+    answer = 0
+    for i in range(len(A)):
+        for j in range(i + 1, len(A)):
+            if A[i] &gt; A[j]:
+                answer += 1
+    return answer
+
 print(inversion(X) + inversion(Y))
 </code></pre>
 

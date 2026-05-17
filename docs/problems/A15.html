@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A15.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A15: 座標圧縮
 # ---------------------------------------------------------------------
 # 【概要】配列 A の各要素について、A 全体での &quot;順位&quot; (1 始まり) を求める。
@@ -89,6 +89,22 @@ for i in range(N):
     B[i] += 1                           # 1-indexed に直す
 
 # --- 空白区切りで出力 ------------------------------------------------
+Answer = [str(i) for i in B]
+print(&quot; &quot;.join(Answer))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import bisect
+
+N = int(input())
+A = list(map(int, input().split()))
+
+T = list(set(A))
+T.sort()
+
+B = [None] * N
+for i in range(N):
+    B[i] = bisect.bisect_left(T, A[i])
+    B[i] += 1
+
 Answer = [str(i) for i in B]
 print(&quot; &quot;.join(Answer))
 </code></pre>

@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A76.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A76: 川渡り (累積和を使った DP 高速化)
 # ---------------------------------------------------------------------
 # 【概要】足場 [0, X_1, ..., X_N, W] の上をジャンプ ([L, R] の範囲) で渡る。
@@ -102,6 +102,29 @@ for i in range(1, N + 2):
     dpsum[i] %= MOD
 
 # --- 出力 -----------------------------------------------------------
+print(dp[N + 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import bisect
+
+N, W, L, R = map(int, input().split())
+X = list(map(int, input().split()))
+
+X = [0] + X + [W]
+
+MOD = 10 ** 9 + 7
+dp = [0] * (N + 2)
+dpsum = [0] * (N + 2)
+dp[0] = 1
+dpsum[0] = 1
+
+for i in range(1, N + 2):
+    posl = bisect.bisect_left(X, X[i] - R)
+    posr = bisect.bisect_left(X, X[i] - L + 1) - 1
+    dp[i] = (dpsum[posr] if posr &gt;= 0 else 0) - (dpsum[posl - 1] if posl &gt;= 1 else 0)
+    dp[i] %= MOD
+    dpsum[i] = dpsum[i - 1] + dp[i]
+    dpsum[i] %= MOD
+
 print(dp[N + 1])
 </code></pre>
 

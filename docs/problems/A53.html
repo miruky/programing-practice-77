@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A53.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A53: 優先度付きキュー (最小ヒープ)
 # ---------------------------------------------------------------------
 # 【概要】3 種類のクエリ:
@@ -87,6 +87,20 @@ for q in queries:
         heapq.heappop(T)               # 最小値を取り除く
 
 # 注意: T[1] 等が &quot;2 番目に小さい要素&quot; になるとは限らないので注意!
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">import heapq
+
+Q = int(input())
+queries = [input().split() for _ in range(Q)]
+
+T = []
+for q in queries:
+    if q[0] == &quot;1&quot;:
+        heapq.heappush(T, int(q[1]))
+    if q[0] == &quot;2&quot;:
+        print(T[0])
+    if q[0] == &quot;3&quot;:
+        heapq.heappop(T)
 </code></pre>
 
   <div class="nav-arrows">

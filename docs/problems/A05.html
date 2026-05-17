@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A05.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A05: 三重ループ全探索
 # ---------------------------------------------------------------------
 # 【概要】x + y + z = K となる (x, y, z) の組数を数える。
@@ -78,6 +78,17 @@ for x in range(1, N + 1):
     for y in range(1, N + 1):
         z = K - x - y
         # z が範囲 [1, N] に収まるときだけカウントする。
+        if z &gt;= 1 and z &lt;= N:
+            Answer += 1
+
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, K = map(int, input().split())
+Answer = 0
+
+for x in range(1, N + 1):
+    for y in range(1, N + 1):
+        z = K - x - y
         if z &gt;= 1 and z &lt;= N:
             Answer += 1
 

@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A41.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A41: 3 連続パターンの検出
 # ---------------------------------------------------------------------
 # 【概要】文字列 S 内に &quot;RRR&quot; または &quot;BBB&quot; が部分文字列として現れるか。
@@ -81,6 +81,21 @@ for i in range(0, N - 2):
         Answer = True
 
 # --- 出力 -----------------------------------------------------------
+if Answer == True:
+    print(&quot;Yes&quot;)
+else:
+    print(&quot;No&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+S = input()
+
+Answer = False
+for i in range(0, N - 2):
+    if S[i] == &#x27;R&#x27; and S[i + 1] == &#x27;R&#x27; and S[i + 2] == &#x27;R&#x27;:
+        Answer = True
+    if S[i] == &#x27;B&#x27; and S[i + 1] == &#x27;B&#x27; and S[i + 2] == &#x27;B&#x27;:
+        Answer = True
+
 if Answer == True:
     print(&quot;Yes&quot;)
 else:

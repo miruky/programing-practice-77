@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A17.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A17: ダンジョン2 (DP + 経路復元)
 # ---------------------------------------------------------------------
 # 【概要】A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を求める。
@@ -98,6 +98,32 @@ while True:
 Answer.reverse()  # スタート→ゴール の順に並べ直す
 
 # --- 出力 -----------------------------------------------------------
+Answer2 = [str(i) for i in Answer]
+print(len(Answer))
+print(&quot; &quot;.join(Answer2))
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+dp = [None] * (N + 1)
+dp[1] = 0
+dp[2] = A[0]
+for i in range(3, N + 1):
+    dp[i] = min(dp[i - 1] + A[i - 2], dp[i - 2] + B[i - 3])
+
+Answer = []
+Place = N
+while True:
+    Answer.append(Place)
+    if Place == 1:
+        break
+    if dp[Place - 1] + A[Place - 2] == dp[Place]:
+        Place = Place - 1
+    else:
+        Place = Place - 2
+Answer.reverse()
+
 Answer2 = [str(i) for i in Answer]
 print(len(Answer))
 print(&quot; &quot;.join(Answer2))

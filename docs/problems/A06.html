@@ -56,11 +56,11 @@
   <div class="code-actions">
     <span>📄 A06.py ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments">🚫 コメントを非表示</button>
-      <button id="copy-code">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
+      <button id="copy-code" type="button">📋 コードをコピー</button>
     </div>
   </div>
-  <pre class="line-numbers"><code class="language-python"># =====================================================================
+  <pre class="line-numbers code-block-full"><code class="language-python"># =====================================================================
 # A06: 1次元累積和
 # ---------------------------------------------------------------------
 # 【概要】配列 A に対して Q 個の区間和クエリ [L, R] に答える。
@@ -90,6 +90,22 @@ for i in range(N):
 
 # --- クエリ処理 -----------------------------------------------------
 # 区間 [L[j], R[j]] の総和を O(1) で返す。
+for j in range(Q):
+    print(S[R[j]] - S[L[j] - 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">N, Q = map(int, input().split())
+A = list(map(int, input().split()))
+
+L = [None] * Q
+R = [None] * Q
+for j in range(Q):
+    L[j], R[j] = map(int, input().split())
+
+S = [None] * (N + 1)
+S[0] = 0
+for i in range(N):
+    S[i + 1] = S[i] + A[i]
+
 for j in range(Q):
     print(S[R[j]] - S[L[j] - 1])
 </code></pre>
