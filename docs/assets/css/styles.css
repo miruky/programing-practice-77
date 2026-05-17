@@ -1,24 +1,27 @@
 /* =====================================================================
    競技プログラミングの鉄則77 ─ Python 実装解説サイト
-   モダンなダーク UI スタイルシート
+   モダンなディープダーク UI スタイルシート
    ===================================================================== */
 
 :root {
-  --bg-0: #0b0f1a;
-  --bg-1: #111827;
-  --bg-2: #1f2937;
-  --bg-3: #2a3447;
-  --border: #2f3a4f;
-  --text-0: #e6ecf5;
-  --text-1: #b6c2d4;
-  --text-2: #8a94a8;
-  --accent: #6366f1;
-  --accent-2: #06b6d4;
-  --pink: #ec4899;
-  --green: #10b981;
-  --yellow: #f59e0b;
-  --red: #ef4444;
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45);
+  --bg-0: #03050b;
+  --bg-1: #07091333;
+  --bg-1s: #070913;
+  --bg-2: #0f1424;
+  --bg-3: #161c30;
+  --border: #1d2538;
+  --text-0: #eef1f8;
+  --text-1: #a4b0c8;
+  --text-2: #5d6a85;
+  --accent: #4f46e5;
+  --accent-2: #0e7490;
+  --pink: #db2777;
+  --green: #15803d;
+  --yellow: #b45309;
+  --red: #b91c1c;
+  --code-bg: #04060d;
+  --code-comment: #4ade80;
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.65);
   --radius: 14px;
   --radius-sm: 8px;
   --transition: 0.18s ease;
@@ -31,7 +34,11 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(circle at 0% 0%, #1a2238 0%, var(--bg-0) 60%) fixed;
+  background:
+    radial-gradient(900px 600px at 0% -10%, rgba(79, 70, 229, 0.14), transparent 60%),
+    radial-gradient(700px 500px at 100% 0%, rgba(219, 39, 119, 0.10), transparent 60%),
+    var(--bg-0);
+  background-attachment: fixed;
   color: var(--text-0);
   font-family: "Inter", "Hiragino Sans", "Noto Sans JP", "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 15px;
@@ -41,7 +48,7 @@ html, body {
 }
 
 a {
-  color: var(--accent-2);
+  color: #38bdf8;
   text-decoration: none;
   transition: color var(--transition);
 }
@@ -53,7 +60,7 @@ a:hover { color: var(--pink); }
   top: 0;
   z-index: 50;
   backdrop-filter: blur(14px);
-  background: rgba(11, 15, 26, 0.78);
+  background: rgba(3, 5, 11, 0.86);
   border-bottom: 1px solid var(--border);
   padding: 14px 32px;
   display: flex;
@@ -79,7 +86,7 @@ a:hover { color: var(--pink); }
   color: #fff;
   font-weight: 800;
   font-size: 15px;
-  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.45);
 }
 .site-header .brand small {
   display: block;
@@ -111,22 +118,16 @@ a:hover { color: var(--pink); }
   line-height: 1.18;
   letter-spacing: 0.02em;
   margin: 0 0 16px;
-  background: linear-gradient(135deg, #fff 30%, #b6c2d4 100%);
+  background: linear-gradient(135deg, #ffffff 25%, #94a3b8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-.hero p.lead {
-  font-size: 16.5px;
-  color: var(--text-1);
-  margin: 0 0 24px;
-  max-width: 760px;
 }
 .hero .stats {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 18px;
+  margin-top: 4px;
 }
 .stat-chip {
   background: var(--bg-2);
@@ -149,7 +150,7 @@ a:hover { color: var(--pink); }
   top: 64px;
   z-index: 40;
   padding: 12px 32px;
-  background: rgba(11, 15, 26, 0.78);
+  background: rgba(3, 5, 11, 0.86);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
@@ -174,7 +175,7 @@ a:hover { color: var(--pink); }
 }
 .search-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22);
 }
 .chapter-filter {
   display: flex;
@@ -249,7 +250,7 @@ a:hover { color: var(--pink); }
 }
 .problem-card {
   display: block;
-  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1s));
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 18px 18px 16px;
@@ -270,7 +271,7 @@ a:hover { color: var(--pink); }
 .problem-card:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
 }
 .problem-card .pid {
   font-family: "JetBrains Mono", "Courier New", monospace;
@@ -368,6 +369,8 @@ a:hover { color: var(--pink); }
   text-transform: uppercase;
   margin-bottom: 4px;
 }
+
+/* コードアクションバー */
 .code-actions {
   display: flex;
   justify-content: space-between;
@@ -380,32 +383,66 @@ a:hover { color: var(--pink); }
   font-family: "JetBrains Mono", "Courier New", monospace;
   font-size: 12px;
   color: var(--text-2);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.code-actions .actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .code-actions button {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-1);
   border-radius: var(--radius-sm);
-  padding: 4px 10px;
+  padding: 5px 11px;
   font-size: 12px;
   cursor: pointer;
   transition: all var(--transition);
+  font-family: inherit;
 }
 .code-actions button:hover {
   color: var(--text-0);
   border-color: var(--accent);
 }
+.code-actions button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Prism コード本体 (ディープ背景) */
 pre[class*="language-"] {
   margin: 0 !important;
   border-radius: 0 0 var(--radius) var(--radius) !important;
   border: 1px solid var(--border) !important;
   font-size: 13.5px !important;
-  background: #0d1117 !important;
+  background: var(--code-bg) !important;
   padding: 18px 20px !important;
   line-height: 1.55 !important;
 }
 code[class*="language-"] {
   font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace !important;
+  text-shadow: none !important;
+}
+
+/* コメントを鮮やかな緑色で表示 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata,
+.token.triple-quoted-string.string {
+  color: var(--code-comment) !important;
+  font-style: italic;
+}
+
+/* line-numbers プラグインの行番号色 */
+.line-numbers .line-numbers-rows {
+  border-right-color: var(--border) !important;
+}
+.line-numbers-rows > span:before {
+  color: var(--text-2) !important;
 }
 
 /* ナビ (prev/next) */

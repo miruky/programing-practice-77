@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>競技プログラミングの鉄則77 | Python 実装ぜんぶ解説</title>
 <meta name="description" content="鉄則77 の全77問+補足コードを、日本語の解説コメント付きで読めるサイト" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,11 +28,6 @@
 </header>
 <section class="hero">
   <h1>競技プログラミングの鉄則77 ─<br/>Python 実装ぜんぶ解説</h1>
-  <p class="lead">
-    書籍『競技プログラミングの鉄則 〜アルゴリズムと思考力を高める 77 の技術〜』に登場するすべての
-    Python サンプルコードを、行ごとの日本語解説と一緒に読めるサイトです。
-    シンタックスハイライト付きで読みやすく、検索・章フィルタにも対応しています。
-  </p>
   <div class="stats">
 <div class="stat-chip"><strong>77</strong> 問の本編解答</div><div class="stat-chip"><strong>6</strong> 件の補足コード</div><div class="stat-chip"><strong>10</strong> 章を網羅</div>
   </div>
@@ -40,7 +36,7 @@
 <div class="search-wrap">
   <div class="search-inner">
     <input class="search-input" id="search" type="search" placeholder="🔍 問題タイトル・タグ・要約から検索 (例: ダイクストラ, DP, 累積和)" />
-    <div class="chapter-filter"><button class="active" data-chapter="all">すべて</button><button data-chapter="1" style="border-color:#6366f133;color:#6366f1">1. アルゴリズムと計算量</button><button data-chapter="2" style="border-color:#06b6d433;color:#06b6d4">2. 累積和</button><button data-chapter="3" style="border-color:#10b98133;color:#10b981">3. 二分探索</button><button data-chapter="4" style="border-color:#f59e0b33;color:#f59e0b">4. 動的計画法</button><button data-chapter="5" style="border-color:#ef444433;color:#ef4444">5. 数学的問題</button><button data-chapter="6" style="border-color:#a855f733;color:#a855f7">6. 考察テクニック</button><button data-chapter="7" style="border-color:#ec489933;color:#ec4899">7. ヒューリスティック</button><button data-chapter="8" style="border-color:#14b8a633;color:#14b8a6">8. データ構造とクエリ処理</button><button data-chapter="9" style="border-color:#0ea5e933;color:#0ea5e9">9. グラフアルゴリズム</button><button data-chapter="10" style="border-color:#8b5cf633;color:#8b5cf6">10. 総合問題・力試し問題</button></div>
+    <div class="chapter-filter"><button class="active" data-chapter="all">すべて</button><button data-chapter="1" style="border-color:#6366f133;color:#6366f1">1章 アルゴリズムと計算量</button><button data-chapter="2" style="border-color:#06b6d433;color:#06b6d4">2章 累積和</button><button data-chapter="3" style="border-color:#10b98133;color:#10b981">3章 二分探索</button><button data-chapter="4" style="border-color:#f59e0b33;color:#f59e0b">4章 動的計画法</button><button data-chapter="5" style="border-color:#ef444433;color:#ef4444">5章 数学的問題</button><button data-chapter="6" style="border-color:#a855f733;color:#a855f7">6章 考察テクニック</button><button data-chapter="7" style="border-color:#ec489933;color:#ec4899">7章 ヒューリスティック</button><button data-chapter="8" style="border-color:#14b8a633;color:#14b8a6">8章 データ構造とクエリ処理</button><button data-chapter="9" style="border-color:#0ea5e933;color:#0ea5e9">9章 グラフアルゴリズム</button><button data-chapter="10" style="border-color:#8b5cf633;color:#8b5cf6">10章 総合問題・力試し問題</button></div>
   </div>
 </div>
 
@@ -49,38 +45,38 @@
 <section class="chapter-section" data-chapter="1">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #6366f1"></span>
-    <span class="num">CHAPTER 01</span>
+    <span class="num">1章</span>
     <h2>アルゴリズムと計算量</h2>
     <span class="summary">計算量・全探索の基礎を学ぶ章。アルゴリズムの第一歩。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A01.html" data-chapter="1" data-search="2乗を計算しよう 整数 n を読み込み、n×n を出力する。標準入出力の練習。 入出力 演習" style="--card-color:#6366f1">
-      <div class="pid">A01 ・ Chapter 1</div>
+      <div class="pid">A01 ・ 1章</div>
       <h3>2乗を計算しよう</h3>
       <p>整数 N を読み込み、N×N を出力する。標準入出力の練習。</p>
       <div class="tags"><span class="tag">入出力</span><span class="tag">演習</span></div>
     </a>
     <a class="problem-card" href="problems/A02.html" data-chapter="1" data-search="n枚のカード 配列に x が含まれるかを線形探索で判定する。 全探索 線形探索" style="--card-color:#6366f1">
-      <div class="pid">A02 ・ Chapter 1</div>
+      <div class="pid">A02 ・ 1章</div>
       <h3>N枚のカード</h3>
       <p>配列に X が含まれるかを線形探索で判定する。</p>
       <div class="tags"><span class="tag">全探索</span><span class="tag">線形探索</span></div>
     </a>
     <a class="problem-card" href="problems/A03.html" data-chapter="1" data-search="二重ループの全探索 2つの配列から合計が k になる組を二重ループで探す。 全探索" style="--card-color:#6366f1">
-      <div class="pid">A03 ・ Chapter 1</div>
+      <div class="pid">A03 ・ 1章</div>
       <h3>二重ループの全探索</h3>
       <p>2つの配列から合計が K になる組を二重ループで探す。</p>
       <div class="tags"><span class="tag">全探索</span></div>
     </a>
     <a class="problem-card" href="problems/A04.html" data-chapter="1" data-search="10進数を2進数へ 整数を 10 桁の 2 進法表記で出力する。 ビット 進法" style="--card-color:#6366f1">
-      <div class="pid">A04 ・ Chapter 1</div>
+      <div class="pid">A04 ・ 1章</div>
       <h3>10進数を2進数へ</h3>
       <p>整数を 10 桁の 2 進法表記で出力する。</p>
       <div class="tags"><span class="tag">ビット</span><span class="tag">進法</span></div>
     </a>
     <a class="problem-card" href="problems/A05.html" data-chapter="1" data-search="三重ループ全探索 x+y+z=k となる組合せを三重ループで数える。計算量 o(n^3)。 全探索" style="--card-color:#6366f1">
-      <div class="pid">A05 ・ Chapter 1</div>
+      <div class="pid">A05 ・ 1章</div>
       <h3>三重ループ全探索</h3>
       <p>x+y+z=K となる組合せを三重ループで数える。計算量 O(N^3)。</p>
       <div class="tags"><span class="tag">全探索</span></div>
@@ -90,38 +86,38 @@
 <section class="chapter-section" data-chapter="2">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #06b6d4"></span>
-    <span class="num">CHAPTER 02</span>
+    <span class="num">2章</span>
     <h2>累積和</h2>
     <span class="summary">区間クエリを高速化する累積和テクニック。1次元・2次元・いもす法まで。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A06.html" data-chapter="2" data-search="1次元累積和 累積和を前計算しておくことで区間和クエリを o(1) で答える。 累積和" style="--card-color:#06b6d4">
-      <div class="pid">A06 ・ Chapter 2</div>
+      <div class="pid">A06 ・ 2章</div>
       <h3>1次元累積和</h3>
       <p>累積和を前計算しておくことで区間和クエリを O(1) で答える。</p>
       <div class="tags"><span class="tag">累積和</span></div>
     </a>
     <a class="problem-card" href="problems/A07.html" data-chapter="2" data-search="いもす法 区間加算を端点だけで処理し、累積和で復元するテクニック。 累積和 いもす法" style="--card-color:#06b6d4">
-      <div class="pid">A07 ・ Chapter 2</div>
+      <div class="pid">A07 ・ 2章</div>
       <h3>いもす法</h3>
       <p>区間加算を端点だけで処理し、累積和で復元するテクニック。</p>
       <div class="tags"><span class="tag">累積和</span><span class="tag">いもす法</span></div>
     </a>
     <a class="problem-card" href="problems/A08.html" data-chapter="2" data-search="2次元累積和 矩形領域の和を o(1) で求めるために 2 次元累積和を構築。 累積和 2次元" style="--card-color:#06b6d4">
-      <div class="pid">A08 ・ Chapter 2</div>
+      <div class="pid">A08 ・ 2章</div>
       <h3>2次元累積和</h3>
       <p>矩形領域の和を O(1) で求めるために 2 次元累積和を構築。</p>
       <div class="tags"><span class="tag">累積和</span><span class="tag">2次元</span></div>
     </a>
     <a class="problem-card" href="problems/A09.html" data-chapter="2" data-search="2次元いもす法 矩形領域への加算を四隅の操作だけで表現し、2 次元累積和で復元。 累積和 いもす法 2次元" style="--card-color:#06b6d4">
-      <div class="pid">A09 ・ Chapter 2</div>
+      <div class="pid">A09 ・ 2章</div>
       <h3>2次元いもす法</h3>
       <p>矩形領域への加算を四隅の操作だけで表現し、2 次元累積和で復元。</p>
       <div class="tags"><span class="tag">累積和</span><span class="tag">いもす法</span><span class="tag">2次元</span></div>
     </a>
     <a class="problem-card" href="problems/A10.html" data-chapter="2" data-search="区間最大値クエリ 左右からの累積最大値を前計算し、抜き取り後の最大値を求める。 累積和 区間クエリ" style="--card-color:#06b6d4">
-      <div class="pid">A10 ・ Chapter 2</div>
+      <div class="pid">A10 ・ 2章</div>
       <h3>区間最大値クエリ</h3>
       <p>左右からの累積最大値を前計算し、抜き取り後の最大値を求める。</p>
       <div class="tags"><span class="tag">累積和</span><span class="tag">区間クエリ</span></div>
@@ -131,38 +127,38 @@
 <section class="chapter-section" data-chapter="3">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #10b981"></span>
-    <span class="num">CHAPTER 03</span>
+    <span class="num">3章</span>
     <h2>二分探索</h2>
     <span class="summary">ソート済み列の探索と「答えで二分探索」の発想を獲得する章。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A11.html" data-chapter="3" data-search="二分探索 ソート済み配列から目的の整数の位置を二分探索で求める。 二分探索" style="--card-color:#10b981">
-      <div class="pid">A11 ・ Chapter 3</div>
+      <div class="pid">A11 ・ 3章</div>
       <h3>二分探索</h3>
       <p>ソート済み配列から目的の整数の位置を二分探索で求める。</p>
       <div class="tags"><span class="tag">二分探索</span></div>
     </a>
     <a class="problem-card" href="problems/A12.html" data-chapter="3" data-search="答えで二分探索 「答えが x 以下か」という判定問題に帰着させて二分探索する典型。 二分探索 めぐる式" style="--card-color:#10b981">
-      <div class="pid">A12 ・ Chapter 3</div>
+      <div class="pid">A12 ・ 3章</div>
       <h3>答えで二分探索</h3>
       <p>「答えが x 以下か」という判定問題に帰着させて二分探索する典型。</p>
       <div class="tags"><span class="tag">二分探索</span><span class="tag">めぐる式</span></div>
     </a>
     <a class="problem-card" href="problems/A13.html" data-chapter="3" data-search="しゃくとり法 右端を尺取り虫のように動かして区間長を効率的に列挙する。 しゃくとり法" style="--card-color:#10b981">
-      <div class="pid">A13 ・ Chapter 3</div>
+      <div class="pid">A13 ・ 3章</div>
       <h3>しゃくとり法</h3>
       <p>右端を尺取り虫のように動かして区間長を効率的に列挙する。</p>
       <div class="tags"><span class="tag">しゃくとり法</span></div>
     </a>
     <a class="problem-card" href="problems/A14.html" data-chapter="3" data-search="半分全列挙 4 つの集合の組合せを 2 つに分け、和の集合を二分探索で照合する。 二分探索 半分全列挙" style="--card-color:#10b981">
-      <div class="pid">A14 ・ Chapter 3</div>
+      <div class="pid">A14 ・ 3章</div>
       <h3>半分全列挙</h3>
       <p>4 つの集合の組合せを 2 つに分け、和の集合を二分探索で照合する。</p>
       <div class="tags"><span class="tag">二分探索</span><span class="tag">半分全列挙</span></div>
     </a>
     <a class="problem-card" href="problems/A15.html" data-chapter="3" data-search="座標圧縮 重複を除いてソートし、各値の順位に置き換えるテクニック。 座標圧縮 二分探索" style="--card-color:#10b981">
-      <div class="pid">A15 ・ Chapter 3</div>
+      <div class="pid">A15 ・ 3章</div>
       <h3>座標圧縮</h3>
       <p>重複を除いてソートし、各値の順位に置き換えるテクニック。</p>
       <div class="tags"><span class="tag">座標圧縮</span><span class="tag">二分探索</span></div>
@@ -172,62 +168,62 @@
 <section class="chapter-section" data-chapter="4">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #f59e0b"></span>
-    <span class="num">CHAPTER 04</span>
+    <span class="num">4章</span>
     <h2>動的計画法</h2>
     <span class="summary">DP の典型パターン（部分和・ナップサック・LCS・LIS など）を網羅。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A16.html" data-chapter="4" data-search="ダンジョン1 1 次元 dp の基本問題。最小コストで部屋 n にたどり着く。 dp" style="--card-color:#f59e0b">
-      <div class="pid">A16 ・ Chapter 4</div>
+      <div class="pid">A16 ・ 4章</div>
       <h3>ダンジョン1</h3>
       <p>1 次元 DP の基本問題。最小コストで部屋 N にたどり着く。</p>
       <div class="tags"><span class="tag">DP</span></div>
     </a>
     <a class="problem-card" href="problems/A17.html" data-chapter="4" data-search="ダンジョン2(復元) dp で求めた最短距離をもとに、経路を復元する。 dp 経路復元" style="--card-color:#f59e0b">
-      <div class="pid">A17 ・ Chapter 4</div>
+      <div class="pid">A17 ・ 4章</div>
       <h3>ダンジョン2(復元)</h3>
       <p>DP で求めた最短距離をもとに、経路を復元する。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">経路復元</span></div>
     </a>
     <a class="problem-card" href="problems/A18.html" data-chapter="4" data-search="部分和問題 選んだカードの合計を s にできるかを 2 次元 dp で判定する。 dp 部分和" style="--card-color:#f59e0b">
-      <div class="pid">A18 ・ Chapter 4</div>
+      <div class="pid">A18 ・ 4章</div>
       <h3>部分和問題</h3>
       <p>選んだカードの合計を S にできるかを 2 次元 DP で判定する。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">部分和</span></div>
     </a>
     <a class="problem-card" href="problems/A19.html" data-chapter="4" data-search="ナップサック問題 重量制限のもとで価値を最大化する典型 dp。 dp ナップサック" style="--card-color:#f59e0b">
-      <div class="pid">A19 ・ Chapter 4</div>
+      <div class="pid">A19 ・ 4章</div>
       <h3>ナップサック問題</h3>
       <p>重量制限のもとで価値を最大化する典型 DP。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">ナップサック</span></div>
     </a>
     <a class="problem-card" href="problems/A20.html" data-chapter="4" data-search="最長共通部分列(lcs) 2 つの文字列の lcs を 2 次元 dp で求める。 dp lcs" style="--card-color:#f59e0b">
-      <div class="pid">A20 ・ Chapter 4</div>
+      <div class="pid">A20 ・ 4章</div>
       <h3>最長共通部分列(LCS)</h3>
       <p>2 つの文字列の LCS を 2 次元 DP で求める。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">LCS</span></div>
     </a>
     <a class="problem-card" href="problems/A21.html" data-chapter="4" data-search="区間dp 区間 [l,r] を状態にとる典型 dp（ブロック取りゲーム）。 dp 区間dp" style="--card-color:#f59e0b">
-      <div class="pid">A21 ・ Chapter 4</div>
+      <div class="pid">A21 ・ 4章</div>
       <h3>区間DP</h3>
       <p>区間 [l,r] を状態にとる典型 DP（ブロック取りゲーム）。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">区間DP</span></div>
     </a>
     <a class="problem-card" href="problems/A22.html" data-chapter="4" data-search="すごろく 各マスから 2 種類のジャンプができるすごろくの最大スコア dp。 dp" style="--card-color:#f59e0b">
-      <div class="pid">A22 ・ Chapter 4</div>
+      <div class="pid">A22 ・ 4章</div>
       <h3>すごろく</h3>
       <p>各マスから 2 種類のジャンプができるすごろくの最大スコア DP。</p>
       <div class="tags"><span class="tag">DP</span></div>
     </a>
     <a class="problem-card" href="problems/A23.html" data-chapter="4" data-search="bitdp 集合の状態をビットで表す bit dp（クーポン券問題）。 dp bitdp" style="--card-color:#f59e0b">
-      <div class="pid">A23 ・ Chapter 4</div>
+      <div class="pid">A23 ・ 4章</div>
       <h3>bitDP</h3>
       <p>集合の状態をビットで表す bit DP（クーポン券問題）。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">bitDP</span></div>
     </a>
     <a class="problem-card" href="problems/A24.html" data-chapter="4" data-search="最長増加部分列(lis) lis を二分探索を使って o(n log n) で求める。 dp lis 二分探索" style="--card-color:#f59e0b">
-      <div class="pid">A24 ・ Chapter 4</div>
+      <div class="pid">A24 ・ 4章</div>
       <h3>最長増加部分列(LIS)</h3>
       <p>LIS を二分探索を使って O(N log N) で求める。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">LIS</span><span class="tag">二分探索</span></div>
@@ -239,7 +235,7 @@
       <div class="tags"><span class="tag">DP</span><span class="tag">LIS</span></div>
     </a>
     <a class="problem-card" href="problems/A25.html" data-chapter="4" data-search="経路数えあげ 格子状の経路数を 2 次元 dp で数える。障害物あり。 dp 数え上げ" style="--card-color:#f59e0b">
-      <div class="pid">A25 ・ Chapter 4</div>
+      <div class="pid">A25 ・ 4章</div>
       <h3>経路数えあげ</h3>
       <p>格子状の経路数を 2 次元 DP で数える。障害物あり。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">数え上げ</span></div>
@@ -249,68 +245,68 @@
 <section class="chapter-section" data-chapter="5">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #ef4444"></span>
-    <span class="num">CHAPTER 05</span>
+    <span class="num">5章</span>
     <h2>数学的問題</h2>
     <span class="summary">素数判定・GCD・モジュラ逆元・ゲーム理論（Grundy 数）まで。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A26.html" data-chapter="5" data-search="素数判定 試し割り法で素数かを判定する。計算量 o(√n)。 数学 素数" style="--card-color:#ef4444">
-      <div class="pid">A26 ・ Chapter 5</div>
+      <div class="pid">A26 ・ 5章</div>
       <h3>素数判定</h3>
       <p>試し割り法で素数かを判定する。計算量 O(√N)。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">素数</span></div>
     </a>
     <a class="problem-card" href="problems/A27.html" data-chapter="5" data-search="最大公約数(ユークリッド互除法) ユークリッド互除法で gcd を求める。 数学 gcd" style="--card-color:#ef4444">
-      <div class="pid">A27 ・ Chapter 5</div>
+      <div class="pid">A27 ・ 5章</div>
       <h3>最大公約数(ユークリッド互除法)</h3>
       <p>ユークリッド互除法で GCD を求める。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">GCD</span></div>
     </a>
     <a class="problem-card" href="problems/A28.html" data-chapter="5" data-search="余りの計算 各操作のたびに mod を取り、オーバーフロー（あるいは桁爆発）を防ぐ。 数学 mod" style="--card-color:#ef4444">
-      <div class="pid">A28 ・ Chapter 5</div>
+      <div class="pid">A28 ・ 5章</div>
       <h3>余りの計算</h3>
       <p>各操作のたびに mod を取り、オーバーフロー（あるいは桁爆発）を防ぐ。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">mod</span></div>
     </a>
     <a class="problem-card" href="problems/A29.html" data-chapter="5" data-search="繰り返し二乗法 a^b mod m を o(log b) で求める繰り返し二乗法。 数学 繰り返し二乗法" style="--card-color:#ef4444">
-      <div class="pid">A29 ・ Chapter 5</div>
+      <div class="pid">A29 ・ 5章</div>
       <h3>繰り返し二乗法</h3>
       <p>a^b mod m を O(log b) で求める繰り返し二乗法。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">繰り返し二乗法</span></div>
     </a>
     <a class="problem-card" href="problems/A30.html" data-chapter="5" data-search="二項係数 mod p フェルマーの小定理で逆元を求め、ncr を計算する。 数学 modular逆元" style="--card-color:#ef4444">
-      <div class="pid">A30 ・ Chapter 5</div>
+      <div class="pid">A30 ・ 5章</div>
       <h3>二項係数 mod p</h3>
       <p>フェルマーの小定理で逆元を求め、nCr を計算する。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">modular逆元</span></div>
     </a>
     <a class="problem-card" href="problems/A31.html" data-chapter="5" data-search="3か5の倍数 包除原理で 3 または 5 の倍数の個数を求める。 数学 包除" style="--card-color:#ef4444">
-      <div class="pid">A31 ・ Chapter 5</div>
+      <div class="pid">A31 ・ 5章</div>
       <h3>3か5の倍数</h3>
       <p>包除原理で 3 または 5 の倍数の個数を求める。</p>
       <div class="tags"><span class="tag">数学</span><span class="tag">包除</span></div>
     </a>
     <a class="problem-card" href="problems/A32.html" data-chapter="5" data-search="ゲーム1(後退解析) 勝ち負け状態を dp で後退解析する。 ゲーム dp" style="--card-color:#ef4444">
-      <div class="pid">A32 ・ Chapter 5</div>
+      <div class="pid">A32 ・ 5章</div>
       <h3>ゲーム1(後退解析)</h3>
       <p>勝ち負け状態を DP で後退解析する。</p>
       <div class="tags"><span class="tag">ゲーム</span><span class="tag">DP</span></div>
     </a>
     <a class="problem-card" href="problems/A33.html" data-chapter="5" data-search="ゲーム2(nim) nim ゲームは xor が 0 でないとき先手必勝。 ゲーム nim" style="--card-color:#ef4444">
-      <div class="pid">A33 ・ Chapter 5</div>
+      <div class="pid">A33 ・ 5章</div>
       <h3>ゲーム2(Nim)</h3>
       <p>Nim ゲームは XOR が 0 でないとき先手必勝。</p>
       <div class="tags"><span class="tag">ゲーム</span><span class="tag">Nim</span></div>
     </a>
     <a class="problem-card" href="problems/A34.html" data-chapter="5" data-search="ゲーム3(grundy数) 複数山の独立ゲームを grundy 数の xor で解く。 ゲーム grundy" style="--card-color:#ef4444">
-      <div class="pid">A34 ・ Chapter 5</div>
+      <div class="pid">A34 ・ 5章</div>
       <h3>ゲーム3(Grundy数)</h3>
       <p>複数山の独立ゲームを Grundy 数の XOR で解く。</p>
       <div class="tags"><span class="tag">ゲーム</span><span class="tag">Grundy</span></div>
     </a>
     <a class="problem-card" href="problems/A35.html" data-chapter="5" data-search="ゲーム4(交互最善) 2 人交互の最善手 dp。階層ごとに min と max を切り替える。 ゲーム dp" style="--card-color:#ef4444">
-      <div class="pid">A35 ・ Chapter 5</div>
+      <div class="pid">A35 ・ 5章</div>
       <h3>ゲーム4(交互最善)</h3>
       <p>2 人交互の最善手 DP。階層ごとに min と max を切り替える。</p>
       <div class="tags"><span class="tag">ゲーム</span><span class="tag">DP</span></div>
@@ -320,68 +316,68 @@
 <section class="chapter-section" data-chapter="6">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #a855f7"></span>
-    <span class="num">CHAPTER 06</span>
+    <span class="num">6章</span>
     <h2>考察テクニック</h2>
     <span class="summary">全探索・貪欲・偶奇・上界下界など、思考力を鍛える章。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A36.html" data-chapter="6" data-search="ちょうどk歩 偶奇と最小歩数の上界に注目すれば必要十分条件が見える。 考察 偶奇" style="--card-color:#a855f7">
-      <div class="pid">A36 ・ Chapter 6</div>
+      <div class="pid">A36 ・ 6章</div>
       <h3>ちょうどK歩</h3>
       <p>偶奇と最小歩数の上界に注目すれば必要十分条件が見える。</p>
       <div class="tags"><span class="tag">考察</span><span class="tag">偶奇</span></div>
     </a>
     <a class="problem-card" href="problems/A37.html" data-chapter="6" data-search="貢献度の独立計算 各要素の貢献度を独立に計算し合計する典型。 考察 貢献度" style="--card-color:#a855f7">
-      <div class="pid">A37 ・ Chapter 6</div>
+      <div class="pid">A37 ・ 6章</div>
       <h3>貢献度の独立計算</h3>
       <p>各要素の貢献度を独立に計算し合計する典型。</p>
       <div class="tags"><span class="tag">考察</span><span class="tag">貢献度</span></div>
     </a>
     <a class="problem-card" href="problems/A38.html" data-chapter="6" data-search="区間の上限値 各時刻の上界を区間ごとに更新し、上界の合計を答える。 考察" style="--card-color:#a855f7">
-      <div class="pid">A38 ・ Chapter 6</div>
+      <div class="pid">A38 ・ 6章</div>
       <h3>区間の上限値</h3>
       <p>各時刻の上界を区間ごとに更新し、上界の合計を答える。</p>
       <div class="tags"><span class="tag">考察</span></div>
     </a>
     <a class="problem-card" href="problems/A39.html" data-chapter="6" data-search="区間スケジューリング 終了時刻でソートし貪欲に選ぶ古典問題。 貪欲 区間スケジューリング" style="--card-color:#a855f7">
-      <div class="pid">A39 ・ Chapter 6</div>
+      <div class="pid">A39 ・ 6章</div>
       <h3>区間スケジューリング</h3>
       <p>終了時刻でソートし貪欲に選ぶ古典問題。</p>
       <div class="tags"><span class="tag">貪欲</span><span class="tag">区間スケジューリング</span></div>
     </a>
     <a class="problem-card" href="problems/A40.html" data-chapter="6" data-search="個数集計 値ごとの個数を数え、組合せ的に数え上げる。 数え上げ 組合せ" style="--card-color:#a855f7">
-      <div class="pid">A40 ・ Chapter 6</div>
+      <div class="pid">A40 ・ 6章</div>
       <h3>個数集計</h3>
       <p>値ごとの個数を数え、組合せ的に数え上げる。</p>
       <div class="tags"><span class="tag">数え上げ</span><span class="tag">組合せ</span></div>
     </a>
     <a class="problem-card" href="problems/A41.html" data-chapter="6" data-search="3連続パターン検出 鳩ノ巣原理を背景に同じ文字の 3 連続を探す。 考察 鳩ノ巣" style="--card-color:#a855f7">
-      <div class="pid">A41 ・ Chapter 6</div>
+      <div class="pid">A41 ・ 6章</div>
       <h3>3連続パターン検出</h3>
       <p>鳩ノ巣原理を背景に同じ文字の 3 連続を探す。</p>
       <div class="tags"><span class="tag">考察</span><span class="tag">鳩ノ巣</span></div>
     </a>
     <a class="problem-card" href="problems/A42.html" data-chapter="6" data-search="k以内の全探索 (a,b) を全探索し、各組に対して条件を満たす要素を数える。 全探索" style="--card-color:#a855f7">
-      <div class="pid">A42 ・ Chapter 6</div>
+      <div class="pid">A42 ・ 6章</div>
       <h3>K以内の全探索</h3>
       <p>(a,b) を全探索し、各組に対して条件を満たす要素を数える。</p>
       <div class="tags"><span class="tag">全探索</span></div>
     </a>
     <a class="problem-card" href="problems/A43.html" data-chapter="6" data-search="東西の島 各物体の最短距離の上限を考え、最大を答える。 考察" style="--card-color:#a855f7">
-      <div class="pid">A43 ・ Chapter 6</div>
+      <div class="pid">A43 ・ 6章</div>
       <h3>東西の島</h3>
       <p>各物体の最短距離の上限を考え、最大を答える。</p>
       <div class="tags"><span class="tag">考察</span></div>
     </a>
     <a class="problem-card" href="problems/A44.html" data-chapter="6" data-search="操作の遅延処理 反転状態をフラグで持ち、毎回の物理反転を回避する。 考察 遅延" style="--card-color:#a855f7">
-      <div class="pid">A44 ・ Chapter 6</div>
+      <div class="pid">A44 ・ 6章</div>
       <h3>操作の遅延処理</h3>
       <p>反転状態をフラグで持ち、毎回の物理反転を回避する。</p>
       <div class="tags"><span class="tag">考察</span><span class="tag">遅延</span></div>
     </a>
     <a class="problem-card" href="problems/A45.html" data-chapter="6" data-search="色の保存量 操作で変わらない量（不変量）を発見し答える。 考察 不変量" style="--card-color:#a855f7">
-      <div class="pid">A45 ・ Chapter 6</div>
+      <div class="pid">A45 ・ 6章</div>
       <h3>色の保存量</h3>
       <p>操作で変わらない量（不変量）を発見し答える。</p>
       <div class="tags"><span class="tag">考察</span><span class="tag">不変量</span></div>
@@ -391,26 +387,26 @@
 <section class="chapter-section" data-chapter="7">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #ec4899"></span>
-    <span class="num">CHAPTER 07</span>
+    <span class="num">7章</span>
     <h2>ヒューリスティック</h2>
     <span class="summary">貪欲・局所探索・焼きなまし法・ビームサーチでスコアを伸ばす。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A46.html" data-chapter="7" data-search="貪欲法(最近傍) 現在地から最も近い都市へ移動する貪欲法（tsp）。 ヒューリスティック 貪欲 tsp" style="--card-color:#ec4899">
-      <div class="pid">A46 ・ Chapter 7</div>
+      <div class="pid">A46 ・ 7章</div>
       <h3>貪欲法(最近傍)</h3>
       <p>現在地から最も近い都市へ移動する貪欲法（TSP）。</p>
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">貪欲</span><span class="tag">TSP</span></div>
     </a>
     <a class="problem-card" href="problems/A47.html" data-chapter="7" data-search="山登り法 ランダムな区間反転で改善した場合のみ受理する局所探索。 ヒューリスティック 山登り tsp" style="--card-color:#ec4899">
-      <div class="pid">A47 ・ Chapter 7</div>
+      <div class="pid">A47 ・ 7章</div>
       <h3>山登り法</h3>
       <p>ランダムな区間反転で改善した場合のみ受理する局所探索。</p>
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">山登り</span><span class="tag">TSP</span></div>
     </a>
     <a class="problem-card" href="problems/A48.html" data-chapter="7" data-search="焼きなまし法 確率的に悪化を受理する焼きなまし法で局所最適から抜け出す。 ヒューリスティック 焼きなまし tsp" style="--card-color:#ec4899">
-      <div class="pid">A48 ・ Chapter 7</div>
+      <div class="pid">A48 ・ 7章</div>
       <h3>焼きなまし法</h3>
       <p>確率的に悪化を受理する焼きなまし法で局所最適から抜け出す。</p>
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">焼きなまし</span><span class="tag">TSP</span></div>
@@ -422,7 +418,7 @@
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">焼きなまし</span></div>
     </a>
     <a class="problem-card" href="problems/A49.html" data-chapter="7" data-search="ビームサーチ 状態を幅 w に絞り込み、評価関数で各層を選ぶビームサーチ。 ヒューリスティック ビームサーチ" style="--card-color:#ec4899">
-      <div class="pid">A49 ・ Chapter 7</div>
+      <div class="pid">A49 ・ 7章</div>
       <h3>ビームサーチ</h3>
       <p>状態を幅 W に絞り込み、評価関数で各層を選ぶビームサーチ。</p>
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">ビームサーチ</span></div>
@@ -440,7 +436,7 @@
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">貪欲</span></div>
     </a>
     <a class="problem-card" href="problems/A50.html" data-chapter="7" data-search="差分計算+ヒューリスティック 差分計算で評価を高速化し、numpy を活用するヒューリスティック。 ヒューリスティック numpy 差分計算" style="--card-color:#ec4899">
-      <div class="pid">A50 ・ Chapter 7</div>
+      <div class="pid">A50 ・ 7章</div>
       <h3>差分計算+ヒューリスティック</h3>
       <p>差分計算で評価を高速化し、numpy を活用するヒューリスティック。</p>
       <div class="tags"><span class="tag">ヒューリスティック</span><span class="tag">numpy</span><span class="tag">差分計算</span></div>
@@ -456,68 +452,68 @@
 <section class="chapter-section" data-chapter="8">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #14b8a6"></span>
-    <span class="num">CHAPTER 08</span>
+    <span class="num">8章</span>
     <h2>データ構造とクエリ処理</h2>
     <span class="summary">スタック・キュー・ヒープ・ハッシュ・ダブリング・セグメント木まで。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A51.html" data-chapter="8" data-search="スタック lifo のスタックを deque で実装。 データ構造 スタック" style="--card-color:#14b8a6">
-      <div class="pid">A51 ・ Chapter 8</div>
+      <div class="pid">A51 ・ 8章</div>
       <h3>スタック</h3>
       <p>LIFO のスタックを deque で実装。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">スタック</span></div>
     </a>
     <a class="problem-card" href="problems/A52.html" data-chapter="8" data-search="キュー fifo のキューを deque で実装。 データ構造 キュー" style="--card-color:#14b8a6">
-      <div class="pid">A52 ・ Chapter 8</div>
+      <div class="pid">A52 ・ 8章</div>
       <h3>キュー</h3>
       <p>FIFO のキューを deque で実装。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">キュー</span></div>
     </a>
     <a class="problem-card" href="problems/A53.html" data-chapter="8" data-search="優先度付きキュー ヒープで最小値を取り出す優先度付きキュー。 データ構造 ヒープ" style="--card-color:#14b8a6">
-      <div class="pid">A53 ・ Chapter 8</div>
+      <div class="pid">A53 ・ 8章</div>
       <h3>優先度付きキュー</h3>
       <p>ヒープで最小値を取り出す優先度付きキュー。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">ヒープ</span></div>
     </a>
     <a class="problem-card" href="problems/A54.html" data-chapter="8" data-search="連想配列(map) 辞書で名前→点数の対応を保持する。 データ構造 辞書" style="--card-color:#14b8a6">
-      <div class="pid">A54 ・ Chapter 8</div>
+      <div class="pid">A54 ・ 8章</div>
       <h3>連想配列(Map)</h3>
       <p>辞書で名前→点数の対応を保持する。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">辞書</span></div>
     </a>
     <a class="problem-card" href="problems/A55.html" data-chapter="8" data-search="順序付き集合 lower_bound 相当を含む順序付き集合のクエリ処理。 データ構造 二分探索" style="--card-color:#14b8a6">
-      <div class="pid">A55 ・ Chapter 8</div>
+      <div class="pid">A55 ・ 8章</div>
       <h3>順序付き集合</h3>
       <p>lower_bound 相当を含む順序付き集合のクエリ処理。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">二分探索</span></div>
     </a>
     <a class="problem-card" href="problems/A56.html" data-chapter="8" data-search="ローリングハッシュ 部分文字列のハッシュを o(1) で比較する。 文字列 ハッシュ" style="--card-color:#14b8a6">
-      <div class="pid">A56 ・ Chapter 8</div>
+      <div class="pid">A56 ・ 8章</div>
       <h3>ローリングハッシュ</h3>
       <p>部分文字列のハッシュを O(1) で比較する。</p>
       <div class="tags"><span class="tag">文字列</span><span class="tag">ハッシュ</span></div>
     </a>
     <a class="problem-card" href="problems/A57.html" data-chapter="8" data-search="ダブリング 2^d 回先の遷移を前計算し、y 回後の位置を o(log y) で求める。 データ構造 ダブリング" style="--card-color:#14b8a6">
-      <div class="pid">A57 ・ Chapter 8</div>
+      <div class="pid">A57 ・ 8章</div>
       <h3>ダブリング</h3>
       <p>2^d 回先の遷移を前計算し、Y 回後の位置を O(log Y) で求める。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">ダブリング</span></div>
     </a>
     <a class="problem-card" href="problems/A58.html" data-chapter="8" data-search="セグメント木(rmq) 区間最大値クエリを o(log n) で処理するセグメント木。 データ構造 セグメント木" style="--card-color:#14b8a6">
-      <div class="pid">A58 ・ Chapter 8</div>
+      <div class="pid">A58 ・ 8章</div>
       <h3>セグメント木(RMQ)</h3>
       <p>区間最大値クエリを O(log N) で処理するセグメント木。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">セグメント木</span></div>
     </a>
     <a class="problem-card" href="problems/A59.html" data-chapter="8" data-search="セグメント木(rsq) 区間和クエリのセグメント木。rmq から演算を変えるだけ。 データ構造 セグメント木" style="--card-color:#14b8a6">
-      <div class="pid">A59 ・ Chapter 8</div>
+      <div class="pid">A59 ・ 8章</div>
       <h3>セグメント木(RSQ)</h3>
       <p>区間和クエリのセグメント木。RMQ から演算を変えるだけ。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">セグメント木</span></div>
     </a>
     <a class="problem-card" href="problems/A60.html" data-chapter="8" data-search="スタックの活用 下から「自分以上の最後の日付」をスタックで効率的に求める。 データ構造 スタック" style="--card-color:#14b8a6">
-      <div class="pid">A60 ・ Chapter 8</div>
+      <div class="pid">A60 ・ 8章</div>
       <h3>スタックの活用</h3>
       <p>下から「自分以上の最後の日付」をスタックで効率的に求める。</p>
       <div class="tags"><span class="tag">データ構造</span><span class="tag">スタック</span></div>
@@ -527,68 +523,68 @@
 <section class="chapter-section" data-chapter="9">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #0ea5e9"></span>
-    <span class="num">CHAPTER 09</span>
+    <span class="num">9章</span>
     <h2>グラフアルゴリズム</h2>
     <span class="summary">DFS・BFS・ダイクストラ・Union-Find・最大フローを実装で学ぶ。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A61.html" data-chapter="9" data-search="グラフの表現 隣接リスト形式で無向グラフを表現する基本。 グラフ" style="--card-color:#0ea5e9">
-      <div class="pid">A61 ・ Chapter 9</div>
+      <div class="pid">A61 ・ 9章</div>
       <h3>グラフの表現</h3>
       <p>隣接リスト形式で無向グラフを表現する基本。</p>
       <div class="tags"><span class="tag">グラフ</span></div>
     </a>
     <a class="problem-card" href="problems/A62.html" data-chapter="9" data-search="深さ優先探索(dfs) dfs で連結性を判定する基本問題。 グラフ dfs" style="--card-color:#0ea5e9">
-      <div class="pid">A62 ・ Chapter 9</div>
+      <div class="pid">A62 ・ 9章</div>
       <h3>深さ優先探索(DFS)</h3>
       <p>DFS で連結性を判定する基本問題。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">DFS</span></div>
     </a>
     <a class="problem-card" href="problems/A63.html" data-chapter="9" data-search="幅優先探索(bfs) bfs で重みなしグラフの最短距離を求める。 グラフ bfs" style="--card-color:#0ea5e9">
-      <div class="pid">A63 ・ Chapter 9</div>
+      <div class="pid">A63 ・ 9章</div>
       <h3>幅優先探索(BFS)</h3>
       <p>BFS で重みなしグラフの最短距離を求める。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">BFS</span></div>
     </a>
     <a class="problem-card" href="problems/A64.html" data-chapter="9" data-search="ダイクストラ法 ヒープを使ったダイクストラ法で重み付き最短経路を求める。 グラフ ダイクストラ" style="--card-color:#0ea5e9">
-      <div class="pid">A64 ・ Chapter 9</div>
+      <div class="pid">A64 ・ 9章</div>
       <h3>ダイクストラ法</h3>
       <p>ヒープを使ったダイクストラ法で重み付き最短経路を求める。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">ダイクストラ</span></div>
     </a>
     <a class="problem-card" href="problems/A65.html" data-chapter="9" data-search="木上のdp 木の葉から根へ向かって部下数を集計する木 dp。 グラフ 木dp" style="--card-color:#0ea5e9">
-      <div class="pid">A65 ・ Chapter 9</div>
+      <div class="pid">A65 ・ 9章</div>
       <h3>木上のDP</h3>
       <p>木の葉から根へ向かって部下数を集計する木 DP。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">木DP</span></div>
     </a>
     <a class="problem-card" href="problems/A66.html" data-chapter="9" data-search="union-find 連結成分の管理ができる union-find のクエリ処理。 グラフ unionfind" style="--card-color:#0ea5e9">
-      <div class="pid">A66 ・ Chapter 9</div>
+      <div class="pid">A66 ・ 9章</div>
       <h3>Union-Find</h3>
       <p>連結成分の管理ができる Union-Find のクエリ処理。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">UnionFind</span></div>
     </a>
     <a class="problem-card" href="problems/A67.html" data-chapter="9" data-search="最小全域木(クラスカル法) 辺を短い順にソートし union-find で mst を構築。 グラフ mst クラスカル" style="--card-color:#0ea5e9">
-      <div class="pid">A67 ・ Chapter 9</div>
+      <div class="pid">A67 ・ 9章</div>
       <h3>最小全域木(クラスカル法)</h3>
       <p>辺を短い順にソートし Union-Find で MST を構築。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">MST</span><span class="tag">クラスカル</span></div>
     </a>
     <a class="problem-card" href="problems/A68.html" data-chapter="9" data-search="最大フロー(ford-fulkerson) 残余グラフへの dfs で増加路を見つけ、フローを増やす。 グラフ 最大フロー" style="--card-color:#0ea5e9">
-      <div class="pid">A68 ・ Chapter 9</div>
+      <div class="pid">A68 ・ 9章</div>
       <h3>最大フロー(Ford-Fulkerson)</h3>
       <p>残余グラフへの DFS で増加路を見つけ、フローを増やす。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">最大フロー</span></div>
     </a>
     <a class="problem-card" href="problems/A69.html" data-chapter="9" data-search="二部マッチング 二部グラフのマッチングを最大フローに帰着して解く。 グラフ マッチング" style="--card-color:#0ea5e9">
-      <div class="pid">A69 ・ Chapter 9</div>
+      <div class="pid">A69 ・ 9章</div>
       <h3>二部マッチング</h3>
       <p>二部グラフのマッチングを最大フローに帰着して解く。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">マッチング</span></div>
     </a>
     <a class="problem-card" href="problems/A70.html" data-chapter="9" data-search="ランプ点灯(状態bfs) 2^n 通りの状態を頂点に持つ bfs。xor でビット反転を行う。 グラフ bfs bit" style="--card-color:#0ea5e9">
-      <div class="pid">A70 ・ Chapter 9</div>
+      <div class="pid">A70 ・ 9章</div>
       <h3>ランプ点灯(状態BFS)</h3>
       <p>2^N 通りの状態を頂点に持つ BFS。XOR でビット反転を行う。</p>
       <div class="tags"><span class="tag">グラフ</span><span class="tag">BFS</span><span class="tag">bit</span></div>
@@ -604,50 +600,50 @@
 <section class="chapter-section" data-chapter="10">
   <div class="chapter-head">
     <span class="accent-bar" style="background: #8b5cf6"></span>
-    <span class="num">CHAPTER 010</span>
+    <span class="num">10章</span>
     <h2>総合問題・力試し問題</h2>
     <span class="summary">ここまでの全アルゴリズムを総動員する応用問題集。</span>
   </div>
   <div class="problems-grid">
     
     <a class="problem-card" href="problems/A71.html" data-chapter="10" data-search="ソートと貪欲 大小の積を最小化するときは昇順×降順の足し算が最小。 貪欲 ソート" style="--card-color:#8b5cf6">
-      <div class="pid">A71 ・ Chapter 10</div>
+      <div class="pid">A71 ・ 10章</div>
       <h3>ソートと貪欲</h3>
       <p>大小の積を最小化するときは昇順×降順の足し算が最小。</p>
       <div class="tags"><span class="tag">貪欲</span><span class="tag">ソート</span></div>
     </a>
     <a class="problem-card" href="problems/A72.html" data-chapter="10" data-search="行ビット全探索 行の選び方を 2^h 通り全探索し、列は貪欲に処理する。 全探索 貪欲" style="--card-color:#8b5cf6">
-      <div class="pid">A72 ・ Chapter 10</div>
+      <div class="pid">A72 ・ 10章</div>
       <h3>行ビット全探索</h3>
       <p>行の選び方を 2^H 通り全探索し、列は貪欲に処理する。</p>
       <div class="tags"><span class="tag">全探索</span><span class="tag">貪欲</span></div>
     </a>
     <a class="problem-card" href="problems/A73.html" data-chapter="10" data-search="重み2成分ダイクストラ 距離と本数の 2 評価を 10000 倍テクニックでまとめてダイクストラ。 ダイクストラ テクニック" style="--card-color:#8b5cf6">
-      <div class="pid">A73 ・ Chapter 10</div>
+      <div class="pid">A73 ・ 10章</div>
       <h3>重み2成分ダイクストラ</h3>
       <p>距離と本数の 2 評価を 10000 倍テクニックでまとめてダイクストラ。</p>
       <div class="tags"><span class="tag">ダイクストラ</span><span class="tag">テクニック</span></div>
     </a>
     <a class="problem-card" href="problems/A74.html" data-chapter="10" data-search="転倒数による最小操作 行と列の独立な並べ替えに分解し、転倒数の和が答え。 転倒数" style="--card-color:#8b5cf6">
-      <div class="pid">A74 ・ Chapter 10</div>
+      <div class="pid">A74 ・ 10章</div>
       <h3>転倒数による最小操作</h3>
       <p>行と列の独立な並べ替えに分解し、転倒数の和が答え。</p>
       <div class="tags"><span class="tag">転倒数</span></div>
     </a>
     <a class="problem-card" href="problems/A75.html" data-chapter="10" data-search="締切付きジョブdp 締切でソート + dp で解ける典型問題。 dp 貪欲" style="--card-color:#8b5cf6">
-      <div class="pid">A75 ・ Chapter 10</div>
+      <div class="pid">A75 ・ 10章</div>
       <h3>締切付きジョブDP</h3>
       <p>締切でソート + DP で解ける典型問題。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">貪欲</span></div>
     </a>
     <a class="problem-card" href="problems/A76.html" data-chapter="10" data-search="区間dp高速化 dp 遷移を累積和で o(1) 化することで全体を o(n log n) に。 dp 累積和" style="--card-color:#8b5cf6">
-      <div class="pid">A76 ・ Chapter 10</div>
+      <div class="pid">A76 ・ 10章</div>
       <h3>区間DP高速化</h3>
       <p>DP 遷移を累積和で O(1) 化することで全体を O(N log N) に。</p>
       <div class="tags"><span class="tag">DP</span><span class="tag">累積和</span></div>
     </a>
     <a class="problem-card" href="problems/A77.html" data-chapter="10" data-search="答えで二分探索(切り方) 切れ目の最小区間長を二分探索で最大化する典型問題。 二分探索 貪欲" style="--card-color:#8b5cf6">
-      <div class="pid">A77 ・ Chapter 10</div>
+      <div class="pid">A77 ・ 10章</div>
       <h3>答えで二分探索(切り方)</h3>
       <p>切れ目の最小区間長を二分探索で最大化する典型問題。</p>
       <div class="tags"><span class="tag">二分探索</span><span class="tag">貪欲</span></div>

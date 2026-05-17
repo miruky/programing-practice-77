@@ -73,7 +73,7 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
-def base_head(title, description=""):
+def base_head(title, description="", favicon_path="assets/favicon.svg"):
     return f'''<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -81,6 +81,7 @@ def base_head(title, description=""):
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}" />
+<link rel="icon" type="image/svg+xml" href="{favicon_path}" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -125,7 +126,7 @@ def build_index():
 
     filter_buttons = '<button class="active" data-chapter="all">すべて</button>'
     for c in CHAPTERS:
-        filter_buttons += f'<button data-chapter="{c["id"]}" style="border-color:{c["color"]}33;color:{c["color"]}">{c["id"]}. {esc(c["title"])}</button>'
+        filter_buttons += f'<button data-chapter="{c["id"]}" style="border-color:{c["color"]}33;color:{c["color"]}">{c["id"]}章 {esc(c["title"])}</button>'
 
     sections_html = ''
     for c in CHAPTERS:
@@ -142,7 +143,7 @@ def build_index():
 <section class="chapter-section" data-chapter="{c['id']}">
   <div class="chapter-head">
     <span class="accent-bar" style="background: {c['color']}"></span>
-    <span class="num">CHAPTER 0{c['id']}</span>
+    <span class="num">{c['id']}章</span>
     <h2>{esc(c['title'])}</h2>
     <span class="summary">{esc(c['summary'])}</span>
   </div>
@@ -161,11 +162,6 @@ def build_index():
     html_out += '''
 <section class="hero">
   <h1>競技プログラミングの鉄則77 ─<br/>Python 実装ぜんぶ解説</h1>
-  <p class="lead">
-    書籍『競技プログラミングの鉄則 〜アルゴリズムと思考力を高める 77 の技術〜』に登場するすべての
-    Python サンプルコードを、行ごとの日本語解説と一緒に読めるサイトです。
-    シンタックスハイライト付きで読みやすく、検索・章フィルタにも対応しています。
-  </p>
   <div class="stats">
 ''' + chip_html + '''
   </div>
@@ -194,7 +190,7 @@ def render_card(p, c):
     style = f'style="--card-color:{c["color"]}"'
     return f'''
     <a class="problem-card" href="problems/{p['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}" {style}>
-      <div class="pid">{p['id']} ・ Chapter {c['id']}</div>
+      <div class="pid">{p['id']} ・ {c['id']}章</div>
       <h3>{esc(p['title'])}</h3>
       <p>{esc(p['summary'])}</p>
       <div class="tags">{tags}</div>
@@ -241,7 +237,7 @@ def build_problem_page(entry, prev_id, next_id):
 
     title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説"
 
-    html_out = base_head(title, description_meta)
+    html_out = base_head(title, description_meta, favicon_path="../assets/favicon.svg")
     html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
@@ -250,7 +246,7 @@ def build_problem_page(entry, prev_id, next_id):
 <main class="problem-detail">
   <nav class="breadcrumb">
     <a href="../index.html">問題一覧</a> /
-    <span style="color: {chapter['color']}">Chapter {chapter['id']}: {esc(chapter['title'])}</span> /
+    <span style="color: {chapter['color']}">{chapter['id']}章: {esc(chapter['title'])}</span> /
     <strong>{esc(entry['id'])}</strong>
   </nav>
 
@@ -262,7 +258,7 @@ def build_problem_page(entry, prev_id, next_id):
   <div class="meta">
     <div class="meta-item">
       <strong>章</strong>
-      <span style="color: {chapter['color']}">Chapter {chapter['id']}: {esc(chapter['title'])}</span>
+      <span style="color: {chapter['color']}">{chapter['id']}章: {esc(chapter['title'])}</span>
     </div>
     <div class="meta-item">
       <strong>主な技法</strong>
@@ -276,7 +272,10 @@ def build_problem_page(entry, prev_id, next_id):
 
   <div class="code-actions">
     <span>📄 {esc(entry['code_file'])} ─ Python 3</span>
-    <button id="copy-code">コードをコピー</button>
+    <div class="actions">
+      <button id="toggle-comments">🚫 コメントを非表示</button>
+      <button id="copy-code">📋 コードをコピー</button>
+    </div>
   </div>
   <pre class="line-numbers"><code class="language-python">{esc(code)}</code></pre>
 
