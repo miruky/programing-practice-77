@@ -31,6 +31,21 @@
   box-sizing: border-box;
 }
 
+/* ─── SVG アイコン共通 ─── */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.15em;
+}
+a.source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+a.source-link .icon { width: 0.9em; height: 0.9em; }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -87,6 +102,10 @@ a:hover { color: var(--pink); }
   font-weight: 800;
   font-size: 15px;
   box-shadow: 0 8px 18px rgba(79, 70, 229, 0.45);
+}
+.site-header .brand .logo svg {
+  width: 62%;
+  height: 62%;
 }
 .site-header .brand small {
   display: block;
@@ -162,13 +181,28 @@ a:hover { color: var(--pink); }
   align-items: center;
   flex-wrap: wrap;
 }
-.search-input {
+.search-input-wrap {
+  position: relative;
   flex: 1 1 240px;
+  display: flex;
+  align-items: center;
+}
+.search-input-wrap .icon-search {
+  position: absolute;
+  left: 13px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-2);
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  flex: 1 1 auto;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-0);
-  padding: 10px 14px;
+  padding: 10px 14px 10px 38px;
   font-size: 14px;
   outline: none;
   transition: border-color var(--transition), box-shadow var(--transition);
@@ -176,6 +210,9 @@ a:hover { color: var(--pink); }
 .search-input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22);
+}
+.search-input-wrap:focus-within .icon-search {
+  color: var(--accent);
 }
 .chapter-filter {
   display: flex;
@@ -386,6 +423,16 @@ a:hover { color: var(--pink); }
   flex-wrap: wrap;
   gap: 8px;
 }
+.code-actions .file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.code-actions .file-label .icon {
+  width: 14px;
+  height: 14px;
+  color: var(--text-1);
+}
 .code-actions .actions {
   display: flex;
   gap: 8px;
@@ -401,6 +448,13 @@ a:hover { color: var(--pink); }
   cursor: pointer;
   transition: all var(--transition);
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.code-actions button .icon {
+  width: 14px;
+  height: 14px;
 }
 .code-actions button:hover {
   color: var(--text-0);
@@ -409,6 +463,11 @@ a:hover { color: var(--pink); }
 .code-actions button.active {
   background: var(--accent);
   border-color: var(--accent);
+  color: #fff;
+}
+.code-actions button.success {
+  background: #15803d;
+  border-color: #15803d;
   color: #fff;
 }
 

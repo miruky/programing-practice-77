@@ -74,6 +74,49 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
+# =====================================================================
+#  SVG アイコン定義 (Lucide / Heroicons 系のアウトラインスタイル)
+#  currentColor を継承するので、CSS の color から色付け可能。
+# =====================================================================
+ICON_SEARCH = (
+    '<svg class="icon icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>'
+)
+ICON_FILE = (
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/>'
+    '<path d="M14 2v6h6"/></svg>'
+)
+ICON_EXTERNAL = (
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'
+    '<path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>'
+)
+ICON_EYE_OFF = (
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>'
+    '<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>'
+    '<path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>'
+    '<line x1="2" y1="2" x2="22" y2="22"/></svg>'
+)
+ICON_CLIPBOARD = (
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>'
+    '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>'
+)
+LOGO_SVG = (
+    '<svg viewBox="0 0 64 64" aria-hidden="true">'
+    '<g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">'
+    '<path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/>'
+    '<path d="M37 18 L27 46"/></g></svg>'
+)
+
+
 def strip_python_comments(code: str) -> str:
     """# コメント (純コメント行 + 行末コメント) を除去した Python コードを返す。
 
@@ -122,7 +165,7 @@ def base_head(title, description="", favicon_path="assets/favicon.svg"):
 def common_header(home_path="."):
     return f'''<header class="site-header">
   <a href="{home_path}/index.html" class="brand">
-    <span class="logo">P</span>
+    <span class="logo">{LOGO_SVG}</span>
     <span>
       競技プログラミングの鉄則77<br />
       <small>Python 実装ぜんぶ解説サイト</small>
@@ -130,7 +173,7 @@ def common_header(home_path="."):
   </a>
   <nav>
     <a href="{home_path}/index.html">問題一覧</a>
-    <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ ↗</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ{ICON_EXTERNAL}</a>
   </nav>
 </header>'''
 
@@ -198,7 +241,7 @@ def build_index():
 
 <div class="search-wrap">
   <div class="search-inner">
-    <input class="search-input" id="search" type="search" placeholder="🔍 問題タイトル・タグ・要約から検索 (例: ダイクストラ, DP, 累積和)" />
+    <div class="search-input-wrap">''' + ICON_SEARCH + '''<input class="search-input" id="search" type="search" placeholder="問題タイトル・タグ・要約から検索 (例: ダイクストラ, DP, 累積和)" /></div>
     <div class="chapter-filter">''' + filter_buttons + '''</div>
   </div>
 </div>
@@ -301,10 +344,10 @@ def build_problem_page(entry, prev_id, next_id):
   </div>
 
   <div class="code-actions">
-    <span>📄 {esc(entry['code_file'])} ─ Python 3</span>
+    <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments" type="button">🚫 コメントを非表示</button>
-      <button id="copy-code" type="button">📋 コードをコピー</button>
+      <button id="toggle-comments" type="button">{ICON_EYE_OFF}<span class="label">コメントを非表示</span></button>
+      <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
   <pre class="line-numbers code-block-full"><code class="language-python">{esc(code)}</code></pre>
@@ -335,11 +378,11 @@ def source_link_html(entry, chapter):
     base = entry['code_file'].replace('.py', '')
     if entry['id'] == 'A55':
         url = f"https://github.com/E869120/kyopro-tessoku/blob/main/codes/cpp/chap{chap_str}/answer_A55.cpp"
-        label = "GitHub で C++ 原文を見る ↗ (Python は当サイト独自実装)"
+        label = "GitHub で C++ 原文を見る (Python は当サイト独自実装)"
     else:
         url = f"https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap{chap_str}/answer_{base}.py"
-        label = "GitHub で原文を見る ↗"
-    return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{esc(label)}</a>'
+        label = "GitHub で原文を見る"
+    return f'<a class="source-link" href="{url}" target="_blank" rel="noopener noreferrer">{esc(label)}{ICON_EXTERNAL}</a>'
 
 
 def render_nav(target_id, label, klass):
