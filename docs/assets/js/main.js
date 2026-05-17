@@ -58,7 +58,7 @@ const ICONS = {
   const strippedBlock = document.querySelector('.code-block-stripped');
   if (!fullBlock || !strippedBlock) return;
 
-  let commentsHidden = false;
+  let commentsHidden = true;
 
   function applyState() {
     fullBlock.hidden = commentsHidden;
@@ -68,6 +68,7 @@ const ICONS = {
   // ----- コメント表示トグル -----
   const toggleBtn = document.getElementById('toggle-comments');
   if (toggleBtn) {
+    toggleBtn.classList.toggle('active', commentsHidden);
     toggleBtn.addEventListener('click', () => {
       commentsHidden = !commentsHidden;
       const icon = commentsHidden ? ICONS.eye : ICONS.eyeOff;

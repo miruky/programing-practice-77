@@ -103,6 +103,12 @@ ICON_EYE_OFF = (
     '<path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>'
     '<line x1="2" y1="2" x2="22" y2="22"/></svg>'
 )
+ICON_EYE = (
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>'
+    '<circle cx="12" cy="12" r="3"/></svg>'
+)
 ICON_CLIPBOARD = (
     '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -346,12 +352,12 @@ def build_problem_page(entry, prev_id, next_id):
   <div class="code-actions">
     <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
-      <button id="toggle-comments" type="button">{ICON_EYE_OFF}<span class="label">コメントを非表示</span></button>
+      <button id="toggle-comments" type="button">{ICON_EYE}<span class="label">コメントを表示</span></button>
       <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
-  <pre class="line-numbers code-block-full"><code class="language-python">{esc(code)}</code></pre>
-  <pre class="line-numbers code-block-stripped" hidden><code class="language-python">{esc(stripped_code)}</code></pre>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
 
   <div class="nav-arrows">
     {prev_html}
