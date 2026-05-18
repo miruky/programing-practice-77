@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A67.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner">
     <span class="applied-banner-label">応用問題</span>
     <a class="applied-banner-link" href="B67.html">
@@ -72,6 +72,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>Union-Find</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">グループの代表者だけを覚えます。同じ代表なら同じ連結成分です。</p>
+        <ol><li>root(x) で x の代表を探す。</li><li>unite(a, b) で 2 つの集合を結合する。</li><li>same(a, b) で代表が同じかを見る。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 辺削除は苦手なので、削除クエリは逆順に見て追加へ変換することがあります。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">グラフ</span><span class="tag">MST</span><span class="tag">クラスカル</span></span></div>
+      </div>
+
+      <div class="visual visual-uf" aria-hidden="true">
+        <div class="visual-title">代表者が同じなら同じ集合</div>
+        <div class="uf-groups"><span>1</span><span>2</span><span>3</span></div><div class="uf-groups alt"><span>4</span><span>5</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A67: 最小全域木 (クラスカル法)
 # ---------------------------------------------------------------------
@@ -83,6 +103,18 @@
 #   ループや余計な辺はスキップされ、N-1 本選ぶと MST が完成。
 # 【計算量】O(M log M)
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: グラフ / MST / クラスカル / 難易度目安: ★4
+# - 要約: 辺を短い順にソートし Union-Find で MST を構築。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - root(x) は x の代表者を返す。同じ代表者なら同じ連結成分に属する。
+# - unite(a,b) は 2 つのグループを結合するだけで、辺そのものを保存しているわけではない。
+# - 削除クエリは苦手なので、必要なら時系列を逆順にして「追加」に変換して読む。
+# ---------------------------------------------------------------------
 
 class unionfind:
     &quot;&quot;&quot;A66 と同じ Union-Find 実装&quot;&quot;&quot;

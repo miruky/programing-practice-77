@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A63.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner">
     <span class="applied-banner-label">応用問題</span>
     <a class="applied-banner-link" href="B63.html">
@@ -72,6 +72,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>グラフ探索</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">頂点を点、辺を道として、今いる点から行ける点へ順に広げます。</p>
+        <ol><li>まず入力を隣接リスト G に変換する。</li><li>visited / dist で、訪問済みや距離を記録する。</li><li>DFS は深く、BFS は近い順に広げると読む。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> グリッド問題も、各マスを頂点だと思えば同じ形になります。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">グラフ</span><span class="tag">BFS</span></span></div>
+      </div>
+
+      <div class="visual visual-graph" aria-hidden="true">
+        <div class="visual-title">点と道に変換して探索</div>
+        <div class="graph-shape"><span class="node n1">1</span><span class="node n2">2</span><span class="node n3">3</span><span class="edge e1"></span><span class="edge e2"></span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A63: 幅優先探索 (BFS) ─ 重みなし最短距離
 # ---------------------------------------------------------------------
@@ -82,6 +102,18 @@
 # 【計算量】O(N + M)
 # 【ポイント】未訪問判定に dist[i] == -1 を使うと初期化と兼ねられる。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: グラフ / BFS / 難易度目安: ★2
+# - 要約: BFS で重みなしグラフの最短距離を求める。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 入力をまず隣接リストやグリッドの隣接関係に変換している部分を見る。
+# - visited や dist は「もう見たか」「何手で来たか」を記録するための配列。
+# - DFS は深く進む、BFS は近い順に広がる。この違いだけ先に押さえる。
+# ---------------------------------------------------------------------
 
 from collections import deque
 

@@ -120,6 +120,12 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
+def write_html(path, content):
+    """生成 HTML の各行末尾空白を削ってから保存する。"""
+    normalized = "\n".join(line.rstrip() for line in content.splitlines()) + "\n"
+    path.write_text(normalized, encoding="utf-8")
+
+
 # =====================================================================
 #  AtCoder 風 難易度色バッジ
 #  鉄則本の ★1〜★5 を AtCoder の色レンジ (灰/茶/緑/水/青) に対応付ける。
@@ -171,6 +177,334 @@ def render_ac_badge(diff, *, mini=False):
         f'<span class="ac-star">★{diff}</span>'
         f'<span class="ac-name">{info["name"]}</span></span>'
     )
+
+
+# =====================================================================
+#  コメント表示時に出す「読み方ガイド」と簡易図解
+#  生成時に各問題のタグから学習のつまずきどころを推定し、問題ページへ埋め込む。
+#  main.js 側でコメント表示トグルと同期して hidden を切り替える。
+# =====================================================================
+GUIDE_DEFS = {
+    "cumsum2d": {
+        "label": "2 次元累積和",
+        "mental": "Z[i][j] は「左上からここまでの合計」です。欲しい長方形は、大きく取って、上と左を引き、左上を戻します。",
+        "steps": [
+            "0 行目・0 列目を余分に持つ理由を先に確認する。",
+            "Z を作る式では「今のマス + 上 + 左 - 左上」と読む。",
+            "答えの式は「右下 - 上 - 左 + 左上」の順に分解する。",
+        ],
+        "pitfall": "A-1 / B-1 が出るので、元配列は 0-index、累積和は 1-index と割り切って読むと混乱しにくいです。",
+    },
+    "imos2d": {
+        "label": "2 次元いもす法",
+        "mental": "長方形全体を毎回塗らず、四隅だけに + / - の印を置きます。最後に累積和を取ると、印が面に広がります。",
+        "steps": [
+            "まず四隅への更新だけを追う。ここではまだ完成形ではない。",
+            "横方向の累積で印を横に伸ばす。",
+            "縦方向の累積で面に復元し、必要なセルを数える。",
+        ],
+        "pitfall": "右端・下端に置く -1 は、矩形の外側を止めるための印です。閉区間か半開区間かだけを必ず確認します。",
+    },
+    "cumsum1d": {
+        "label": "1 次元累積和",
+        "mental": "S[i] は先頭から i 個分の合計です。区間 [l, r] は、右端までの合計から左手前までを引きます。",
+        "steps": [
+            "S[0] = 0 を番兵として用意する。",
+            "S[i] = S[i-1] + A[i-1] で前から足す。",
+            "区間和は S[r] - S[l-1] または半開区間なら S[r] - S[l] と読む。",
+        ],
+        "pitfall": "問題が 1-indexed で来るか、Python の配列が 0-indexed かで式が 1 つずれます。",
+    },
+    "imos1d": {
+        "label": "いもす法",
+        "mental": "区間全体を更新せず、始点で +、終点の次で - を置きます。累積和を取ると各位置の値に戻ります。",
+        "steps": [
+            "各区間の左端に加算、右端の次に減算する。",
+            "差分配列を左から累積して本当の値に戻す。",
+            "復元後の配列を出力・集計する。",
+        ],
+        "pitfall": "右端が含まれる区間なら r+1 に -、半開区間 [l, r) なら r に - を置きます。",
+    },
+    "binary": {
+        "label": "二分探索",
+        "mental": "答えの候補を一直線に並べ、NG と OK の境目を探します。毎回、真ん中を見て半分捨てます。",
+        "steps": [
+            "何が OK で何が NG かを言葉で決める。",
+            "left / right が常に条件を満たすように初期化する。",
+            "mid の判定結果で、境目がどちら側にあるかだけ更新する。",
+        ],
+        "pitfall": "探索しているのは値そのものではなく、条件が切り替わる境目です。",
+    },
+    "twopointer": {
+        "label": "しゃくとり法",
+        "mental": "左端と右端で窓を持ち、条件を壊さない範囲で右端だけ前へ進めます。",
+        "steps": [
+            "左端 l を 1 つずつ進める。",
+            "条件を満たす限り右端 r を進める。",
+            "その l から作れる区間数をまとめて足す。",
+        ],
+        "pitfall": "r を毎回 l に戻さないことが高速化の本体です。",
+    },
+    "dp": {
+        "label": "動的計画法",
+        "mental": "dp は「途中結果のメモ」です。dp[i] や dp[i][j] の日本語意味を決めると、遷移式が読みやすくなります。",
+        "steps": [
+            "dp の添字が何を表すかを先に固定する。",
+            "初期状態だけを手で入れる。",
+            "小さい状態から大きい状態へ、使う/使わない・進む/進まないで遷移する。",
+        ],
+        "pitfall": "式を先に暗記するより、dp[i] の意味を日本語で読めるかを優先します。",
+    },
+    "bitdp": {
+        "label": "bitDP",
+        "mental": "整数 1 個を、ON/OFF の集合として使います。bit が 1 なら、その要素をすでに選んでいる状態です。",
+        "steps": [
+            "状態 state を 2 進数で見て、どの要素が入っているか確認する。",
+            "1 << k で k 番目の要素を表す。",
+            "OR や XOR で集合の追加・反転を行う。",
+        ],
+        "pitfall": "状態数は 2^N なので、N が小さい問題専用の考え方です。",
+    },
+    "graph": {
+        "label": "グラフ探索",
+        "mental": "頂点を点、辺を道として、今いる点から行ける点へ順に広げます。",
+        "steps": [
+            "まず入力を隣接リスト G に変換する。",
+            "visited / dist で、訪問済みや距離を記録する。",
+            "DFS は深く、BFS は近い順に広げると読む。",
+        ],
+        "pitfall": "グリッド問題も、各マスを頂点だと思えば同じ形になります。",
+    },
+    "dijkstra": {
+        "label": "ダイクストラ法",
+        "mental": "未確定の中で一番距離が短い頂点を確定し、その頂点から隣を更新します。",
+        "steps": [
+            "cur[v] を暫定最短距離として初期化する。",
+            "ヒープから距離最小の頂点を取り出す。",
+            "その頂点から伸びる辺で隣の距離を改善する。",
+        ],
+        "pitfall": "辺の重みが負の場合は使えません。古い候補がヒープに残るので、確定済みならスキップします。",
+    },
+    "unionfind": {
+        "label": "Union-Find",
+        "mental": "グループの代表者だけを覚えます。同じ代表なら同じ連結成分です。",
+        "steps": [
+            "root(x) で x の代表を探す。",
+            "unite(a, b) で 2 つの集合を結合する。",
+            "same(a, b) で代表が同じかを見る。",
+        ],
+        "pitfall": "辺削除は苦手なので、削除クエリは逆順に見て追加へ変換することがあります。",
+    },
+    "segtree": {
+        "label": "セグメント木",
+        "mental": "配列を区間ごとに二分した木です。親には子 2 つをまとめた値を置きます。",
+        "steps": [
+            "葉に元配列の値を置く。",
+            "親を max / sum などの演算で作る。",
+            "クエリでは関係ない区間を捨て、完全に含まれる区間だけ使う。",
+        ],
+        "pitfall": "半開区間 [l, r) で統一すると実装のズレが減ります。",
+    },
+    "flow": {
+        "label": "最大フロー",
+        "mental": "辺には容量があり、まだ流せる残り容量を残余グラフで管理します。",
+        "steps": [
+            "各辺に逆辺を追加して残余グラフを作る。",
+            "s から t まで流せる道を探す。",
+            "流した分だけ順辺を減らし、逆辺を増やす。",
+        ],
+        "pitfall": "逆辺は「あとで流れを取り消せる余地」を表します。ここが最大フローの一番見落としやすい点です。",
+    },
+    "greedy": {
+        "label": "貪欲法",
+        "mental": "その場の選択が後で損にならない基準を見つけて、順に決めます。",
+        "steps": [
+            "何を基準に並べるかを確認する。",
+            "先頭から見て、採用できるものを採用する。",
+            "なぜ後で取り返しがつく/つかないかをコメントで確認する。",
+        ],
+        "pitfall": "貪欲は実装より「その選び方でよい理由」が本体です。",
+    },
+    "math": {
+        "label": "数学・数え上げ",
+        "mental": "全部試す代わりに、式・周期・余り・不変量で一気に数えます。",
+        "steps": [
+            "何を数えたいかを集合や式に置き換える。",
+            "重複・余り・周期を確認する。",
+            "計算量が定数または log になっているか見る。",
+        ],
+        "pitfall": "式変形だけを追うとつらいので、小さい例で 1 回手計算すると読みやすいです。",
+    },
+    "default": {
+        "label": "実装の基本",
+        "mental": "入力、前処理、判定・更新、出力の 4 ブロックに分けて読むと崩れにくいです。",
+        "steps": [
+            "入力で何が変数・配列に入るか確認する。",
+            "ループが何を全探索・更新しているか見る。",
+            "最後に答えへどう変換しているか確認する。",
+        ],
+        "pitfall": "名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。",
+    },
+}
+
+
+def guide_kind(entry):
+    text = " ".join([entry.get("title", ""), entry.get("summary", ""), " ".join(entry.get("tags", []))])
+    if "最大フロー" in text or "マッチング" in text:
+        return "flow"
+    if "ダイクストラ" in text:
+        return "dijkstra"
+    if "UnionFind" in text or "Union-Find" in text:
+        return "unionfind"
+    if "セグメント木" in text:
+        return "segtree"
+    if "bitDP" in text or "状態BFS" in text:
+        return "bitdp"
+    if "2次元" in text and "いもす" in text:
+        return "imos2d"
+    if "2次元" in text and "累積和" in text:
+        return "cumsum2d"
+    if "いもす" in text:
+        return "imos1d"
+    if "累積和" in text:
+        return "cumsum1d"
+    if "二分探索" in text or "LIS" in text:
+        return "binary"
+    if "しゃくとり" in text:
+        return "twopointer"
+    if "DP" in text or "dp" in text:
+        return "dp"
+    if "BFS" in text or "DFS" in text or "グラフ" in text or "木DP" in text:
+        return "graph"
+    if "貪欲" in text or "区間スケジューリング" in text:
+        return "greedy"
+    if "数学" in text or "GCD" in text or "mod" in text or "包除" in text or "素数" in text:
+        return "math"
+    return "default"
+
+
+def visual_html(kind):
+    """簡易図解。全問題ではなく、図が効く型だけ返す。"""
+    if kind == "cumsum2d":
+        cells = ""
+        for r in range(4):
+            for c in range(4):
+                klass = "v-cell"
+                if r < 1 and c < 1:
+                    klass += " is-corner"
+                elif r < 1:
+                    klass += " is-cut"
+                elif c < 1:
+                    klass += " is-cut"
+                elif 1 <= r <= 3 and 1 <= c <= 3:
+                    klass += " is-target"
+                cells += f'<span class="{klass}"></span>'
+        return f'''
+      <div class="visual visual-cumsum2d" aria-hidden="true">
+        <div class="visual-title">右下 - 上 - 左 + 左上</div>
+        <div class="v-grid">{cells}</div>
+        <div class="visual-legend"><span class="target"></span>欲しい範囲 <span class="cut"></span>引く範囲 <span class="corner"></span>戻す範囲</div>
+      </div>'''
+    if kind == "imos2d":
+        return '''
+      <div class="visual visual-imos2d" aria-hidden="true">
+        <div class="visual-title">四隅だけに印を置く</div>
+        <div class="imos-box"><span class="corner-plus tl">+1</span><span class="corner-minus tr">-1</span><span class="corner-minus bl">-1</span><span class="corner-plus br">+1</span></div>
+      </div>'''
+    if kind == "cumsum1d":
+        return '''
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">区間和 = 右端まで - 左手前まで</div>
+        <div class="line-cells"><span>S[0]</span><span>S[l-1]</span><span class="active">l..r</span><span>S[r]</span></div>
+      </div>'''
+    if kind == "imos1d":
+        return '''
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">始点で +、終点の次で -</div>
+        <div class="line-cells"><span></span><span class="plus">+1</span><span class="active">区間</span><span class="minus">-1</span></div>
+      </div>'''
+    if kind == "binary":
+        return '''
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">NG / OK の境目を探す</div>
+        <div class="binary-line"><span class="ng">NG</span><span class="ng">NG</span><span class="mid">mid</span><span class="ok">OK</span><span class="ok">OK</span></div>
+      </div>'''
+    if kind == "twopointer":
+        return '''
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">窓を右へ滑らせる</div>
+        <div class="window-line"><span></span><span class="l">l</span><span class="active">window</span><span class="r">r</span><span></span></div>
+      </div>'''
+    if kind == "dp":
+        return '''
+      <div class="visual visual-dp" aria-hidden="true">
+        <div class="visual-title">小さい状態から大きい状態へ</div>
+        <div class="dp-flow"><span>dp[i-2]</span><span>dp[i-1]</span><strong>dp[i]</strong></div>
+      </div>'''
+    if kind == "bitdp":
+        return '''
+      <div class="visual visual-bit" aria-hidden="true">
+        <div class="visual-title">整数を集合として読む</div>
+        <div class="bit-row"><span>1</span><span>0</span><span>1</span><span>1</span></div>
+        <div class="bit-caption">ON の bit = 選ばれている要素</div>
+      </div>'''
+    if kind == "graph":
+        return '''
+      <div class="visual visual-graph" aria-hidden="true">
+        <div class="visual-title">点と道に変換して探索</div>
+        <div class="graph-shape"><span class="node n1">1</span><span class="node n2">2</span><span class="node n3">3</span><span class="edge e1"></span><span class="edge e2"></span></div>
+      </div>'''
+    if kind == "dijkstra":
+        return '''
+      <div class="visual visual-graph" aria-hidden="true">
+        <div class="visual-title">距離最小から確定</div>
+        <div class="graph-shape"><span class="node n1 fixed">0</span><span class="node n2">4</span><span class="node n3">7</span><span class="edge e1"></span><span class="edge e2"></span></div>
+      </div>'''
+    if kind == "unionfind":
+        return '''
+      <div class="visual visual-uf" aria-hidden="true">
+        <div class="visual-title">代表者が同じなら同じ集合</div>
+        <div class="uf-groups"><span>1</span><span>2</span><span>3</span></div><div class="uf-groups alt"><span>4</span><span>5</span></div>
+      </div>'''
+    if kind == "segtree":
+        return '''
+      <div class="visual visual-tree" aria-hidden="true">
+        <div class="visual-title">区間を半分ずつまとめる</div>
+        <div class="tree-level"><span>[0,8)</span></div><div class="tree-level"><span>[0,4)</span><span>[4,8)</span></div><div class="tree-level"><span>[0,2)</span><span>[2,4)</span><span>[4,6)</span><span>[6,8)</span></div>
+      </div>'''
+    if kind == "flow":
+        return '''
+      <div class="visual visual-flow" aria-hidden="true">
+        <div class="visual-title">容量つきの道に流す</div>
+        <div class="flow-row"><span>s</span><span>L</span><span>R</span><span>t</span></div>
+      </div>'''
+    return ""
+
+
+def learning_panel_html(entry):
+    kind = guide_kind(entry)
+    guide = GUIDE_DEFS[kind]
+    steps = "".join(f"<li>{esc(s)}</li>" for s in guide["steps"])
+    tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in entry.get("tags", []))
+    visual = visual_html(kind)
+    diff = effective_difficulty(entry["id"])
+    diff_text = f"★{diff}" if diff else "未設定"
+    return f'''
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>{esc(guide["label"])}</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">{esc(guide["mental"])}</p>
+        <ol>{steps}</ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> {esc(guide["pitfall"])}</p>
+        <div class="explain-meta-line"><span>難易度目安: {esc(diff_text)}</span><span>{tags}</span></div>
+      </div>
+      {visual}
+    </div>
+  </section>'''
 
 
 # =====================================================================
@@ -365,7 +699,7 @@ def build_index():
 <script src="assets/js/main.js"></script>
 </body></html>
 '''
-    (DOCS / "index.html").write_text(html_out, encoding="utf-8")
+    write_html(DOCS / "index.html", html_out)
 
 
 def render_card(p, c):
@@ -570,6 +904,7 @@ def build_problem_page(entry, prev_id, next_id):
       <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
+  {learning_panel_html(entry)}
   <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
 
@@ -589,7 +924,7 @@ def build_problem_page(entry, prev_id, next_id):
 <script src="../assets/js/main.js"></script>
 </body></html>
 '''
-    (PROBLEMS_DIR / f"{entry['id']}.html").write_text(html_out, encoding="utf-8")
+    write_html(PROBLEMS_DIR / f"{entry['id']}.html", html_out)
 
 
 def source_link_html(entry, chapter):
@@ -724,6 +1059,7 @@ def build_applied_page(entry, prev_id, next_id):
       <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
+  {learning_panel_html(entry)}
   <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
 
@@ -742,7 +1078,7 @@ def build_applied_page(entry, prev_id, next_id):
 <script src="../assets/js/main.js"></script>
 </body></html>
 '''
-    (PROBLEMS_DIR / f"{entry['id']}.html").write_text(html_out, encoding="utf-8")
+    write_html(PROBLEMS_DIR / f"{entry['id']}.html", html_out)
 
 
 # =====================================================================

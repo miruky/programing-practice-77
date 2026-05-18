@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A76.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A76.py ─ Python 3</span>
     <div class="actions">
@@ -64,6 +64,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>1 次元累積和</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">S[i] は先頭から i 個分の合計です。区間 [l, r] は、右端までの合計から左手前までを引きます。</p>
+        <ol><li>S[0] = 0 を番兵として用意する。</li><li>S[i] = S[i-1] + A[i-1] で前から足す。</li><li>区間和は S[r] - S[l-1] または半開区間なら S[r] - S[l] と読む。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 問題が 1-indexed で来るか、Python の配列が 0-indexed かで式が 1 つずれます。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">DP</span><span class="tag">累積和</span></span></div>
+      </div>
+
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">区間和 = 右端まで - 左手前まで</div>
+        <div class="line-cells"><span>S[0]</span><span>S[l-1]</span><span class="active">l..r</span><span>S[r]</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A76: 川渡り (累積和を使った DP 高速化)
 # ---------------------------------------------------------------------
@@ -76,6 +96,18 @@
 #   ジャンプ可能な範囲の端は二分探索 (bisect) で求める。
 # 【計算量】O(N log N)
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: DP / 累積和 / 難易度目安: ★4
+# - 要約: DP 遷移を累積和で O(1) 化することで全体を O(N log N) に。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - S[i] は先頭から i 個分の合計。S[0]=0 を置くと端の例外処理が消える。
+# - 区間和は「右端までの合計 - 左手前までの合計」と読む。
+# - 入力が 1-indexed、Python 配列が 0-indexed なので添字の変換だけ注意する。
+# ---------------------------------------------------------------------
 
 import bisect
 

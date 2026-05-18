@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A73.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A73.py ─ Python 3</span>
     <div class="actions">
@@ -64,6 +64,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>ダイクストラ法</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">未確定の中で一番距離が短い頂点を確定し、その頂点から隣を更新します。</p>
+        <ol><li>cur[v] を暫定最短距離として初期化する。</li><li>ヒープから距離最小の頂点を取り出す。</li><li>その頂点から伸びる辺で隣の距離を改善する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 辺の重みが負の場合は使えません。古い候補がヒープに残るので、確定済みならスキップします。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">ダイクストラ</span><span class="tag">テクニック</span></span></div>
+      </div>
+
+      <div class="visual visual-graph" aria-hidden="true">
+        <div class="visual-title">距離最小から確定</div>
+        <div class="graph-shape"><span class="node n1 fixed">0</span><span class="node n2">4</span><span class="node n3">7</span><span class="edge e1"></span><span class="edge e2"></span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A73: 2 目的のダイクストラ (距離 + 木の本数)
 # ---------------------------------------------------------------------
@@ -74,6 +94,18 @@
 #   - その下位ビットで木の有無を表現する。
 # 【計算量】O((N+M) log N)
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: ダイクストラ / テクニック / 難易度目安: ★4
+# - 要約: 距離と本数の 2 評価を 10000 倍テクニックでまとめてダイクストラ。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - cur[v] は「今わかっている最短距離」。確定前なので後から小さくなる可能性がある。
+# - ヒープから距離最小の頂点を取り出した瞬間、その頂点の距離を確定させる。
+# - 古い候補がヒープに残るので、確定済みならスキップする行が必要になる。
+# ---------------------------------------------------------------------
 
 import heapq
 

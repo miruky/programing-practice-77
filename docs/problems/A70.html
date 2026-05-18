@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A70.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A70.py ─ Python 3</span>
     <div class="actions">
@@ -64,6 +64,27 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>bitDP</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">整数 1 個を、ON/OFF の集合として使います。bit が 1 なら、その要素をすでに選んでいる状態です。</p>
+        <ol><li>状態 state を 2 進数で見て、どの要素が入っているか確認する。</li><li>1 &lt;&lt; k で k 番目の要素を表す。</li><li>OR や XOR で集合の追加・反転を行う。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 状態数は 2^N なので、N が小さい問題専用の考え方です。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">グラフ</span><span class="tag">BFS</span><span class="tag">bit</span></span></div>
+      </div>
+
+      <div class="visual visual-bit" aria-hidden="true">
+        <div class="visual-title">整数を集合として読む</div>
+        <div class="bit-row"><span>1</span><span>0</span><span>1</span><span>1</span></div>
+        <div class="bit-caption">ON の bit = 選ばれている要素</div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A70: 状態 BFS (ランプ点灯ゲーム)
 # ---------------------------------------------------------------------
@@ -75,6 +96,18 @@
 #   - スタート → ゴールへの最短手数を BFS で求める
 # 【計算量】O(2^N * M)
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: グラフ / BFS / bit / 難易度目安: ★4
+# - 要約: 2^N 通りの状態を頂点に持つ BFS。XOR でビット反転を行う。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。
+# - 1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。
+# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。
+# ---------------------------------------------------------------------
 
 from collections import deque
 

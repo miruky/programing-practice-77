@@ -61,7 +61,7 @@
       <a class="source-link" href="https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_al" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A07.html">
@@ -76,6 +76,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>いもす法</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">区間全体を更新せず、始点で +、終点の次で - を置きます。累積和を取ると各位置の値に戻ります。</p>
+        <ol><li>各区間の左端に加算、右端の次に減算する。</li><li>差分配列を左から累積して本当の値に戻す。</li><li>復元後の配列を出力・集計する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 右端が含まれる区間なら r+1 に -、半開区間 [l, r) なら r に - を置きます。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">累積和</span><span class="tag">いもす法</span></span></div>
+      </div>
+
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">始点で +、終点の次で -</div>
+        <div class="line-cells"><span></span><span class="plus">+1</span><span class="active">区間</span><span class="minus">-1</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B07: Convenience Store 2 (A07 応用 ─ いもす法)
 # ---------------------------------------------------------------------
@@ -85,6 +105,18 @@
 #                 累積和を取れば各時刻の人数が分かる ─ これがいもす法。
 # 【計算量】O(N + T)。区間加算が定数時間でできるのが肝。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: 累積和 / いもす法 / 難易度目安: ★3
+# - 要約: いもす法で各時刻に滞在中の客数を求める。A07 の練習。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 区間全体を更新せず、始点で +、終点の次で - を置く。
+# - 最後に左から累積和を取ると、各位置に実際の加算結果が広がる。
+# - 右端を含む区間か、半開区間かで - を置く場所が変わる。
+# ---------------------------------------------------------------------
 
 # --- 入力 -----------------------------------------------------------
 T = int(input())

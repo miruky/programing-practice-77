@@ -61,7 +61,7 @@
       <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_em" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A66.html">
@@ -76,6 +76,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>Union-Find</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">グループの代表者だけを覚えます。同じ代表なら同じ連結成分です。</p>
+        <ol><li>root(x) で x の代表を探す。</li><li>unite(a, b) で 2 つの集合を結合する。</li><li>same(a, b) で代表が同じかを見る。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 辺削除は苦手なので、削除クエリは逆順に見て追加へ変換することがあります。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">グラフ</span><span class="tag">UnionFind</span><span class="tag">オフライン</span></span></div>
+      </div>
+
+      <div class="visual visual-uf" aria-hidden="true">
+        <div class="visual-title">代表者が同じなら同じ集合</div>
+        <div class="uf-groups"><span>1</span><span>2</span><span>3</span></div><div class="uf-groups alt"><span>4</span><span>5</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B66: Typhoon (A66 応用 ─ Union-Find + クエリ逆順処理)
 # ---------------------------------------------------------------------
@@ -87,6 +107,18 @@
 #                 答えは逆順に得られるので、最後に反転して出力する。
 # 【計算量】O((N + M + Q) α(N))。α は Ackermann の逆関数で実用上ほぼ定数。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: グラフ / UnionFind / オフライン / 難易度目安: ★4
+# - 要約: 辺削除クエリを時系列逆順にして Union-Find で連結性を答える典型。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - root(x) は x の代表者を返す。同じ代表者なら同じ連結成分に属する。
+# - unite(a,b) は 2 つのグループを結合するだけで、辺そのものを保存しているわけではない。
+# - 削除クエリは苦手なので、必要なら時系列を逆順にして「追加」に変換して読む。
+# ---------------------------------------------------------------------
 
 # --- 入力 (辺) -----------------------------------------------------
 N, M = map(int, input().split())

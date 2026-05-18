@@ -61,7 +61,7 @@
       <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_bz" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A01.html">
@@ -76,6 +76,22 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>実装の基本</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">入力、前処理、判定・更新、出力の 4 ブロックに分けて読むと崩れにくいです。</p>
+        <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">入出力</span></span></div>
+      </div>
+
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B01: A+B Problem (A01 応用)
 # ---------------------------------------------------------------------
@@ -84,6 +100,18 @@
 #         1 行で受け取る」イディオムを身につける (A01 では 1 数だけだった)。
 # 【計算量】O(1)。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: 入出力 / 難易度目安: ★2
+# - 要約: 整数 A, B を読み込み A+B を出力する。標準入出力の更なる練習。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
+# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
+# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
+# ---------------------------------------------------------------------
 
 # input().split() は 1 行の文字列を空白で分割し、リストとして返す。
 # それを map(int, ...) で各要素を int に変換し、A, B にそれぞれ代入する。

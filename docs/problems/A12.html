@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A12.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner">
     <span class="applied-banner-label">応用問題</span>
     <a class="applied-banner-link" href="B12.html">
@@ -72,6 +72,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>二分探索</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">答えの候補を一直線に並べ、NG と OK の境目を探します。毎回、真ん中を見て半分捨てます。</p>
+        <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">二分探索</span><span class="tag">めぐる式</span></span></div>
+      </div>
+
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">NG / OK の境目を探す</div>
+        <div class="binary-line"><span class="ng">NG</span><span class="ng">NG</span><span class="mid">mid</span><span class="ok">OK</span><span class="ok">OK</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A12: 答えで二分探索 (印刷機問題)
 # ---------------------------------------------------------------------
@@ -83,6 +103,18 @@
 #   x が単調 (時間を増やすほど印刷可能枚数も増える) なので二分探索が効く。
 # 【計算量】O(N log(maxAnswer))
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: 二分探索 / めぐる式 / 難易度目安: ★3
+# - 要約: 「答えが x 以下か」という判定問題に帰着させて二分探索する典型。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。
+# - bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。
+# - LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。
+# ---------------------------------------------------------------------
 
 # x 分以内に合計 K 枚以上印刷できるかを判定する関数。
 def check(x, N, K, A):

@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap09/answer_A70_extra.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A70_extra.py ─ Python 3</span>
     <div class="actions">
@@ -64,6 +64,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>グラフ探索</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">頂点を点、辺を道として、今いる点から行ける点へ順に広げます。</p>
+        <ol><li>まず入力を隣接リスト G に変換する。</li><li>visited / dist で、訪問済みや距離を記録する。</li><li>DFS は深く、BFS は近い順に広げると読む。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> グリッド問題も、各マスを頂点だと思えば同じ形になります。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">グラフ</span><span class="tag">BFS</span><span class="tag">XOR</span></span></div>
+      </div>
+
+      <div class="visual visual-graph" aria-hidden="true">
+        <div class="visual-title">点と道に変換して探索</div>
+        <div class="graph-shape"><span class="node n1">1</span><span class="node n2">2</span><span class="node n3">3</span><span class="edge e1"></span><span class="edge e2"></span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A70 (補足版): XOR を使った高速版
 # ---------------------------------------------------------------------
@@ -74,6 +94,18 @@
 #   さらにグラフを実体化せず、BFS 内で直接遷移を計算する。
 # 【計算量】A70 と同じだが定数倍が約 1/5 と高速。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: グラフ / BFS / XOR / 難易度目安: ★4
+# - 要約: ランプ反転を XOR 1 回で表現し、A70 を約 1/5 の実行時間に。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。
+# - 1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。
+# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。
+# ---------------------------------------------------------------------
 
 from collections import deque
 

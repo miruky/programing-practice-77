@@ -57,12 +57,16 @@ const ICONS = {
   const fullBlock = document.querySelector('.code-block-full');
   const strippedBlock = document.querySelector('.code-block-stripped');
   if (!fullBlock || !strippedBlock) return;
+  const explainPanels = document.querySelectorAll('.explain-panel');
 
   let commentsHidden = true;
 
   function applyState() {
     fullBlock.hidden = commentsHidden;
     strippedBlock.hidden = !commentsHidden;
+    explainPanels.forEach(panel => {
+      panel.hidden = commentsHidden;
+    });
   }
 
   // ----- コメント表示トグル -----
@@ -78,6 +82,7 @@ const ICONS = {
       applyState();
     });
   }
+  applyState();
 
   // ----- コードコピー (現在表示している方をコピー) -----
   const copyBtn = document.getElementById('copy-code');

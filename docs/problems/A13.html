@@ -56,7 +56,7 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap03/answer_A13.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner">
     <span class="applied-banner-label">応用問題</span>
     <a class="applied-banner-link" href="B13.html">
@@ -72,6 +72,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>しゃくとり法</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">左端と右端で窓を持ち、条件を壊さない範囲で右端だけ前へ進めます。</p>
+        <ol><li>左端 l を 1 つずつ進める。</li><li>条件を満たす限り右端 r を進める。</li><li>その l から作れる区間数をまとめて足す。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> r を毎回 l に戻さないことが高速化の本体です。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">しゃくとり法</span></span></div>
+      </div>
+
+      <div class="visual visual-line" aria-hidden="true">
+        <div class="visual-title">窓を右へ滑らせる</div>
+        <div class="window-line"><span></span><span class="l">l</span><span class="active">window</span><span class="r">r</span><span></span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A13: しゃくとり法 (近いペアの数え上げ)
 # ---------------------------------------------------------------------
@@ -83,6 +103,18 @@
 # 【計算量】O(N)
 # 【ポイント】L を i, R を「i から見て条件を満たす一番遠い右端」とする。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: しゃくとり法 / 難易度目安: ★3
+# - 要約: 右端を尺取り虫のように動かして区間長を効率的に列挙する。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 左端 l を固定し、条件を満たす限り右端 r を前に進める。
+# - r は戻さない。各要素が高々 1 回ずつ進むので全体 O(N) になる。
+# - 現在の窓が何を満たしているかを、ループの不変条件として読む。
+# ---------------------------------------------------------------------
 
 # --- 入力 -----------------------------------------------------------
 N, K = map(int, input().split())

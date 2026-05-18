@@ -56,14 +56,14 @@
       <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap08/answer_A53.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner">
     <span class="applied-banner-label">応用問題</span>
     <a class="applied-banner-link" href="B53.html">
       <strong>B53: Job Scheduling</strong>
       <span class="applied-banner-summary">毎日、開放されたジョブの中から最大給料のものを優先度付きキューで選ぶ。</span>
     </a>
-    
+
   </div>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A53.py ─ Python 3</span>
@@ -72,6 +72,22 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>実装の基本</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">入力、前処理、判定・更新、出力の 4 ブロックに分けて読むと崩れにくいです。</p>
+        <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">データ構造</span><span class="tag">ヒープ</span></span></div>
+      </div>
+
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A53: 優先度付きキュー (最小ヒープ)
 # ---------------------------------------------------------------------
@@ -81,6 +97,18 @@
 #   Python の heapq は &quot;最小ヒープ&quot; のみ。最大値が欲しいときは符号反転。
 # 【計算量】挿入・削除 O(log N), 最小値参照 O(1)
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: データ構造 / ヒープ / 難易度目安: ★2
+# - 要約: ヒープで最小値を取り出す優先度付きキュー。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
+# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
+# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
+# ---------------------------------------------------------------------
 
 import heapq
 

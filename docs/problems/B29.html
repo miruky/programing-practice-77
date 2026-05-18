@@ -61,7 +61,7 @@
       <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_db" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A29.html">
@@ -76,6 +76,22 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>数学・数え上げ</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">全部試す代わりに、式・周期・余り・不変量で一気に数えます。</p>
+        <ol><li>何を数えたいかを集合や式に置き換える。</li><li>重複・余り・周期を確認する。</li><li>計算量が定数または log になっているか見る。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式変形だけを追うとつらいので、小さい例で 1 回手計算すると読みやすいです。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">数学</span><span class="tag">繰り返し二乗法</span></span></div>
+      </div>
+
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B29: Power Hard (A29 応用 ─ 繰り返し二乗法)
 # ---------------------------------------------------------------------
@@ -86,6 +102,18 @@
 #         答えに掛け合わせる。
 # 【計算量】O(log b)。b = 10¹⁸ でも 60 回ループで終わる。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: 数学 / 繰り返し二乗法 / 難易度目安: ★3
+# - 要約: 繰り返し二乗法で a^b mod 10^9+7 を O(log b) で計算する。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
+# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
+# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
+# ---------------------------------------------------------------------
 
 # a^b mod m を返す関数。
 def Power(a, b, m):

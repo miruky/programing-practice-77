@@ -61,7 +61,7 @@
       <span style="color:#9ca3af">(AtCoder には掲載なし / 鉄則本 editorial 限定)</span>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A53.html">
@@ -76,6 +76,22 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>貪欲法</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">その場の選択が後で損にならない基準を見つけて、順に決めます。</p>
+        <ol><li>何を基準に並べるかを確認する。</li><li>先頭から見て、採用できるものを採用する。</li><li>なぜ後で取り返しがつく/つかないかをコメントで確認する。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 貪欲は実装より「その選び方でよい理由」が本体です。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">データ構造</span><span class="tag">ヒープ</span><span class="tag">貪欲</span></span></div>
+      </div>
+
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B53: Job Scheduling (A53 応用 ─ 優先度付きキュー)
 # ---------------------------------------------------------------------
@@ -88,6 +104,18 @@
 # 【計算量】O((N + D) log N)。
 # =====================================================================
 import heapq
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: データ構造 / ヒープ / 貪欲 / 難易度目安: ★3
+# - 要約: 毎日、開放されたジョブの中から最大給料のものを優先度付きキューで選ぶ。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 貪欲法は、何を基準に並べるか・どの候補を先に取るかが本体。
+# - コードより先に「その選択をしても後で損しない理由」をコメントで確認する。
+# - ソート後は、左から順に決めて戻らない構造になっているかを見る。
+# ---------------------------------------------------------------------
 
 # G[i] = i 日目に開放される仕事の給料リスト
 G = [list() for _ in range(2005)]

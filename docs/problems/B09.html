@@ -61,7 +61,7 @@
       <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_ch" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
-  
+
   <div class="applied-banner applied-banner--reverse">
     <span class="applied-banner-label">基本問題</span>
     <a class="applied-banner-link" href="A09.html">
@@ -76,6 +76,26 @@
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
+
+  <section class="explain-panel" hidden>
+    <div class="explain-panel-head">
+      <span class="explain-kicker">コメント表示中だけの読み方ガイド</span>
+      <strong>2 次元いもす法</strong>
+    </div>
+    <div class="explain-panel-body">
+      <div class="explain-copy">
+        <p class="explain-lead">長方形全体を毎回塗らず、四隅だけに + / - の印を置きます。最後に累積和を取ると、印が面に広がります。</p>
+        <ol><li>まず四隅への更新だけを追う。ここではまだ完成形ではない。</li><li>横方向の累積で印を横に伸ばす。</li><li>縦方向の累積で面に復元し、必要なセルを数える。</li></ol>
+        <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 右端・下端に置く -1 は、矩形の外側を止めるための印です。閉区間か半開区間かだけを必ず確認します。</p>
+        <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">累積和</span><span class="tag">いもす法</span><span class="tag">2次元</span></span></div>
+      </div>
+
+      <div class="visual visual-imos2d" aria-hidden="true">
+        <div class="visual-title">四隅だけに印を置く</div>
+        <div class="imos-box"><span class="corner-plus tl">+1</span><span class="corner-minus tr">-1</span><span class="corner-minus bl">-1</span><span class="corner-plus br">+1</span></div>
+      </div>
+    </div>
+  </section>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # B09: Papers (A09 応用 ─ 2 次元いもす法)
 # ---------------------------------------------------------------------
@@ -85,6 +105,18 @@
 #                 累積和を取れば各マスの被覆枚数になる。1 以上のマスを数える。
 # 【計算量】O(N + 座標範囲²)。
 # =====================================================================
+# ---------------------------------------------------------------------
+# 【読み方の地図】
+# - 問題の型: 累積和 / いもす法 / 2次元 / 難易度目安: ★4
+# - 要約: 2 次元いもす法で、複数の長方形が覆う総面積を求める。
+# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
+# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
+# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
+# 【このコードで特に見る場所】
+# - 長方形の全マスを直接更新せず、四隅に +1/-1 の印だけ置く。
+# - 印を置いた時点では答えではない。横方向・縦方向の累積和で面に戻す。
+# - 閉区間か半開区間かで、-1 を置く座標が 1 つずれるので最初に確認する。
+# ---------------------------------------------------------------------
 
 # --- 入力 -----------------------------------------------------------
 N = int(input())
@@ -104,19 +136,22 @@ for i in range(N):
     T[C[i]][B[i]] -= 1
     T[C[i]][D[i]] += 1
 
-# --- 横方向 → 縦方向の累積和 --------------------------------------
-for i in range(0, 1501):
-    for j in range(1, 1501):
-        T[i][j] = T[i][j - 1] + T[i][j]
-for i in range(1, 1501):
-    for j in range(0, 1501):
-        T[i][j] = T[i - 1][j] + T[i][j]
+# --- 2 次元累積和で被覆枚数に復元 ----------------------------------
+# T[x][y] を「セル (x,y) が何枚の紙で覆われているか」に戻す。
+# いもすの四隅の印は、累積和を取って初めて面の値になる。
+for x in range(1501):
+    for y in range(1, 1501):
+        T[x][y] += T[x][y - 1]
+for x in range(1, 1501):
+    for y in range(1501):
+        T[x][y] += T[x - 1][y]
 
 # --- 1 枚以上覆われているマス数を数える ----------------------------
+# 紙が覆うセルは 0..1499 の 1500×1500 個。1500 番目の境界線は面積に含めない。
 Answer = 0
-for i in range(1501):
-    for j in range(1501):
-        if T[i][j] &gt;= 1:
+for x in range(1500):
+    for y in range(1500):
+        if T[x][y] &gt;= 1:
             Answer += 1
 
 # --- 出力 -----------------------------------------------------------
@@ -137,17 +172,17 @@ for i in range(N):
     T[C[i]][B[i]] -= 1
     T[C[i]][D[i]] += 1
 
-for i in range(0, 1501):
-    for j in range(1, 1501):
-        T[i][j] = T[i][j - 1] + T[i][j]
-for i in range(1, 1501):
-    for j in range(0, 1501):
-        T[i][j] = T[i - 1][j] + T[i][j]
+for x in range(1501):
+    for y in range(1, 1501):
+        T[x][y] += T[x][y - 1]
+for x in range(1, 1501):
+    for y in range(1501):
+        T[x][y] += T[x - 1][y]
 
 Answer = 0
-for i in range(1501):
-    for j in range(1501):
-        if T[i][j] &gt;= 1:
+for x in range(1500):
+    for y in range(1500):
+        if T[x][y] &gt;= 1:
             Answer += 1
 
 print(Answer)
