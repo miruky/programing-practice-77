@@ -1,0 +1,63 @@
+# =====================================================================
+# C15: Many Meetings (力試し問題)
+# ---------------------------------------------------------------------
+# 【概要】N 個の会議 (時刻 L[i]〜R[i], 1 つの会議は K 分継続) があり、
+#         各会議 i に必ず出席する場合の「残りで出席できる会議数 (の最大)」
+#         を求める。
+# 【アルゴリズム】R[i] += K で「会議終了時刻 + 移動 K」を境界に補正。
+#         左から区間スケジューリング (終了時刻昇順) で cntL[t] = 「時刻 t
+#         までに出席できる会議数」を、右からも cntR[t] を構築。
+#         cntL[L[i]] + cntR[R[i]] + 1 が答え (+1 は会議 i 自身)。
+# 【計算量】O(N log N + V)。V = 時刻範囲 (200000)。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, K = map(int, input().split())
+L = [0] * (N + 1)
+R = [0] * (N + 1)
+for i in range(1, N + 1):
+    L[i], R[i] = map(int, input().split())
+
+# 時刻に補正をかける (移動 K 分も塞ぐ)
+for i in range(1, N + 1):
+    R[i] += K
+
+MAXT = 200000 + 5
+cntL = [0] * MAXT
+cntR = [0] * MAXT
+
+# --- 左から区間スケジューリング ------------------------------------
+# (R, L) で昇順ソート → 終了時刻早い順
+tmp1 = sorted((R[i], L[i]) for i in range(1, N + 1))
+cur_time = 0
+num = 0
+for r, l in tmp1:
+    if cur_time <= l:
+        cur_time = r
+        num += 1
+        cntL[cur_time] = num
+
+# --- 右から区間スケジューリング ------------------------------------
+# (L, R) で降順 (開始時刻遅い順)
+tmp2 = sorted(((L[i], R[i]) for i in range(1, N + 1)), reverse=True)
+cur_time = 200000
+num = 0
+for l, r in tmp2:
+    if cur_time >= r:
+        cur_time = l
+        num += 1
+        cntR[cur_time] = num
+
+# --- cntL, cntR を「区間最大」で埋める ----------------------------
+for i in range(1, MAXT - 1):
+    if cntL[i] < cntL[i - 1]:
+        cntL[i] = cntL[i - 1]
+for i in range(MAXT - 2, -1, -1):
+    if cntR[i] < cntR[i + 1]:
+        cntR[i] = cntR[i + 1]
+
+# --- 各会議 i 自身を必ず含めた場合の最大出席数を出力 ---------------
+out = []
+for i in range(1, N + 1):
+    out.append(str(cntL[L[i]] + cntR[R[i]] + 1))
+print("\n".join(out))

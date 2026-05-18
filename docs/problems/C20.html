@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>C20: Mayor&#x27;s Challenge | 鉄則77 Python解説 (力試し問題)</title>
+<meta name="description" content="C20: Mayor&#x27;s Challenge ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>C20</strong>
+  </nav>
+
+  <span class="id-pill id-pill--final">C20</span>
+  <h1>Mayor&#x27;s Challenge</h1>
+
+  <div class="summary">K 区画を L 個の連結特別区にまとめる問題を、貪欲 + 焼きなまし法で解く。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">ヒューリスティック</span><span class="tag">焼きなまし</span><span class="tag">UnionFind</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/final/cpp/answer_C20.cpp" target="_blank" rel="noopener noreferrer">GitHub で C++ 原文を見る (Python は当サイト独自実装)<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_fr" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C20.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# C20: Mayor&#x27;s Challenge (力試し問題 / ヒューリスティック)
+# ---------------------------------------------------------------------
+# 【概要】N×N グリッドの K 個の区画を L 個の連結な特別区にまとめる。
+#         各区画には人口 A、面積 B が与えられ、特別区ごとの (合計 A, 合計 B)
+#         の最小/最大比をスコアとする。スコアを最大化する。
+# 【アルゴリズム】Union-Find で「小さい連結成分から併合」する貪欲法で
+#                 初期解を作り、その後「ランダムに 1 区画の色を変えてみる」
+#                 焼きなまし法で改善する。
+# 【計算量】貪欲 O(K² + KE)、焼きなまし 0.95 秒のループ。
+# 【注意】Python は C++ より遅いため、C++ 版より得点が下がる可能性あり。
+# =====================================================================
+import random
+import time
+
+
+# --- Union-Find ------------------------------------------------------
+class UnionFind:
+    def __init__(self, n):
+        self.par = [-1] * (n + 1)
+        self.siz = [1] * (n + 1)
+
+    def root(self, x):
+        while self.par[x] != -1:
+            x = self.par[x]
+        return x
+
+    def unite(self, u, v):
+        ru, rv = self.root(u), self.root(v)
+        if ru == rv:
+            return
+        if self.siz[ru] &lt; self.siz[rv]:
+            self.par[ru] = rv
+            self.siz[rv] += self.siz[ru]
+        else:
+            self.par[rv] = ru
+            self.siz[ru] += self.siz[rv]
+
+    def same(self, u, v):
+        return self.root(u) == self.root(v)
+
+
+# --- 入力 -----------------------------------------------------------
+N, K, L = map(int, input().split())
+A = [0] * (K + 1)
+B = [0] * (K + 1)
+for i in range(1, K + 1):
+    A[i], B[i] = map(int, input().split())
+C = [[0] * (N + 1)]
+for i in range(1, N + 1):
+    C.append([0] + list(map(int, input().split())))
+
+# --- 隣接グラフを構築 (区画 ↔ 区画) ---------------------------------
+G = [set() for _ in range(K + 1)]
+for i in range(1, N + 1):
+    for j in range(1, N + 1):
+        if i != N and C[i][j] != 0 and C[i + 1][j] != 0 and C[i][j] != C[i + 1][j]:
+            G[C[i][j]].add(C[i + 1][j])
+            G[C[i + 1][j]].add(C[i][j])
+        if j != N and C[i][j] != 0 and C[i][j + 1] != 0 and C[i][j] != C[i][j + 1]:
+            G[C[i][j]].add(C[i][j + 1])
+            G[C[i][j + 1]].add(C[i][j])
+G = [list(s) for s in G]                  # 後で index アクセスするためリスト化
+
+answer = [0] * (K + 1)
+
+# 連結性チェック用 DFS
+visited = [False] * (K + 1)
+
+def dfs(pos, color):
+    stack = [pos]
+    while stack:
+        v = stack.pop()
+        if visited[v]:
+            continue
+        visited[v] = True
+        for nv in G[v]:
+            if answer[nv] == color and not visited[nv]:
+                stack.append(nv)
+
+
+def get_score():
+    # 各特別区が連結かつ存在するか
+    for i in range(1, K + 1):
+        visited[i] = False
+    for i in range(1, L + 1):
+        pos = -1
+        for j in range(1, K + 1):
+            if answer[j] == i:
+                pos = j
+        if pos == -1:
+            return 0.0
+        dfs(pos, i)
+    for i in range(1, K + 1):
+        if not visited[i]:
+            return 0.0
+
+    # スコア計算
+    p = [0] * (L + 1)
+    q = [0] * (L + 1)
+    for i in range(1, K + 1):
+        p[answer[i]] += A[i]
+        q[answer[i]] += B[i]
+    pmin, pmax = min(p[1:L + 1]), max(p[1:L + 1])
+    qmin, qmax = min(q[1:L + 1]), max(q[1:L + 1])
+    if pmax == 0 or qmax == 0:
+        return 0.0
+    return min(pmin / pmax, qmin / qmax)
+
+
+# --- 貪欲法で初期解 (小さい連結成分から K - L 回併合) --------------
+uf = UnionFind(K)
+for _ in range(K - L):
+    min_size = 10 ** 9
+    v1, v2 = -1, -1
+    for j in range(1, K + 1):
+        for v in G[j]:
+            if not uf.same(j, v):
+                s1 = uf.siz[uf.root(j)]
+                s2 = uf.siz[uf.root(v)]
+                if min_size &gt; s1 + s2:
+                    min_size = s1 + s2
+                    v1, v2 = j, v
+    if v1 != -1:
+        uf.unite(v1, v2)
+
+# --- Union-Find の根を色番号に変換 ---------------------------------
+roots = sorted(set(uf.root(i) for i in range(1, K + 1)))
+root_to_color = {r: idx + 1 for idx, r in enumerate(roots)}
+for i in range(1, K + 1):
+    answer[i] = root_to_color[uf.root(i)]
+
+# --- 山登り / 焼きなまし法で改善 (0.95 秒) -------------------------
+TIME_LIMIT = 0.95
+ti = time.time()
+current_score = get_score()
+while time.time() - ti &lt; TIME_LIMIT:
+    # 隣接する別色の頂点を選んで色を交換してみる
+    v = random.randint(1, K)
+    if not G[v]:
+        continue
+    x = answer[G[v][random.randint(0, len(G[v]) - 1)]]
+    if answer[v] == x:
+        continue
+    old_x = answer[v]
+    answer[v] = x
+    new_score = get_score()
+
+    # 焼きなまし: 確率で悪化も受理
+    rv = (random.random() + 0.5)         # ≒ [0.5, 1.5]
+    rv /= 1.5
+    temp = 0.0040 - 0.0039 * ((time.time() - ti) / TIME_LIMIT)
+    import math
+    if new_score != 0.0 and rv &lt; math.exp((new_score - current_score) / max(temp, 1e-9)):
+        current_score = new_score
+    else:
+        answer[v] = old_x
+
+# --- 出力 -----------------------------------------------------------
+print(&quot;\n&quot;.join(str(answer[i]) for i in range(1, K + 1)))
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">import random
+import time
+
+class UnionFind:
+    def __init__(self, n):
+        self.par = [-1] * (n + 1)
+        self.siz = [1] * (n + 1)
+
+    def root(self, x):
+        while self.par[x] != -1:
+            x = self.par[x]
+        return x
+
+    def unite(self, u, v):
+        ru, rv = self.root(u), self.root(v)
+        if ru == rv:
+            return
+        if self.siz[ru] &lt; self.siz[rv]:
+            self.par[ru] = rv
+            self.siz[rv] += self.siz[ru]
+        else:
+            self.par[rv] = ru
+            self.siz[ru] += self.siz[rv]
+
+    def same(self, u, v):
+        return self.root(u) == self.root(v)
+
+N, K, L = map(int, input().split())
+A = [0] * (K + 1)
+B = [0] * (K + 1)
+for i in range(1, K + 1):
+    A[i], B[i] = map(int, input().split())
+C = [[0] * (N + 1)]
+for i in range(1, N + 1):
+    C.append([0] + list(map(int, input().split())))
+
+G = [set() for _ in range(K + 1)]
+for i in range(1, N + 1):
+    for j in range(1, N + 1):
+        if i != N and C[i][j] != 0 and C[i + 1][j] != 0 and C[i][j] != C[i + 1][j]:
+            G[C[i][j]].add(C[i + 1][j])
+            G[C[i + 1][j]].add(C[i][j])
+        if j != N and C[i][j] != 0 and C[i][j + 1] != 0 and C[i][j] != C[i][j + 1]:
+            G[C[i][j]].add(C[i][j + 1])
+            G[C[i][j + 1]].add(C[i][j])
+G = [list(s) for s in G]
+
+answer = [0] * (K + 1)
+
+visited = [False] * (K + 1)
+
+def dfs(pos, color):
+    stack = [pos]
+    while stack:
+        v = stack.pop()
+        if visited[v]:
+            continue
+        visited[v] = True
+        for nv in G[v]:
+            if answer[nv] == color and not visited[nv]:
+                stack.append(nv)
+
+def get_score():
+    for i in range(1, K + 1):
+        visited[i] = False
+    for i in range(1, L + 1):
+        pos = -1
+        for j in range(1, K + 1):
+            if answer[j] == i:
+                pos = j
+        if pos == -1:
+            return 0.0
+        dfs(pos, i)
+    for i in range(1, K + 1):
+        if not visited[i]:
+            return 0.0
+
+    p = [0] * (L + 1)
+    q = [0] * (L + 1)
+    for i in range(1, K + 1):
+        p[answer[i]] += A[i]
+        q[answer[i]] += B[i]
+    pmin, pmax = min(p[1:L + 1]), max(p[1:L + 1])
+    qmin, qmax = min(q[1:L + 1]), max(q[1:L + 1])
+    if pmax == 0 or qmax == 0:
+        return 0.0
+    return min(pmin / pmax, qmin / qmax)
+
+uf = UnionFind(K)
+for _ in range(K - L):
+    min_size = 10 ** 9
+    v1, v2 = -1, -1
+    for j in range(1, K + 1):
+        for v in G[j]:
+            if not uf.same(j, v):
+                s1 = uf.siz[uf.root(j)]
+                s2 = uf.siz[uf.root(v)]
+                if min_size &gt; s1 + s2:
+                    min_size = s1 + s2
+                    v1, v2 = j, v
+    if v1 != -1:
+        uf.unite(v1, v2)
+
+roots = sorted(set(uf.root(i) for i in range(1, K + 1)))
+root_to_color = {r: idx + 1 for idx, r in enumerate(roots)}
+for i in range(1, K + 1):
+    answer[i] = root_to_color[uf.root(i)]
+
+TIME_LIMIT = 0.95
+ti = time.time()
+current_score = get_score()
+while time.time() - ti &lt; TIME_LIMIT:
+    v = random.randint(1, K)
+    if not G[v]:
+        continue
+    x = answer[G[v][random.randint(0, len(G[v]) - 1)]]
+    if answer[v] == x:
+        continue
+    old_x = answer[v]
+    answer[v] = x
+    new_score = get_score()
+
+    rv = (random.random() + 0.5)
+    rv /= 1.5
+    temp = 0.0040 - 0.0039 * ((time.time() - ti) / TIME_LIMIT)
+    import math
+    if new_score != 0.0 and rv &lt; math.exp((new_score - current_score) / max(temp, 1e-9)):
+        current_score = new_score
+    else:
+        answer[v] = old_x
+
+print(&quot;\n&quot;.join(str(answer[i]) for i in range(1, K + 1)))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="C19.html"><div class="nav-label">前の問題</div><div class="nav-title">C19: Gasoline Optimization</div></a>
+    <a class="next disabled"><div class="nav-label">次の問題</div><div class="nav-title">─</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

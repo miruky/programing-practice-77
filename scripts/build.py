@@ -28,6 +28,7 @@ CHAPTERS = META["chapters"]
 PROBLEMS = META["problems"]
 EXTRAS = META["extras"]
 APPLIED = META.get("applied", [])
+FINAL = META.get("final", [])
 
 # id -> data 辞書
 PROBLEMS_BY_ID = {p["id"]: p for p in PROBLEMS}
@@ -45,9 +46,15 @@ APPLIED_BY_BASE = {a["base"]: a for a in APPLIED}
 # 応用問題 ID -> 応用問題エントリ
 APPLIED_BY_ID = {a["id"]: a for a in APPLIED}
 
+# 章番号 -> [力試し問題,...] (chap10 のみ)
+FINAL_BY_CHAPTER = {c["id"]: [] for c in CHAPTERS}
+for f in FINAL:
+    FINAL_BY_CHAPTER[f["chapter"]].append(f)
+FINAL_BY_ID = {f["id"]: f for f in FINAL}
+
 CHAPTER_BY_ID = {c["id"]: c for c in CHAPTERS}
 
-# 全エントリ (本編 + 補足) を index ページに並べる順序
+# 全エントリ (本編 + 補足 + 力試し) を index ページに並べる順序
 ALL_ENTRIES = []  # (id, title, summary, tags, chapter_id, code_filename)
 for p in PROBLEMS:
     ALL_ENTRIES.append({
@@ -58,6 +65,7 @@ for p in PROBLEMS:
         "chapter": p["chapter"],
         "code_file": f"{p['id']}.py",
         "is_extra": False,
+        "is_final": False,
         "base": p["id"],
     })
     # 補足を続けて入れる
@@ -70,8 +78,23 @@ for p in PROBLEMS:
             "chapter": p["chapter"],
             "code_file": f"{e['id']}.py",
             "is_extra": True,
+            "is_final": False,
             "base": e["base"],
         })
+# 力試し問題は最後 (= 10 章セクションの末尾) に並べる
+for f in FINAL:
+    ALL_ENTRIES.append({
+        "id": f["id"],
+        "title": f["title"],
+        "summary": f["summary"],
+        "tags": f["tags"],
+        "chapter": f["chapter"],
+        "code_file": f"{f['id']}.py",
+        "is_extra": False,
+        "is_final": True,
+        "base": f["id"],
+        "atcoder": f.get("atcoder"),
+    })
 
 ENTRIES_BY_ID = {e["id"]: e for e in ALL_ENTRIES}
 
@@ -219,10 +242,13 @@ def footer_html():
 #  index.html の生成
 # =====================================================================
 def build_index():
+    total = len(PROBLEMS) + len(EXTRAS) + len(APPLIED) + len(FINAL)
     chip_html = (
-        f'<div class="stat-chip"><strong>{len(PROBLEMS)}</strong> 問の本編解答</div>'
+        f'<div class="stat-chip"><strong>{len(PROBLEMS)}</strong> 問の本編 (A)</div>'
+        f'<div class="stat-chip"><strong>{len(APPLIED)}</strong> 問の応用 (B)</div>'
+        f'<div class="stat-chip"><strong>{len(FINAL)}</strong> 問の力試し (C)</div>'
         f'<div class="stat-chip"><strong>{len(EXTRAS)}</strong> 件の補足コード</div>'
-        f'<div class="stat-chip"><strong>{len(CHAPTERS)}</strong> 章を網羅</div>'
+        f'<div class="stat-chip"><strong>{total}</strong> 問掲載</div>'
     )
 
     filter_buttons = '<button class="active" data-chapter="all">すべて</button>'
@@ -232,7 +258,8 @@ def build_index():
     sections_html = ''
     for c in CHAPTERS:
         chap_problems = PROBLEMS_BY_CHAPTER.get(c["id"], [])
-        if not chap_problems:
+        chap_finals = FINAL_BY_CHAPTER.get(c["id"], [])
+        if not chap_problems and not chap_finals:
             continue
         cards = ''
         for p in chap_problems:
@@ -240,6 +267,9 @@ def build_index():
             # base 問題の直後に補足カードを並べる
             for e in EXTRAS_BY_BASE.get(p["id"], []):
                 cards += render_extra_card(e, c)
+        # 力試し問題は章末尾に並べる (10 章のみ)
+        for f in chap_finals:
+            cards += render_final_card(f, c)
         sections_html += f'''
 <section class="chapter-section" data-chapter="{c['id']}">
   <div class="chapter-head">
@@ -313,6 +343,20 @@ def render_extra_card(e, c):
       <div class="pid">+ {e['base']} 補足コード</div>
       <h3>{esc(e['title'])}</h3>
       <p>{esc(e['summary'])}</p>
+      <div class="tags">{tags}</div>
+    </a>'''
+
+
+def render_final_card(f, c):
+    """力試し問題 (C 問題) のカード ─ ピンク系のバッジで A 問題と区別する"""
+    search_text = (f["title"] + " " + f["summary"] + " " + " ".join(f["tags"])).lower()
+    tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in f["tags"])
+    style = f'style="--card-color:{c["color"]}"'
+    return f'''
+    <a class="problem-card problem-card--final" href="problems/{f['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}" {style}>
+      <div class="pid">{f['id']} ・ {c['id']}章<span class="final-badge">力試し</span></div>
+      <h3>{esc(f['title'])}</h3>
+      <p>{esc(f['summary'])}</p>
       <div class="tags">{tags}</div>
     </a>'''
 
@@ -394,16 +438,38 @@ def build_problem_page(entry, prev_id, next_id):
     prev_html = render_nav(prev_id, "前の問題", "prev")
     next_html = render_nav(next_id, "次の問題", "next")
 
+    is_final = entry.get('is_final', False)
+
     description_meta = (
         f"{entry['id']}: {entry['title']} ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説"
     )
-
     title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説"
+    if is_final:
+        title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説 (力試し問題)"
 
     html_out = base_head(title, description_meta, favicon_path="../assets/favicon.svg")
     html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
+
+    # 力試し問題 (C) は対応する A 問題が無いので、AtCoder のリンクを meta に追加する。
+    atc_meta_html = ''
+    if is_final:
+        atc_url = atcoder_url(entry.get('atcoder'))
+        if atc_url:
+            atc_link = (
+                f'<a class="source-link" href="{atc_url}" target="_blank" '
+                f'rel="noopener noreferrer">AtCoder で問題を見る{ICON_EXTERNAL}</a>'
+            )
+        else:
+            atc_link = '<span style="color:#9ca3af">(AtCoder には掲載なし)</span>'
+        atc_meta_html = f'''
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      {atc_link}
+    </div>'''
+
+    id_pill_class = 'id-pill id-pill--final' if is_final else 'id-pill'
 
     html_out += f'''
 <main class="problem-detail">
@@ -413,7 +479,7 @@ def build_problem_page(entry, prev_id, next_id):
     <strong>{esc(entry['id'])}</strong>
   </nav>
 
-  <span class="id-pill">{esc(entry['id'])}</span>
+  <span class="{id_pill_class}">{esc(entry['id'])}</span>
   <h1>{esc(entry['title'])}</h1>
 
   <div class="summary">{esc(entry['summary'])}</div>
@@ -430,9 +496,9 @@ def build_problem_page(entry, prev_id, next_id):
     <div class="meta-item">
       <strong>原典</strong>
       {source_link_html(entry, chapter)}
-    </div>
+    </div>{atc_meta_html}
   </div>
-  {applied_link_block_for_base(entry['id']) if not entry.get('is_extra') else ''}
+  {applied_link_block_for_base(entry['id']) if (not entry.get('is_extra') and not is_final) else ''}
   <div class="code-actions">
     <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
@@ -463,10 +529,17 @@ def build_problem_page(entry, prev_id, next_id):
 
 
 def source_link_html(entry, chapter):
-    """原典 GitHub リンク (A55 のみ Python が存在しないので C++ を指す)"""
+    """原典 GitHub リンク
+       - 力試し問題 C* は editorial/final/cpp の C++ ソースを指す (Python 版は当サイト独自実装)
+       - A55 のみ Python 原典が無いので C++ を指す
+       - それ以外は codes/python/chap{XX}/answer_AXX.py
+    """
     chap_str = str(chapter['id']).zfill(2)
     base = entry['code_file'].replace('.py', '')
-    if entry['id'] == 'A55':
+    if entry.get('is_final'):
+        url = f"https://github.com/E869120/kyopro-tessoku/blob/main/editorial/final/cpp/answer_{base}.cpp"
+        label = "GitHub で C++ 原文を見る (Python は当サイト独自実装)"
+    elif entry['id'] == 'A55':
         url = f"https://github.com/E869120/kyopro-tessoku/blob/main/codes/cpp/chap{chap_str}/answer_A55.cpp"
         label = "GitHub で C++ 原文を見る (Python は当サイト独自実装)"
     else:

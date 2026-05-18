@@ -217,5 +217,27 @@
     { "id": "B67", "base": "A67", "chapter": 9, "title": "Max MST", "summary": "辺重みの降順でソートしクラスカル法を適用すれば最大全域木が得られる。", "tags": ["グラフ", "MST", "クラスカル"], "atcoder": "tessoku-book/tessoku_book_en" },
     { "id": "B68", "base": "A68", "chapter": 9, "title": "ALGO Express", "summary": "プロジェクト選択問題を最小カット (= 最大フロー) に帰着して解く。", "tags": ["グラフ", "最大フロー", "プロジェクト選択"], "atcoder": "tessoku-book/tessoku_book_eo" },
     { "id": "B69", "base": "A69", "chapter": 9, "title": "Black Company 2", "summary": "1 人 10 時間制約付きシフトを二部マッチング (最大フロー) で組む。", "tags": ["グラフ", "マッチング", "最大フロー"], "atcoder": "tessoku-book/tessoku_book_ep" }
+  ],
+  "final": [
+    { "id": "C01", "chapter": 10, "title": "Tax Rate", "summary": "税抜価格 N 円の税込価格 1.1N を整数で出力。", "tags": ["演習", "数学"], "difficulty": 1, "atcoder": "tessoku-book/tessoku_book_ey" },
+    { "id": "C02", "chapter": 10, "title": "Two Balls", "summary": "N 個のボールから 2 つ選んで合計を最大化 (全探索 O(N²))。", "tags": ["全探索"], "difficulty": 1, "atcoder": "tessoku-book/tessoku_book_ez" },
+    { "id": "C03", "chapter": 10, "title": "Stock Queries", "summary": "前日比からの累積和で各日の株価を求め、2 日の比較クエリに答える。", "tags": ["累積和", "クエリ"], "difficulty": 2, "atcoder": "tessoku-book/tessoku_book_fa" },
+    { "id": "C04", "chapter": 10, "title": "Divisor Enumeration", "summary": "√N までの試し割りで N の約数を列挙し、昇順に出力。", "tags": ["数学", "約数"], "difficulty": 2, "atcoder": "tessoku-book/tessoku_book_fb" },
+    { "id": "C05", "chapter": 10, "title": "Lucky Numbers", "summary": "4 と 7 だけからなる数の N 番目を、N-1 の 2 進法で求める。", "tags": ["数学", "ビット"], "difficulty": 2, "atcoder": "tessoku-book/tessoku_book_fc" },
+    { "id": "C06", "chapter": 10, "title": "Regular Graph", "summary": "全頂点の次数が 2 となるサイクルを 1 つ構成して出力する。", "tags": ["構築", "グラフ"], "difficulty": 2, "atcoder": "tessoku-book/tessoku_book_fd" },
+    { "id": "C07", "chapter": 10, "title": "ALGO-MARKET", "summary": "値段昇順 + 累積和 + 二分探索で「予算 X 円で買える最大個数」を答える。", "tags": ["二分探索", "累積和"], "difficulty": 3, "atcoder": "tessoku-book/tessoku_book_fe" },
+    { "id": "C08", "chapter": 10, "title": "ALGO4", "summary": "4 桁数字くじの当選番号を、0000〜9999 の全探索 + 情報整合性チェックで一意に決定する。", "tags": ["全探索", "シミュレーション"], "difficulty": 3, "atcoder": "tessoku-book/tessoku_book_ff" },
+    { "id": "C09", "chapter": 10, "title": "Taro's Vacation", "summary": "「働く / 休む」の 2 状態 DP で N 日間の最大収入を求める。", "tags": ["DP"], "difficulty": 3, "atcoder": "math-and-algorithm/math_and_algorithm_ac" },
+    { "id": "C10", "chapter": 10, "title": "A Long Grid", "summary": "2 行 W 列の塗り分け方法数 = 12 · 7^(W-1) を繰り返し二乗法で mod 計算。", "tags": ["数学", "繰り返し二乗法"], "difficulty": 3, "atcoder": "tessoku-book/tessoku_book_fh" },
+    { "id": "C11", "chapter": 10, "title": "Election", "summary": "ドント方式の議席配分 ─ 「割り算の値 x」を実数二分探索で求める。", "tags": ["二分探索", "実数"], "difficulty": 3, "atcoder": "tessoku-book/tessoku_book_fi" },
+    { "id": "C12", "chapter": 10, "title": "Taro the Novel Writer", "summary": "本を K 章に分割し、章内に含まれるつながり総数を最大化する 2 次元 DP。", "tags": ["DP", "区間"], "difficulty": 4, "atcoder": "tessoku-book/tessoku_book_fj" },
+    { "id": "C13", "chapter": 10, "title": "Select 2", "summary": "mod 上で A[i]·A[j] ≡ P となるペア数を、mod 逆元と累積カウントで数える。", "tags": ["数学", "modular逆元", "累積カウント"], "difficulty": 4, "atcoder": "tessoku-book/tessoku_book_fk" },
+    { "id": "C14", "chapter": 10, "title": "Commute Route", "summary": "1 と N から 2 回ダイクストラを実行し、最短経路上にある頂点数を数える。", "tags": ["グラフ", "ダイクストラ"], "difficulty": 4, "atcoder": "tessoku-book/tessoku_book_fl" },
+    { "id": "C15", "chapter": 10, "title": "Many Meetings", "summary": "左右両方向の区間スケジューリングを前計算し、各会議出席時の最大値を出力する。", "tags": ["貪欲", "区間スケジューリング"], "difficulty": 5, "atcoder": "tessoku-book/tessoku_book_fm" },
+    { "id": "C16", "chapter": 10, "title": "Flights", "summary": "フライト網を (空港,時刻) 頂点の DAG にしてトポロジカル DP で最長経路を求める。", "tags": ["グラフ", "DAG", "DP"], "difficulty": 5, "atcoder": "tessoku-book/tessoku_book_fn" },
+    { "id": "C17", "chapter": 10, "title": "Strange Data Structure", "summary": "前後 2 つのデックで「先頭/中央/末尾」操作を償却 O(1) で実装する。", "tags": ["データ構造", "デック"], "difficulty": 5, "atcoder": "tessoku-book/tessoku_book_fo" },
+    { "id": "C18", "chapter": 10, "title": "Pick Two", "summary": "隣接 2 つを取り除くゲームの最小コスト ─ 区間 DP で計算する。", "tags": ["DP", "区間DP"], "difficulty": 5, "atcoder": "typical90/typical90_s" },
+    { "id": "C19", "chapter": 10, "title": "Gasoline Optimization", "summary": "各位置の最小ガソリン価格をセグメント木 (RMQ) で取り、K 区間の min を合計する。", "tags": ["データ構造", "セグメント木"], "difficulty": 5, "atcoder": "tessoku-book/tessoku_book_fq" },
+    { "id": "C20", "chapter": 10, "title": "Mayor's Challenge", "summary": "K 区画を L 個の連結特別区にまとめる問題を、貪欲 + 焼きなまし法で解く。", "tags": ["ヒューリスティック", "焼きなまし", "UnionFind"], "difficulty": 5, "atcoder": "tessoku-book/tessoku_book_fr" }
   ]
 }

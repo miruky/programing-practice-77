@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>A77: 答えで二分探索(切り方) | 鉄則77 Python解説</title>
-<meta name="description" content="A77: 答えで二分探索(切り方) ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<title>C05: Lucky Numbers | 鉄則77 Python解説 (力試し問題)</title>
+<meta name="description" content="C05: Lucky Numbers ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,13 +30,13 @@
   <nav class="breadcrumb">
     <a href="../index.html">問題一覧</a> /
     <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
-    <strong>A77</strong>
+    <strong>C05</strong>
   </nav>
 
-  <span class="id-pill">A77</span>
-  <h1>答えで二分探索(切り方)</h1>
+  <span class="id-pill id-pill--final">C05</span>
+  <h1>Lucky Numbers</h1>
 
-  <div class="summary">切れ目の最小区間長を二分探索で最大化する典型問題。</div>
+  <div class="summary">4 と 7 だけからなる数の N 番目を、N-1 の 2 進法で求める。</div>
 
   <div class="meta">
     <div class="meta-item">
@@ -45,93 +45,69 @@
     </div>
     <div class="meta-item">
       <strong>主な技法</strong>
-      <div class="tags" style="margin-top:4px"><span class="tag">二分探索</span><span class="tag">貪欲</span></div>
+      <div class="tags" style="margin-top:4px"><span class="tag">数学</span><span class="tag">ビット</span></div>
     </div>
     <div class="meta-item">
       <strong>原典</strong>
-      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/codes/python/chap10/answer_A77.py" target="_blank" rel="noopener noreferrer">GitHub で原文を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/final/cpp/answer_C05.cpp" target="_blank" rel="noopener noreferrer">GitHub で C++ 原文を見る (Python は当サイト独自実装)<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_fc" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
     </div>
   </div>
   
   <div class="code-actions">
-    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A77.py ─ Python 3</span>
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C05.py ─ Python 3</span>
     <div class="actions">
       <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
       <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
     </div>
   </div>
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A77: 答えで二分探索 (棒の切り方)
+# C05: Lucky Numbers (力試し問題)
 # ---------------------------------------------------------------------
-# 【概要】長さ L の棒に N 個の &quot;印&quot; がある。そのうち K 個を選んで
-#         切ったとき、できる N+1 個の区間の最小長を最大化する。
-# 【アルゴリズム】答えで二分探索
-#   - 「最小区間長を x 以上にできるか?」という判定問題に帰着する。
-#   - 印を左から見て、前回の切れ目から x 以上離れていれば切る (貪欲)。
-#   - 切った数が K 以上なら OK。x について単調なので二分探索が効く。
-# 【計算量】O(N log(10^9))
+# 【概要】「4 と 7 だけからなる 10 桁以下の整数」を小さい順に並べたとき、
+#         N 番目の数を求める。
+# 【アルゴリズム】N - 1 を 10 桁の 2 進数とみなし、「0 → 4」「1 → 7」に
+#                 置き換えれば N 番目のラッキーナンバーが得られる。
+#         (1 番目=4444444444, 2 番目=4444444447, 3 番目=4444444474, ...)
+# 【計算量】O(10)。
 # =====================================================================
 
 # --- 入力 -----------------------------------------------------------
-N, L = map(int, input().split())
-K = int(input())
-A = list(map(int, input().split()))
+N = int(input())
+N -= 1                                   # 0-indexed に直す
 
-
-def check(x):
-    &quot;&quot;&quot;最小区間長を x 以上にできるかを判定する関数&quot;&quot;&quot;
-    cnt = 0           # ここまで何回切ったか
-    last_kireme = 0   # 直前の切れ目の位置
-    for i in range(N):
-        # 左端からの距離 と 右端までの距離 がともに x 以上なら切る
-        if A[i] - last_kireme &gt;= x and L - A[i] &gt;= x:
-            cnt += 1
-            last_kireme = A[i]
-    return cnt &gt;= K
-
-
-# --- 二分探索 (左閉右閉) ----------------------------------------
-# left: 達成可能な値 (確定済み), right: 不明領域の右端
-left, right = 1, 10 ** 9
-while left &lt; right:
-    mid = (left + right + 1) // 2  # 上に切り上げ (空白回避)
-    answer = check(mid)
-    if answer == False:
-        right = mid - 1  # 答えは mid より小さい
+# --- 上位桁から順に 2 進数を読み、0→&#x27;4&#x27;、1→&#x27;7&#x27; に変換 -------------
+out = []
+for x in range(9, -1, -1):
+    wari = 1 &lt;&lt; x                        # 2^x
+    if (N // wari) % 2 == 0:
+        out.append(&quot;4&quot;)
     else:
-        left = mid       # 答えは mid 以上
+        out.append(&quot;7&quot;)
 
-print(left)
+# --- 出力 -----------------------------------------------------------
+print(&quot;&quot;.join(out))
 </code></pre>
-  <pre class="line-numbers code-block-stripped"><code class="language-python">N, L = map(int, input().split())
-K = int(input())
-A = list(map(int, input().split()))
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
+N -= 1
 
-def check(x):
-    &quot;&quot;&quot;最小区間長を x 以上にできるかを判定する関数&quot;&quot;&quot;
-    cnt = 0
-    last_kireme = 0
-    for i in range(N):
-        if A[i] - last_kireme &gt;= x and L - A[i] &gt;= x:
-            cnt += 1
-            last_kireme = A[i]
-    return cnt &gt;= K
-
-left, right = 1, 10 ** 9
-while left &lt; right:
-    mid = (left + right + 1) // 2
-    answer = check(mid)
-    if answer == False:
-        right = mid - 1
+out = []
+for x in range(9, -1, -1):
+    wari = 1 &lt;&lt; x
+    if (N // wari) % 2 == 0:
+        out.append(&quot;4&quot;)
     else:
-        left = mid
+        out.append(&quot;7&quot;)
 
-print(left)
+print(&quot;&quot;.join(out))
 </code></pre>
 
   <div class="nav-arrows">
-    <a class="prev" href="A76.html"><div class="nav-label">前の問題</div><div class="nav-title">A76: 区間DP高速化</div></a>
-    <a class="next" href="C01.html"><div class="nav-label">次の問題</div><div class="nav-title">C01: Tax Rate</div></a>
+    <a class="prev" href="C04.html"><div class="nav-label">前の問題</div><div class="nav-title">C04: Divisor Enumeration</div></a>
+    <a class="next" href="C06.html"><div class="nav-label">次の問題</div><div class="nav-title">C06: Regular Graph</div></a>
   </div>
 </main>
 <footer>

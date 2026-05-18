@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>C19: Gasoline Optimization | 鉄則77 Python解説 (力試し問題)</title>
+<meta name="description" content="C19: Gasoline Optimization ─ 競技プログラミングの鉄則77 の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>C19</strong>
+  </nav>
+
+  <span class="id-pill id-pill--final">C19</span>
+  <h1>Gasoline Optimization</h1>
+
+  <div class="summary">各位置の最小ガソリン価格をセグメント木 (RMQ) で取り、K 区間の min を合計する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">セグメント木</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/final/cpp/answer_C19.cpp" target="_blank" rel="noopener noreferrer">GitHub で C++ 原文を見る (Python は当サイト独自実装)<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_fq" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C19.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# C19: Gasoline Optimization (力試し問題)
+# ---------------------------------------------------------------------
+# 【概要】長さ L の道に N 個のガソリンスタンドがあり、A[i] 地点で C[i] 円。
+#         スタートから L まで進むとき、K 区間先のガソリンを今地点で
+#         買えるとする (= 各位置で連続 K 区間の最小価格を支払う)。
+#         全位置 1..L-K の最小価格の合計を求める。届かない区間があれば -1。
+# 【アルゴリズム】各位置の最小価格を一次元配列に詰めて、セグメント木
+#                 (区間最小値クエリ) を使い、各窓 [i, i+K) の min を取る。
+# 【計算量】O(L log L)。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, L, K = map(int, input().split())
+A = [0] * (N + 1)
+C = [0] * (N + 1)
+for i in range(1, N + 1):
+    A[i], C[i] = map(int, input().split())
+
+# --- 各地点での値段の最小値 -----------------------------------------
+INF = 1 &lt;&lt; 60
+Min_Value = [INF] * (L + 1)
+for i in range(1, N + 1):
+    if Min_Value[A[i]] &gt; C[i]:
+        Min_Value[A[i]] = C[i]
+
+# --- セグメント木 (区間 min) ----------------------------------------
+class SegmentTree:
+    def __init__(self, n):
+        self.siz = 1
+        while self.siz &lt; n:
+            self.siz *= 2
+        self.dat = [INF] * (self.siz * 2)
+
+    def update(self, pos, x):
+        pos = pos + self.siz - 1
+        self.dat[pos] = x
+        while pos &gt;= 2:
+            pos //= 2
+            self.dat[pos] = min(self.dat[pos * 2], self.dat[pos * 2 + 1])
+
+    # [l, r) の min を求める。u は現在のノード、[a, b) はそのカバー区間
+    def query(self, l, r, a, b, u):
+        if r &lt;= a or b &lt;= l:
+            return INF
+        if l &lt;= a and b &lt;= r:
+            return self.dat[u]
+        m = (a + b) // 2
+        return min(self.query(l, r, a, m, u * 2),
+                   self.query(l, r, m, b, u * 2 + 1))
+
+Z = SegmentTree(L)
+for i in range(1, L):
+    Z.update(i, Min_Value[i])
+
+# --- 各位置 i (=1..L-K) で [i, i+K) の min を加算 -------------------
+Answer = 0
+for i in range(1, L - K + 1):
+    v = Z.query(i, i + K, 1, Z.siz + 1, 1)
+    if v == INF:
+        print(-1)
+        break
+    Answer += v
+else:
+    print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N, L, K = map(int, input().split())
+A = [0] * (N + 1)
+C = [0] * (N + 1)
+for i in range(1, N + 1):
+    A[i], C[i] = map(int, input().split())
+
+INF = 1 &lt;&lt; 60
+Min_Value = [INF] * (L + 1)
+for i in range(1, N + 1):
+    if Min_Value[A[i]] &gt; C[i]:
+        Min_Value[A[i]] = C[i]
+
+class SegmentTree:
+    def __init__(self, n):
+        self.siz = 1
+        while self.siz &lt; n:
+            self.siz *= 2
+        self.dat = [INF] * (self.siz * 2)
+
+    def update(self, pos, x):
+        pos = pos + self.siz - 1
+        self.dat[pos] = x
+        while pos &gt;= 2:
+            pos //= 2
+            self.dat[pos] = min(self.dat[pos * 2], self.dat[pos * 2 + 1])
+
+    def query(self, l, r, a, b, u):
+        if r &lt;= a or b &lt;= l:
+            return INF
+        if l &lt;= a and b &lt;= r:
+            return self.dat[u]
+        m = (a + b) // 2
+        return min(self.query(l, r, a, m, u * 2),
+                   self.query(l, r, m, b, u * 2 + 1))
+
+Z = SegmentTree(L)
+for i in range(1, L):
+    Z.update(i, Min_Value[i])
+
+Answer = 0
+for i in range(1, L - K + 1):
+    v = Z.query(i, i + K, 1, Z.siz + 1, 1)
+    if v == INF:
+        print(-1)
+        break
+    Answer += v
+else:
+    print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="C18.html"><div class="nav-label">前の問題</div><div class="nav-title">C18: Pick Two</div></a>
+    <a class="next" href="C20.html"><div class="nav-label">次の問題</div><div class="nav-title">C20: Mayor&#x27;s Challenge</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

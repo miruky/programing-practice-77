@@ -607,6 +607,26 @@ code[class*="language-"] {
 .problem-detail .id-pill--applied {
   background: var(--pink);
 }
+/* 力試し問題 (C 問題) の ID ピルは紫系 */
+.problem-detail .id-pill--final {
+  background: #8b5cf6;
+}
+
+/* 力試し問題のカード ─ 左帯を紫に変更 */
+.problem-card--final::before {
+  background: #8b5cf6;
+}
+.final-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.55);
+  color: #c4b5fd;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
 
 footer {
   text-align: center;
