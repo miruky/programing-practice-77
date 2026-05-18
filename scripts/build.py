@@ -121,6 +121,59 @@ def esc(s):
 
 
 # =====================================================================
+#  AtCoder 風 難易度色バッジ
+#  鉄則本の ★1〜★5 を AtCoder の色レンジ (灰/茶/緑/水/青) に対応付ける。
+#  公式の対応表ではなく、本サイト独自の目安マッピング。
+# =====================================================================
+AC_COLORS = {
+    1: {"name": "灰", "css": "ac-1"},
+    2: {"name": "茶", "css": "ac-2"},
+    3: {"name": "緑", "css": "ac-3"},
+    4: {"name": "水", "css": "ac-4"},
+    5: {"name": "青", "css": "ac-5"},
+}
+
+EXTRAS_BY_ID = {e["id"]: e for e in EXTRAS}
+
+
+def effective_difficulty(entry_id):
+    """エントリ ID から表示用の★を返す。
+    A/C: 既定の difficulty。
+    B (応用): base の A 問題 difficulty + 1 (上限 5)。
+    補足コード: base の A 問題 difficulty (据え置き)。
+    """
+    if entry_id in PROBLEMS_BY_ID and "difficulty" in PROBLEMS_BY_ID[entry_id]:
+        return PROBLEMS_BY_ID[entry_id]["difficulty"]
+    if entry_id in FINAL_BY_ID and "difficulty" in FINAL_BY_ID[entry_id]:
+        return FINAL_BY_ID[entry_id]["difficulty"]
+    if entry_id in APPLIED_BY_ID:
+        base = APPLIED_BY_ID[entry_id]["base"]
+        base_diff = PROBLEMS_BY_ID.get(base, {}).get("difficulty")
+        if base_diff is None:
+            return None
+        return min(5, base_diff + 1)
+    if entry_id in EXTRAS_BY_ID:
+        base = EXTRAS_BY_ID[entry_id]["base"]
+        return PROBLEMS_BY_ID.get(base, {}).get("difficulty")
+    return None
+
+
+def render_ac_badge(diff, *, mini=False):
+    """AtCoder 色バッジ HTML を返す。mini=True ならカード用の小型版。"""
+    if diff is None or diff not in AC_COLORS:
+        return ''
+    info = AC_COLORS[diff]
+    klass = f"ac-badge ac-badge--{info['css']}"
+    if mini:
+        klass += " ac-badge--mini"
+    return (
+        f'<span class="{klass}" title="本サイト独自マッピング: 鉄則本 ★{diff} ≒ AtCoder {info["name"]}色">'
+        f'<span class="ac-star">★{diff}</span>'
+        f'<span class="ac-name">{info["name"]}</span></span>'
+    )
+
+
+# =====================================================================
 #  SVG アイコン定義 (Lucide / Heroicons 系のアウトラインスタイル)
 #  currentColor を継承するので、CSS の color から色付け可能。
 # =====================================================================
@@ -326,9 +379,10 @@ def render_card(p, c):
         applied_badge = f'<span class="applied-badge">応用 {esc(applied["id"])}</span>'
         # 応用問題のタイトルも検索対象に含める
         search_text += " " + applied["title"].lower() + " " + applied["summary"].lower()
+    ac_badge = render_ac_badge(effective_difficulty(p["id"]), mini=True)
     return f'''
     <a class="problem-card" href="problems/{p['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}" {style}>
-      <div class="pid">{p['id']} ・ {c['id']}章{applied_badge}</div>
+      <div class="pid">{p['id']} ・ {c['id']}章{applied_badge}{ac_badge}</div>
       <h3>{esc(p['title'])}</h3>
       <p>{esc(p['summary'])}</p>
       <div class="tags">{tags}</div>
@@ -338,9 +392,10 @@ def render_card(p, c):
 def render_extra_card(e, c):
     search_text = (e["title"] + " " + e["summary"] + " " + " ".join(e["tags"])).lower()
     tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in e["tags"])
+    ac_badge = render_ac_badge(effective_difficulty(e["id"]), mini=True)
     return f'''
     <a class="problem-card" href="problems/{e['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}">
-      <div class="pid">+ {e['base']} 補足コード</div>
+      <div class="pid">+ {e['base']} 補足コード{ac_badge}</div>
       <h3>{esc(e['title'])}</h3>
       <p>{esc(e['summary'])}</p>
       <div class="tags">{tags}</div>
@@ -352,9 +407,10 @@ def render_final_card(f, c):
     search_text = (f["title"] + " " + f["summary"] + " " + " ".join(f["tags"])).lower()
     tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in f["tags"])
     style = f'style="--card-color:{c["color"]}"'
+    ac_badge = render_ac_badge(effective_difficulty(f["id"]), mini=True)
     return f'''
     <a class="problem-card problem-card--final" href="problems/{f['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}" {style}>
-      <div class="pid">{f['id']} ・ {c['id']}章<span class="final-badge">力試し</span></div>
+      <div class="pid">{f['id']} ・ {c['id']}章<span class="final-badge">力試し</span>{ac_badge}</div>
       <h3>{esc(f['title'])}</h3>
       <p>{esc(f['summary'])}</p>
       <div class="tags">{tags}</div>
@@ -470,6 +526,14 @@ def build_problem_page(entry, prev_id, next_id):
     </div>'''
 
     id_pill_class = 'id-pill id-pill--final' if is_final else 'id-pill'
+    ac_badge = render_ac_badge(effective_difficulty(entry['id']))
+    ac_meta_html = ''
+    if ac_badge:
+        ac_meta_html = f'''
+    <div class="meta-item">
+      <strong>難易度</strong>
+      <div style="margin-top:4px">{ac_badge}</div>
+    </div>'''
 
     html_out += f'''
 <main class="problem-detail">
@@ -492,7 +556,7 @@ def build_problem_page(entry, prev_id, next_id):
     <div class="meta-item">
       <strong>主な技法</strong>
       <div class="tags" style="margin-top:4px">{tags_html}</div>
-    </div>
+    </div>{ac_meta_html}
     <div class="meta-item">
       <strong>原典</strong>
       {source_link_html(entry, chapter)}
@@ -611,6 +675,15 @@ def build_applied_page(entry, prev_id, next_id):
     html_out += '</head><body>\n'
     html_out += common_header("..")
 
+    ac_badge = render_ac_badge(effective_difficulty(entry['id']))
+    ac_meta_html = ''
+    if ac_badge:
+        ac_meta_html = f'''
+    <div class="meta-item">
+      <strong>難易度</strong>
+      <div style="margin-top:4px">{ac_badge}</div>
+    </div>'''
+
     html_out += f'''
 <main class="problem-detail">
   <nav class="breadcrumb">
@@ -633,7 +706,7 @@ def build_applied_page(entry, prev_id, next_id):
     <div class="meta-item">
       <strong>主な技法</strong>
       <div class="tags" style="margin-top:4px">{tags_html}</div>
-    </div>
+    </div>{ac_meta_html}
     <div class="meta-item">
       <strong>原典</strong>
       {applied_source_link_html(entry, chapter)}
