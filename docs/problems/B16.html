@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B16: Frog 1 | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B16: Frog 1 ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <a href="A16.html">A16</a> /
+    <strong>B16</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B16</span>
+  <h1>Frog 1</h1>
+
+  <div class="summary">1 個 or 2 個先に飛ぶカエル DP の古典問題 (EDPC-A)。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">4章: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap04/python/answer_B16.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/dp/tasks/dp_a" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A16.html">
+      <strong>A16: ダンジョン1</strong>
+      <span class="applied-banner-summary">1 次元 DP の基本問題。最小コストで部屋 N にたどり着く。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B16.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B16: Frog 1 (A16 応用 / EDPC-A の典型 DP)
+# ---------------------------------------------------------------------
+# 【概要】足場 0..N-1 の高さ H[i] が与えられる。0 から N-1 まで、1 個 or
+#         2 個先のマスに飛び移れるとき、移動コストの最小値を求める。
+#         コストは |H[i] - H[j]|。
+# 【アルゴリズム】古典 1 次元 DP。dp[i] = 足場 i に到達する最小コスト。
+#         dp[i] = min(dp[i-1] + |H[i-1] - H[i]|, dp[i-2] + |H[i-2] - H[i]|)
+# 【計算量】O(N)。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+H = list(map(int, input().split()))
+
+# --- DP 配列の初期化 ------------------------------------------------
+dp = [None] * N
+
+# --- 動的計画法 -----------------------------------------------------
+# 0 番目はスタートなのでコスト 0、1 番目は必ず 1 個ジャンプして来る。
+dp[0] = 0
+dp[1] = abs(H[0] - H[1])
+for i in range(2, N):
+    # 1 個前から来るか、2 個前から来るかの安い方を取る。
+    dp[i] = min(dp[i - 1] + abs(H[i - 1] - H[i]),
+                dp[i - 2] + abs(H[i - 2] - H[i]))
+
+# --- 出力 -----------------------------------------------------------
+print(dp[N - 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
+H = list(map(int, input().split()))
+
+dp = [None] * N
+
+dp[0] = 0
+dp[1] = abs(H[0] - H[1])
+for i in range(2, N):
+    dp[i] = min(dp[i - 1] + abs(H[i - 1] - H[i]),
+                dp[i - 2] + abs(H[i - 2] - H[i]))
+
+print(dp[N - 1])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B14.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B14: Another Subset Sum</div></a>
+    <a class="next" href="B17.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B17: Frog 1 with Restoration</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

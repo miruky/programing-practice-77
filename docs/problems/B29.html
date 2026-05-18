@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B29: Power Hard | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B29: Power Hard ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <a href="A29.html">A29</a> /
+    <strong>B29</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B29</span>
+  <h1>Power Hard</h1>
+
+  <div class="summary">繰り返し二乗法で a^b mod 10^9+7 を O(log b) で計算する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #ef4444">5章: 数学的問題</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">数学</span><span class="tag">繰り返し二乗法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap05/python/answer_B29.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_db" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A29.html">
+      <strong>A29: 繰り返し二乗法</strong>
+      <span class="applied-banner-summary">a^b mod m を O(log b) で求める繰り返し二乗法。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B29.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B29: Power Hard (A29 応用 ─ 繰り返し二乗法)
+# ---------------------------------------------------------------------
+# 【概要】a^b mod 10⁹+7 を求める。b は最大 10¹⁸ 程度。
+# 【アルゴリズム】繰り返し二乗法。
+#         b を 2 進数表現に分解し、a^(2^0), a^(2^1), a^(2^2), ... を順に
+#         2 乗で計算しながら、b の対応する bit が立っているところだけ
+#         答えに掛け合わせる。
+# 【計算量】O(log b)。b = 10¹⁸ でも 60 回ループで終わる。
+# =====================================================================
+
+# a^b mod m を返す関数。
+def Power(a, b, m):
+    p = a                                  # p は a^(2^i) を保持する変数
+    Answer = 1
+    for i in range(60):
+        wari = 2 ** i
+        if (b // wari) % 2 == 1:
+            Answer = (Answer * p) % m      # b の i 桁目が 1 のとき掛ける
+        p = (p * p) % m                    # p を 2 乗して次の桁へ
+    return Answer
+
+# --- 入出力 ---------------------------------------------------------
+a, b = map(int, input().split())
+print(Power(a, b, 1000000007))
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">def Power(a, b, m):
+    p = a
+    Answer = 1
+    for i in range(60):
+        wari = 2 ** i
+        if (b // wari) % 2 == 1:
+            Answer = (Answer * p) % m
+        p = (p * p) % m
+    return Answer
+
+a, b = map(int, input().split())
+print(Power(a, b, 1000000007))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B28.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B28: Fibonacci Easy (mod 1000000007)</div></a>
+    <a class="next" href="B30.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B30: Combination 2</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

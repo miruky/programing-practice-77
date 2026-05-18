@@ -27,6 +27,7 @@ with META_PATH.open(encoding="utf-8") as f:
 CHAPTERS = META["chapters"]
 PROBLEMS = META["problems"]
 EXTRAS = META["extras"]
+APPLIED = META.get("applied", [])
 
 # id -> data 辞書
 PROBLEMS_BY_ID = {p["id"]: p for p in PROBLEMS}
@@ -38,6 +39,11 @@ for p in PROBLEMS:
 EXTRAS_BY_BASE = {}
 for e in EXTRAS:
     EXTRAS_BY_BASE.setdefault(e["base"], []).append(e)
+
+# 基本問題 ID -> 応用問題エントリ (1 対 1)
+APPLIED_BY_BASE = {a["base"]: a for a in APPLIED}
+# 応用問題 ID -> 応用問題エントリ
+APPLIED_BY_ID = {a["id"]: a for a in APPLIED}
 
 CHAPTER_BY_ID = {c["id"]: c for c in CHAPTERS}
 
@@ -68,6 +74,23 @@ for p in PROBLEMS:
         })
 
 ENTRIES_BY_ID = {e["id"]: e for e in ALL_ENTRIES}
+
+# 応用問題ページ用に独立した一覧 (前後ナビゲーション用に並びを保持)
+APPLIED_ENTRIES = []
+for p in PROBLEMS:
+    a = APPLIED_BY_BASE.get(p["id"])
+    if a is None:
+        continue
+    APPLIED_ENTRIES.append({
+        "id": a["id"],
+        "title": a["title"],
+        "summary": a["summary"],
+        "tags": a["tags"],
+        "chapter": a["chapter"],
+        "code_file": f"{a['id']}.py",
+        "base": a["base"],
+        "atcoder": a.get("atcoder"),
+    })
 
 
 def esc(s):
@@ -263,12 +286,19 @@ def build_index():
 
 
 def render_card(p, c):
+    """基本問題カード ─ 応用問題が存在する場合は "応用 B0X" バッジを差し込む"""
     search_text = (p["title"] + " " + p["summary"] + " " + " ".join(p["tags"])).lower()
     tags = "".join(f'<span class="tag">{esc(t)}</span>' for t in p["tags"])
     style = f'style="--card-color:{c["color"]}"'
+    applied = APPLIED_BY_BASE.get(p["id"])
+    applied_badge = ''
+    if applied:
+        applied_badge = f'<span class="applied-badge">応用 {esc(applied["id"])}</span>'
+        # 応用問題のタイトルも検索対象に含める
+        search_text += " " + applied["title"].lower() + " " + applied["summary"].lower()
     return f'''
     <a class="problem-card" href="problems/{p['id']}.html" data-chapter="{c['id']}" data-search="{esc(search_text)}" {style}>
-      <div class="pid">{p['id']} ・ {c['id']}章</div>
+      <div class="pid">{p['id']} ・ {c['id']}章{applied_badge}</div>
       <h3>{esc(p['title'])}</h3>
       <p>{esc(p['summary'])}</p>
       <div class="tags">{tags}</div>
@@ -285,6 +315,60 @@ def render_extra_card(e, c):
       <p>{esc(e['summary'])}</p>
       <div class="tags">{tags}</div>
     </a>'''
+
+
+# =====================================================================
+#  応用問題関連 (B 問題)
+# =====================================================================
+def atcoder_url(slug):
+    """slug は "contest_id/task_id" 形式 (例: tessoku-book/tessoku_book_bz)"""
+    if not slug:
+        return None
+    contest, task = slug.split("/", 1)
+    return f"https://atcoder.jp/contests/{contest}/tasks/{task}"
+
+
+def applied_source_link_html(applied, chapter):
+    """応用問題の原典 (editorial 内 Python ソース) への GitHub リンク"""
+    chap_str = str(chapter['id']).zfill(2)
+    url = f"https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap{chap_str}/python/answer_{applied['id']}.py"
+    label = "GitHub で原文 (editorial) を見る"
+    return f'<a class="source-link" href="{url}" target="_blank" rel="noopener noreferrer">{esc(label)}{ICON_EXTERNAL}</a>'
+
+
+def applied_link_block_for_base(base_id):
+    """基本問題ページに埋め込む『応用問題への誘導ブロック』を返す。応用が無ければ空文字列。"""
+    a = APPLIED_BY_BASE.get(base_id)
+    if a is None:
+        return ''
+    atc = atcoder_url(a.get("atcoder"))
+    atc_link = ''
+    if atc:
+        atc_link = f' <a class="source-link" style="margin-left:6px" href="{atc}" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る{ICON_EXTERNAL}</a>'
+    return f'''
+  <div class="applied-banner">
+    <span class="applied-banner-label">応用問題</span>
+    <a class="applied-banner-link" href="{a['id']}.html">
+      <strong>{esc(a['id'])}: {esc(a['title'])}</strong>
+      <span class="applied-banner-summary">{esc(a['summary'])}</span>
+    </a>
+    {atc_link}
+  </div>'''
+
+
+def base_link_block_for_applied(base_id):
+    """応用問題ページに埋め込む『対応する基本問題への誘導ブロック』を返す。"""
+    p = PROBLEMS_BY_ID.get(base_id)
+    if p is None:
+        return ''
+    return f'''
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="{p['id']}.html">
+      <strong>{esc(p['id'])}: {esc(p['title'])}</strong>
+      <span class="applied-banner-summary">{esc(p['summary'])}</span>
+    </a>
+  </div>'''
 
 
 # =====================================================================
@@ -348,7 +432,7 @@ def build_problem_page(entry, prev_id, next_id):
       {source_link_html(entry, chapter)}
     </div>
   </div>
-
+  {applied_link_block_for_base(entry['id']) if not entry.get('is_extra') else ''}
   <div class="code-actions">
     <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
@@ -401,6 +485,120 @@ def render_nav(target_id, label, klass):
             '</a>')
 
 
+def render_applied_nav(target_id, label, klass):
+    """応用問題ページの前後リンク (応用問題内でのみ移動)"""
+    if target_id is None:
+        return f'<a class="{klass} disabled"><div class="nav-label">{label}</div><div class="nav-title">─</div></a>'
+    a = APPLIED_BY_ID[target_id]
+    return (f'<a class="{klass}" href="{target_id}.html">'
+            f'<div class="nav-label">{label}</div>'
+            f'<div class="nav-title">{esc(target_id)}: {esc(a["title"])}</div>'
+            '</a>')
+
+
+# =====================================================================
+#  応用問題ページ生成 (B 問題)
+# =====================================================================
+def build_applied_pages():
+    order = [a["id"] for a in APPLIED_ENTRIES]
+    for idx, entry in enumerate(APPLIED_ENTRIES):
+        prev_id = order[idx - 1] if idx > 0 else None
+        next_id = order[idx + 1] if idx + 1 < len(order) else None
+        build_applied_page(entry, prev_id, next_id)
+
+
+def build_applied_page(entry, prev_id, next_id):
+    code_path = CODES_DIR / entry["code_file"]
+    code = code_path.read_text(encoding="utf-8") if code_path.exists() else ""
+    stripped_code = strip_python_comments(code) if code else ""
+    chapter = CHAPTER_BY_ID[entry["chapter"]]
+
+    tags_html = "".join(f'<span class="tag">{esc(t)}</span>' for t in entry["tags"])
+
+    prev_html = render_applied_nav(prev_id, "前の応用問題", "prev")
+    next_html = render_applied_nav(next_id, "次の応用問題", "next")
+
+    atc_url = atcoder_url(entry.get("atcoder"))
+    atc_link = ''
+    if atc_url:
+        atc_link = (
+            f'<a class="source-link" href="{atc_url}" target="_blank" '
+            f'rel="noopener noreferrer">AtCoder で問題を見る{ICON_EXTERNAL}</a>'
+        )
+    else:
+        atc_link = '<span style="color:#9ca3af">(AtCoder には掲載なし / 鉄則本 editorial 限定)</span>'
+
+    description_meta = (
+        f"{entry['id']}: {entry['title']} ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説"
+    )
+    title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説 (応用問題)"
+
+    html_out = base_head(title, description_meta, favicon_path="../assets/favicon.svg")
+    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += '</head><body>\n'
+    html_out += common_header("..")
+
+    html_out += f'''
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: {chapter['color']}">{chapter['id']}章: {esc(chapter['title'])}</span> /
+    <a href="{entry['base']}.html">{esc(entry['base'])}</a> /
+    <strong>{esc(entry['id'])}</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">{esc(entry['id'])}</span>
+  <h1>{esc(entry['title'])}</h1>
+
+  <div class="summary">{esc(entry['summary'])}</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: {chapter['color']}">{chapter['id']}章: {esc(chapter['title'])}</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px">{tags_html}</div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      {applied_source_link_html(entry, chapter)}
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      {atc_link}
+    </div>
+  </div>
+  {base_link_block_for_applied(entry['base'])}
+  <div class="code-actions">
+    <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button">{ICON_EYE}<span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
+
+  <div class="nav-arrows">
+    {prev_html}
+    {next_html}
+  </div>
+</main>
+'''
+    html_out += footer_html()
+    html_out += '''
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>
+'''
+    (PROBLEMS_DIR / f"{entry['id']}.html").write_text(html_out, encoding="utf-8")
+
+
 # =====================================================================
 #  実行
 # =====================================================================
@@ -409,6 +607,8 @@ def main():
     build_index()
     print(f"Generating {len(ALL_ENTRIES)} problem pages...")
     build_problem_pages()
+    print(f"Generating {len(APPLIED_ENTRIES)} applied (B) problem pages...")
+    build_applied_pages()
     print("Done!")
 
 

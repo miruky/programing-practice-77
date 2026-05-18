@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B22: Frog Jump 2 | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B22: Frog Jump 2 ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <a href="A22.html">A22</a> /
+    <strong>B22</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B22</span>
+  <h1>Frog Jump 2</h1>
+
+  <div class="summary">前向き遷移で書いた、すごろく型 DP の練習問題。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">4章: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap04/python/answer_B22.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <span style="color:#9ca3af">(AtCoder には掲載なし / 鉄則本 editorial 限定)</span>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A22.html">
+      <strong>A22: すごろく</strong>
+      <span class="applied-banner-summary">各マスから 2 種類のジャンプができるすごろくの最大スコア DP。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B22.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B22: Frog Jump 2 (A22 応用 ─ 前向き遷移 DP)
+# ---------------------------------------------------------------------
+# 【概要】N 個のマスを進む。i 番目から +1 進むコストが A[i]、+2 進む
+#         コストが B[i]。マス 0 からマス N-1 までの最小コストを求める。
+# 【アルゴリズム】1 次元 DP を「前向き遷移」(自分→次) で書く別解。
+#         dp[i] が確定したら dp[i+1] と dp[i+2] を更新する。
+# 【計算量】O(N)。
+# 【ポイント】後ろ向き「dp[i] = min(dp[i-1]+A, dp[i-2]+B)」と等価だが、
+#             前向きの方が「いま見えている地点から先に配るイメージ」で
+#             直感的に書ける場面もある。
+# =====================================================================
+
+# --- 入力 (A, B は 0-indexed) --------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+# --- DP 初期化 ------------------------------------------------------
+INF = 2 * 10 ** 9
+dp = [INF] * N
+dp[0] = 0
+
+# --- 前向き DP ------------------------------------------------------
+for i in range(N):
+    if i &lt;= N - 2:                       # +1 マスへ進む
+        dp[i + 1] = min(dp[i + 1], dp[i] + A[i])
+    if i &lt;= N - 3:                       # +2 マスへ進む
+        dp[i + 2] = min(dp[i + 2], dp[i] + B[i])
+
+# --- 出力 -----------------------------------------------------------
+print(dp[N - 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+INF = 2 * 10 ** 9
+dp = [INF] * N
+dp[0] = 0
+
+for i in range(N):
+    if i &lt;= N - 2:
+        dp[i + 1] = min(dp[i + 1], dp[i] + A[i])
+    if i &lt;= N - 3:
+        dp[i + 2] = min(dp[i + 2], dp[i] + B[i])
+
+print(dp[N - 1])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B21.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B21: Longest Subpalindrome</div></a>
+    <a class="next" href="B23.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B23: Traveling Salesman Problem</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

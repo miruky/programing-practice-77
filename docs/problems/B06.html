@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B06: Lottery | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B06: Lottery ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <a href="A06.html">A06</a> /
+    <strong>B06</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B06</span>
+  <h1>Lottery</h1>
+
+  <div class="summary">アタリ/ハズレの累積和を 2 つ持ち、区間内の勝敗を O(1) で判定する。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #06b6d4">2章: 累積和</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">累積和</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap02/python/answer_B06.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_ce" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A06.html">
+      <strong>A06: 1次元累積和</strong>
+      <span class="applied-banner-summary">累積和を前計算しておくことで区間和クエリを O(1) で答える。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B06.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B06: Lottery (A06 応用 ─ 1 次元累積和)
+# ---------------------------------------------------------------------
+# 【概要】配列 A は各回のくじの結果 (1=アタリ, 0=ハズレ)。
+#         Q 個の区間 [L,R] について、アタリとハズレの数を比べて
+#         &quot;win&quot;/&quot;draw&quot;/&quot;lose&quot; を出力する。
+# 【アルゴリズム】アタリ用とハズレ用の累積和を別々に持ち、区間内の個数を
+#                 引き算 (S[R] - S[L-1]) で O(1) 取得。
+# 【計算量】前計算 O(N) + クエリ O(Q)。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+A = list(map(int, input().split()))
+Q = int(input())
+L = [None] * Q
+R = [None] * Q
+for i in range(Q):
+    L[i], R[i] = map(int, input().split())
+
+# --- アタリ / ハズレの累積和 ---------------------------------------
+# Atari[i] = A[0..i-1] の中のアタリの個数 (1-indexed)
+# Hazre[i] = A[0..i-1] の中のハズレの個数 (1-indexed)
+Atari = [0] * (N + 1)
+Hazre = [0] * (N + 1)
+for i in range(1, N + 1):
+    # 前の値を引き継ぎつつ、新しい A[i-1] の分だけ増やす。
+    Atari[i] = Atari[i - 1] + (1 if A[i - 1] == 1 else 0)
+    Hazre[i] = Hazre[i - 1] + (1 if A[i - 1] == 0 else 0)
+
+# --- 質問処理 -------------------------------------------------------
+# 区間 [L[i], R[i]] のアタリ数 = Atari[R[i]] - Atari[L[i]-1]
+for i in range(Q):
+    NumAtari = Atari[R[i]] - Atari[L[i] - 1]
+    NumHazre = Hazre[R[i]] - Hazre[L[i] - 1]
+    if NumAtari &gt; NumHazre:
+        print(&quot;win&quot;)
+    elif NumAtari == NumHazre:
+        print(&quot;draw&quot;)
+    else:
+        print(&quot;lose&quot;)
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
+A = list(map(int, input().split()))
+Q = int(input())
+L = [None] * Q
+R = [None] * Q
+for i in range(Q):
+    L[i], R[i] = map(int, input().split())
+
+Atari = [0] * (N + 1)
+Hazre = [0] * (N + 1)
+for i in range(1, N + 1):
+    Atari[i] = Atari[i - 1] + (1 if A[i - 1] == 1 else 0)
+    Hazre[i] = Hazre[i - 1] + (1 if A[i - 1] == 0 else 0)
+
+for i in range(Q):
+    NumAtari = Atari[R[i]] - Atari[L[i] - 1]
+    NumHazre = Hazre[R[i]] - Hazre[L[i] - 1]
+    if NumAtari &gt; NumHazre:
+        print(&quot;win&quot;)
+    elif NumAtari == NumHazre:
+        print(&quot;draw&quot;)
+    else:
+        print(&quot;lose&quot;)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B04.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B04: Binary Representation 2</div></a>
+    <a class="next" href="B07.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B07: Convenience Store 2</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

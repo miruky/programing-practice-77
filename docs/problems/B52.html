@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B52: Ball Simulation | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B52: Ball Simulation ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <a href="A52.html">A52</a> /
+    <strong>B52</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B52</span>
+  <h1>Ball Simulation</h1>
+
+  <div class="summary">ボールが転がる範囲を BFS でシミュレートする (キューの応用)。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #14b8a6">8章: データ構造とクエリ処理</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">データ構造</span><span class="tag">キュー</span><span class="tag">BFS</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap08/python/answer_B52.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_dy" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A52.html">
+      <strong>A52: キュー</strong>
+      <span class="applied-banner-summary">FIFO のキューを deque で実装。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B52.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B52: Ball Simulation (A52 応用 ─ キュー / BFS シミュレーション)
+# ---------------------------------------------------------------------
+# 【概要】1 次元上に並んだマス列 (床) と、初期位置 X にあるボールを考える。
+#         隣接する &#x27;.&#x27; (空きマス) に向かってボールが拡散していく様子を
+#         シミュレートし、最終的にボールが到達したマスを &#x27;@&#x27; にして出力する。
+# 【アルゴリズム】BFS。キューに「処理待ちのマス位置」を入れ、両隣の &#x27;.&#x27; を
+#                 訪れて &#x27;@&#x27; に塗り直してキューに追加する。
+# 【計算量】O(N)。
+# =====================================================================
+from collections import deque
+
+# --- 入力 -----------------------------------------------------------
+N, X = map(int, input().split())
+X -= 1                                     # 1-indexed → 0-indexed
+A = list(input())
+
+# --- BFS ------------------------------------------------------------
+Q = deque([X])
+Q.append(X)                                # 元コードに合わせて 2 回追加 (重複は無害)
+A[X] = &#x27;@&#x27;
+while Q:
+    pos = Q.popleft()
+    # 左隣
+    if pos - 1 &gt;= 0 and A[pos - 1] == &#x27;.&#x27;:
+        A[pos - 1] = &#x27;@&#x27;
+        Q.append(pos - 1)
+    # 右隣
+    if pos + 1 &lt; N and A[pos + 1] == &#x27;.&#x27;:
+        A[pos + 1] = &#x27;@&#x27;
+        Q.append(pos + 1)
+
+# --- 出力 -----------------------------------------------------------
+print(&quot;&quot;.join(A))
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">from collections import deque
+
+N, X = map(int, input().split())
+X -= 1
+A = list(input())
+
+Q = deque([X])
+Q.append(X)
+A[X] = &#x27;@&#x27;
+while Q:
+    pos = Q.popleft()
+    if pos - 1 &gt;= 0 and A[pos - 1] == &#x27;.&#x27;:
+        A[pos - 1] = &#x27;@&#x27;
+        Q.append(pos - 1)
+    if pos + 1 &lt; N and A[pos + 1] == &#x27;.&#x27;:
+        A[pos + 1] = &#x27;@&#x27;
+        Q.append(pos + 1)
+
+print(&quot;&quot;.join(A))
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B51.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B51: Bracket</div></a>
+    <a class="next" href="B53.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B53: Job Scheduling</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

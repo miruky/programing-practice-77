@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B07: Convenience Store 2 | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B07: Convenience Store 2 ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <a href="A07.html">A07</a> /
+    <strong>B07</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B07</span>
+  <h1>Convenience Store 2</h1>
+
+  <div class="summary">いもす法で各時刻に滞在中の客数を求める。A07 の練習。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #06b6d4">2章: 累積和</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">累積和</span><span class="tag">いもす法</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap02/python/answer_B07.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/math-and-algorithm/tasks/math_and_algorithm_al" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A07.html">
+      <strong>A07: いもす法</strong>
+      <span class="applied-banner-summary">区間加算を端点だけで処理し、累積和で復元するテクニック。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B07.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B07: Convenience Store 2 (A07 応用 ─ いもす法)
+# ---------------------------------------------------------------------
+# 【概要】時刻 0..T-1 において、それぞれの時刻に滞在中の人数を出力する。
+#         入店時刻 L[i]、退店時刻 R[i] (退店の瞬間にはいない) が N 件。
+# 【アルゴリズム】「差分配列」B に対し B[L]+=1, B[R]-=1 を加え、最後に
+#                 累積和を取れば各時刻の人数が分かる ─ これがいもす法。
+# 【計算量】O(N + T)。区間加算が定数時間でできるのが肝。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+T = int(input())
+N = int(input())
+L = [None] * N
+R = [None] * N
+for i in range(N):
+    L[i], R[i] = map(int, input().split())
+
+# --- 差分配列に区間操作を畳む --------------------------------------
+# B[d] は「時刻 d で人数が前時刻からどれだけ変化したか」を表す。
+B = [0] * (T + 1)
+for i in range(N):
+    B[L[i]] += 1                # L 時刻で +1 人入店
+    B[R[i]] -= 1                # R 時刻で -1 人退店
+
+# --- 累積和を取って実際の人数を復元 --------------------------------
+Answer = [None] * (T + 1)
+Answer[0] = B[0]
+for d in range(1, T + 1):
+    Answer[d] = Answer[d - 1] + B[d]
+
+# --- 出力 -----------------------------------------------------------
+for d in range(T):
+    print(Answer[d])
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">T = int(input())
+N = int(input())
+L = [None] * N
+R = [None] * N
+for i in range(N):
+    L[i], R[i] = map(int, input().split())
+
+B = [0] * (T + 1)
+for i in range(N):
+    B[L[i]] += 1
+    B[R[i]] -= 1
+
+Answer = [None] * (T + 1)
+Answer[0] = B[0]
+for d in range(1, T + 1):
+    Answer[d] = Answer[d - 1] + B[d]
+
+for d in range(T):
+    print(Answer[d])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B06.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B06: Lottery</div></a>
+    <a class="next" href="B08.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B08: Counting Points</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

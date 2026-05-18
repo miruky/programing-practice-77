@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B21: Longest Subpalindrome | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B21: Longest Subpalindrome ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <a href="A21.html">A21</a> /
+    <strong>B21</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B21</span>
+  <h1>Longest Subpalindrome</h1>
+
+  <div class="summary">区間 DP で最長回文部分列の長さを求める。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">4章: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">区間DP</span><span class="tag">回文</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap04/python/answer_B21.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_ct" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A21.html">
+      <strong>A21: 区間DP</strong>
+      <span class="applied-banner-summary">区間 [l,r] を状態にとる典型 DP（ブロック取りゲーム）。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B21.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B21: Longest Subpalindrome (A21 応用 ─ 区間 DP)
+# ---------------------------------------------------------------------
+# 【概要】文字列 S の中の最長回文「部分列」の長さを求める。連続でなくてよい。
+# 【アルゴリズム】区間 DP。
+#         dp[l][r] = S[l..r] の最長回文部分列の長さ。
+#         S[l] == S[r] のとき: max(dp[l][r-1], dp[l+1][r], dp[l+1][r-1] + 2)
+#         そうでないとき: max(dp[l][r-1], dp[l+1][r])
+# 【計算量】O(N²)。
+# 【ポイント】区間長 LEN を外側でループするのが区間 DP の定石。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N = int(input())
+S = input()
+
+# --- DP の初期状態 (長さ 1 と長さ 2) -------------------------------
+dp = [[None] * N for _ in range(N)]
+for i in range(N):
+    dp[i][i] = 1                          # 長さ 1 は必ず回文
+for i in range(N - 1):
+    dp[i][i + 1] = 2 if S[i] == S[i + 1] else 1
+
+# --- 区間長を 2 から N まで増やしながら遷移 ------------------------
+for LEN in range(2, N):
+    for l in range(N - LEN):
+        r = l + LEN
+        if S[l] == S[r]:
+            dp[l][r] = max(dp[l][r - 1],
+                           dp[l + 1][r],
+                           dp[l + 1][r - 1] + 2)
+        else:
+            dp[l][r] = max(dp[l][r - 1],
+                           dp[l + 1][r])
+
+# --- 出力 -----------------------------------------------------------
+print(dp[0][N - 1])
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
+S = input()
+
+dp = [[None] * N for _ in range(N)]
+for i in range(N):
+    dp[i][i] = 1
+for i in range(N - 1):
+    dp[i][i + 1] = 2 if S[i] == S[i + 1] else 1
+
+for LEN in range(2, N):
+    for l in range(N - LEN):
+        r = l + LEN
+        if S[l] == S[r]:
+            dp[l][r] = max(dp[l][r - 1],
+                           dp[l + 1][r],
+                           dp[l + 1][r - 1] + 2)
+        else:
+            dp[l][r] = max(dp[l][r - 1],
+                           dp[l + 1][r])
+
+print(dp[0][N - 1])
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B20.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B20: Edit Distance</div></a>
+    <a class="next" href="B22.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B22: Frog Jump 2</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>

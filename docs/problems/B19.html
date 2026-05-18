@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B19: Knapsack 2 | 鉄則77 Python解説 (応用問題)</title>
+<meta name="description" content="B19: Knapsack 2 ─ 競技プログラミングの鉄則77 応用問題の Python 実装と日本語解説" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="problem-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <a href="A19.html">A19</a> /
+    <strong>B19</strong>
+  </nav>
+
+  <span class="id-pill id-pill--applied">B19</span>
+  <h1>Knapsack 2</h1>
+
+  <div class="summary">価値を添字とする別解のナップサック DP。重量と価値の役割を入れ替える。</div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <strong>章</strong>
+      <span style="color: #f59e0b">4章: 動的計画法</span>
+    </div>
+    <div class="meta-item">
+      <strong>主な技法</strong>
+      <div class="tags" style="margin-top:4px"><span class="tag">DP</span><span class="tag">ナップサック</span></div>
+    </div>
+    <div class="meta-item">
+      <strong>原典</strong>
+      <a class="source-link" href="https://github.com/E869120/kyopro-tessoku/blob/main/editorial/chap04/python/answer_B19.py" target="_blank" rel="noopener noreferrer">GitHub で原文 (editorial) を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+    <div class="meta-item">
+      <strong>AtCoder</strong>
+      <a class="source-link" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_cr" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+    </div>
+  </div>
+  
+  <div class="applied-banner applied-banner--reverse">
+    <span class="applied-banner-label">基本問題</span>
+    <a class="applied-banner-link" href="A19.html">
+      <strong>A19: ナップサック問題</strong>
+      <span class="applied-banner-summary">重量制限のもとで価値を最大化する典型 DP。</span>
+    </a>
+  </div>
+  <div class="code-actions">
+    <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B19.py ─ Python 3</span>
+    <div class="actions">
+      <button id="toggle-comments" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="label">コメントを表示</span></button>
+      <button id="copy-code" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg><span class="label">コードをコピー</span></button>
+    </div>
+  </div>
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
+# B19: Knapsack 2 (A19 応用 ─ 価値添字のナップサック DP)
+# ---------------------------------------------------------------------
+# 【概要】N 個の品物 (重み w[i], 価値 v[i]) と容量 W のナップサックで、
+#         価値の総和を最大化する。W は最大 10⁹ なので、通常の重み添字 DP
+#         (O(NW)) では間に合わない。
+# 【アルゴリズム】価値の合計を添字に取り、最小重みを管理する DP に切り替える。
+#                 dp[i][j] = 「i 個目まで見て合計価値 j を達成するときの最小重さ」
+#                 → 最後に dp[N][j] ≦ W となる最大 j を答えとして出力。
+# 【計算量】O(N · sum(v))。v_i ≦ 1000 なら 10⁵ 程度に抑えられる。
+# =====================================================================
+
+# --- 入力 -----------------------------------------------------------
+N, W = map(int, input().split())
+w = [None] * (N + 1)
+v = [None] * (N + 1)
+for i in range(1, N + 1):
+    w[i], v[i] = map(int, input().split())
+
+# --- DP テーブル (添字: 価値, 値: 重みの最小) ----------------------
+INF = 10 ** 15
+dp = [[INF] * 100001 for _ in range(N + 1)]
+dp[0][0] = 0
+for i in range(1, N + 1):
+    for j in range(100001):
+        if j &lt; v[i]:
+            dp[i][j] = dp[i - 1][j]
+        else:
+            # 取らない / 取って重み w[i] を加算 の min を取る。
+            dp[i][j] = min(dp[i - 1][j], dp[i - 1][j - v[i]] + w[i])
+
+# --- W を超えない範囲で達成できる最大の価値 j を探す ---------------
+Answer = 0
+for j in range(100001):
+    if dp[N][j] &lt;= W:
+        Answer = j
+print(Answer)
+</code></pre>
+  <pre class="line-numbers code-block-stripped"><code class="language-python">N, W = map(int, input().split())
+w = [None] * (N + 1)
+v = [None] * (N + 1)
+for i in range(1, N + 1):
+    w[i], v[i] = map(int, input().split())
+
+INF = 10 ** 15
+dp = [[INF] * 100001 for _ in range(N + 1)]
+dp[0][0] = 0
+for i in range(1, N + 1):
+    for j in range(100001):
+        if j &lt; v[i]:
+            dp[i][j] = dp[i - 1][j]
+        else:
+            dp[i][j] = min(dp[i - 1][j], dp[i - 1][j - v[i]] + w[i])
+
+Answer = 0
+for j in range(100001):
+    if dp[N][j] &lt;= W:
+        Answer = j
+print(Answer)
+</code></pre>
+
+  <div class="nav-arrows">
+    <a class="prev" href="B18.html"><div class="nav-label">前の応用問題</div><div class="nav-title">B18: Subset Sum with Restoration</div></a>
+    <a class="next" href="B20.html"><div class="nav-label">次の応用問題</div><div class="nav-title">B20: Edit Distance</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+<script src="../assets/js/main.js"></script>
+</body></html>
