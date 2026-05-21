@@ -95,34 +95,32 @@
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A17: ダンジョン2 (DP + 経路復元)
 # ---------------------------------------------------------------------
-# 【概要】A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を求める。
-# 【アルゴリズム】DP 後に逆方向にトレースバックする経路復元の典型手法。
+# 【概要】A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を出力する。
+# 【アルゴリズム】DP 後にゴール側から逆方向にトレースバックする経路復元。
 #   ゴールから出発し、dp の値と一致する遷移をたどり直す。
 # 【計算量】O(N)
+# 【実装メモ】A16 と同じく A, B にダミーを詰めて 1-indexed 化することで、
+#             dp[i] = min(dp[i-1]+A[i], dp[i-2]+B[i]) と書籍の数式に揃える。
 # =====================================================================
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: DP / 経路復元 / 難易度目安: ★3
 # - 要約: DP で求めた最短距離をもとに、経路を復元する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。
-# - 初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。
-# - 遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。
+# - dp[i] の意味は A16 と同じ。
+# - 復元では「dp[i-1] + A[i] == dp[i] なら 1 個前から来た」を判定して
+#   遡るだけでよい (= が 2 つあるときは A 側 (1 個進む) を優先しても OK)。
 # ---------------------------------------------------------------------
 
-# --- 入力・DP (A16 と同じ) -----------------------------------------
+# --- 入力 + DP (A16 と同じ) -----------------------------------------
 N = int(input())
-A = list(map(int, input().split()))
-B = list(map(int, input().split()))
+A = [0, 0] + list(map(int, input().split()))      # A[2..N]
+B = [0, 0, 0] + list(map(int, input().split()))   # B[3..N]
 
-dp = [None] * (N + 1)
+dp = [0] * (N + 1)
 dp[1] = 0
-dp[2] = A[0]
+dp[2] = A[2]
 for i in range(3, N + 1):
-    dp[i] = min(dp[i - 1] + A[i - 2], dp[i - 2] + B[i - 3])
+    dp[i] = min(dp[i - 1] + A[i], dp[i - 2] + B[i])
 
 # --- 経路復元 ------------------------------------------------------
 # Place は現在位置。ゴール N から始めて部屋 1 まで遡る。
@@ -134,27 +132,26 @@ while True:
     if Place == 1:
         break
     # 「どちらの遷移で来たか」を dp 値から逆算する。
-    # dp[Place-1] + A[Place-2] == dp[Place] ならば 1 個前から来た。
-    if dp[Place - 1] + A[Place - 2] == dp[Place]:
+    # dp[Place-1] + A[Place] == dp[Place] ならば 1 個前から来たと分かる。
+    if dp[Place - 1] + A[Place] == dp[Place]:
         Place = Place - 1
     else:
         Place = Place - 2
 Answer.reverse()  # スタート→ゴール の順に並べ直す
 
 # --- 出力 -----------------------------------------------------------
-Answer2 = [str(i) for i in Answer]
 print(len(Answer))
-print(&quot; &quot;.join(Answer2))
+print(&quot; &quot;.join(str(i) for i in Answer))
 </code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">N = int(input())
-A = list(map(int, input().split()))
-B = list(map(int, input().split()))
+A = [0, 0] + list(map(int, input().split()))
+B = [0, 0, 0] + list(map(int, input().split()))
 
-dp = [None] * (N + 1)
+dp = [0] * (N + 1)
 dp[1] = 0
-dp[2] = A[0]
+dp[2] = A[2]
 for i in range(3, N + 1):
-    dp[i] = min(dp[i - 1] + A[i - 2], dp[i - 2] + B[i - 3])
+    dp[i] = min(dp[i - 1] + A[i], dp[i - 2] + B[i])
 
 Answer = []
 Place = N
@@ -162,15 +159,14 @@ while True:
     Answer.append(Place)
     if Place == 1:
         break
-    if dp[Place - 1] + A[Place - 2] == dp[Place]:
+    if dp[Place - 1] + A[Place] == dp[Place]:
         Place = Place - 1
     else:
         Place = Place - 2
 Answer.reverse()
 
-Answer2 = [str(i) for i in Answer]
 print(len(Answer))
-print(&quot; &quot;.join(Answer2))
+print(&quot; &quot;.join(str(i) for i in Answer))
 </code></pre>
 
   <div class="nav-arrows">

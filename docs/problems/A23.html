@@ -96,92 +96,90 @@
   <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
 # A23: bitDP (クーポン券問題)
 # ---------------------------------------------------------------------
-# 【概要】N 種類の品物がある。M 枚のクーポンを使って全品を無料にする
-#         必要枚数を求める。各クーポンは一部の品物だけ無料にできる。
-# 【アルゴリズム】bitDP
-#   状態 state (0 〜 2^N - 1) は「どの品物が既に無料か」を 2 進数で表す。
-#   各クーポンも bitmask に変換し、使った後の状態を state | coupon_mask で作る。
-#   dp[state] = その状態を作るのに必要なクーポン枚数の最小値。
-# 【計算量】O(M * 2^N)
+# 【概要】N 種類の品物に対し、M 枚のクーポンがある。各クーポン i は
+#         どの品物を無料にできるかが 0/1 で与えられる。
+#         全部の品物を無料にするために必要な最小枚数を求める。
+# 【アルゴリズム】2 次元 bitDP
+#   dp[i][j] = 「i 枚目までを処理し、無料になっている品物の集合が j」
+#              を作るのに必要な最小枚数。
+#   j は N ビットの整数。bit k = 1 なら品物 k が無料。
+#   遷移は「i 枚目を使わない: dp[i][j] = min(dp[i][j], dp[i-1][j])」
+#         「i 枚目を使う:    dp[i][v] = min(dp[i][v], dp[i-1][j] + 1)」
+#   ここで v = (i 枚目を j に重ねた集合) を整数演算で作る。
+# 【計算量】O(M · 2^N · N)
+# 【ポイント】到達不能は十分大きい 10^9 で表す。
 # =====================================================================
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: DP / bitDP / 難易度目安: ★4
 # - 要約: 集合の状態をビットで表す bit DP（クーポン券問題）。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。
+# - 整数 j を 2 進数として見て、各 bit が ON/OFF の集合を表す。
 # - 1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。
-# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。
+# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP。
 # ---------------------------------------------------------------------
 
-# --- 入力 -----------------------------------------------------------
+# --- 入力 (配列 A は 0-indexed なので、i 枚目は A[i-1]) -------------
 N, M = map(int, input().split())
-coupon_masks = []
-for _ in range(M):
-    row = list(map(int, input().split()))
+A = [None] * M
+for i in range(M):
+    A[i] = list(map(int, input().split()))
 
-    # row[k] = 1 なら「品物 k を無料にできる」。
-    # それを 2 進数の k bit 目に移すと、クーポンを整数 1 個で表せる。
-    mask = 0
-    for k in range(N):
-        if row[k] == 1:
-            mask |= (1 &lt;&lt; k)
-    coupon_masks.append(mask)
+# --- DP 配列初期化 (10^9 = 到達不能) -------------------------------
+dp = [[10 ** 9] * (2 ** N) for _ in range(M + 1)]
+dp[0][0] = 0  # 0 枚で「無料の品物なし」だけが達成可能
 
-# --- DP 初期化 ------------------------------------------------------
-# 到達不能を 10^9 で表現する。
-INF = 10 ** 9
-ALL_FREE = (1 &lt;&lt; N) - 1
-dp = [INF] * (1 &lt;&lt; N)
-dp[0] = 0  # 何もクーポンを使わず、何も無料になっていない状態
+# --- DP 本体 -------------------------------------------------------
+for i in range(1, M + 1):
+    for j in range(0, 2 ** N):
+        # already[k] = 1 のとき、品物 k は既に状態 j で無料になっている
+        already = [0] * N
+        for k in range(0, N):
+            if (j // (2 ** k)) % 2 == 1:
+                already[k] = 1
 
-# --- DP 遷移 -------------------------------------------------------
-# 各クーポンについて「使う / 使わない」を考える。
-# 使わない場合は dp がそのまま残る。使う場合だけ new_dp を更新する。
-for coupon in coupon_masks:
-    new_dp = dp[:]
-    for state in range(1 &lt;&lt; N):
-        next_state = state | coupon
-        new_dp[next_state] = min(new_dp[next_state], dp[state] + 1)
-    dp = new_dp
+        # クーポン i (= A[i-1]) を使った後の整数表現 v を計算する
+        v = 0
+        for k in range(0, N):
+            if already[k] == 1 or A[i - 1][k] == 1:
+                v += (2 ** k)
 
-# --- 出力 -----------------------------------------------------------
-# 全部が 1 のビット = 2^N - 1 (全部無料の状態)。
-if dp[ALL_FREE] == INF:
-    print(&quot;-1&quot;)
+        # 遷移: 使わない / 使う の両方
+        dp[i][j] = min(dp[i][j], dp[i - 1][j])
+        dp[i][v] = min(dp[i][v], dp[i - 1][j] + 1)
+
+# --- 出力 (全 bit が 1 = 全品物無料 の状態を見る) -------------------
+if dp[M][2 ** N - 1] == 10 ** 9:
+    print(-1)
 else:
-    print(dp[ALL_FREE])
+    print(dp[M][2 ** N - 1])
 </code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">N, M = map(int, input().split())
-coupon_masks = []
-for _ in range(M):
-    row = list(map(int, input().split()))
+A = [None] * M
+for i in range(M):
+    A[i] = list(map(int, input().split()))
 
-    mask = 0
-    for k in range(N):
-        if row[k] == 1:
-            mask |= (1 &lt;&lt; k)
-    coupon_masks.append(mask)
+dp = [[10 ** 9] * (2 ** N) for _ in range(M + 1)]
+dp[0][0] = 0
 
-INF = 10 ** 9
-ALL_FREE = (1 &lt;&lt; N) - 1
-dp = [INF] * (1 &lt;&lt; N)
-dp[0] = 0
+for i in range(1, M + 1):
+    for j in range(0, 2 ** N):
+        already = [0] * N
+        for k in range(0, N):
+            if (j // (2 ** k)) % 2 == 1:
+                already[k] = 1
 
-for coupon in coupon_masks:
-    new_dp = dp[:]
-    for state in range(1 &lt;&lt; N):
-        next_state = state | coupon
-        new_dp[next_state] = min(new_dp[next_state], dp[state] + 1)
-    dp = new_dp
+        v = 0
+        for k in range(0, N):
+            if already[k] == 1 or A[i - 1][k] == 1:
+                v += (2 ** k)
 
-if dp[ALL_FREE] == INF:
-    print(&quot;-1&quot;)
+        dp[i][j] = min(dp[i][j], dp[i - 1][j])
+        dp[i][v] = min(dp[i][v], dp[i - 1][j] + 1)
+
+if dp[M][2 ** N - 1] == 10 ** 9:
+    print(-1)
 else:
-    print(dp[ALL_FREE])
+    print(dp[M][2 ** N - 1])
 </code></pre>
 
   <div class="nav-arrows">
