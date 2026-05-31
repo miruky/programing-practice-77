@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A59: セグメント木 (RSQ) — 区間和に演算を取り替える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A59: セグメント木 (RSQ) — 区間和に演算を取り替える ─ A58 と同じ構造。max を sum に変えるだけ。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <strong>法則 A59</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A59</span>
+    <h1>セグメント木 (RSQ) — 区間和に演算を取り替える</h1>
+    <p class="law-tagline">A58 と同じ構造。max を sum に変えるだけ</p>
+  </div>
+
+  <section class="law-intro">
+    <p>A58 のセグメント木の <strong>演算を max → sum に変えただけ</strong> で区間和クエリ (RSQ) になる。</p>
+<p>より一般に、<strong>結合則を持ち単位元がある任意の演算</strong> (sum, max, min, GCD, XOR, 行列積…) で同じ枠組みが使える。「Segment Tree は 1 つ覚えれば 10 個の問題が解ける」と言われる所以。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 単位元と演算の変更</h2>
+    <div class="law-section-body">
+      <ul>
+<li>sum: 単位元 0、演算 +</li>
+<li>max: 単位元 -∞、演算 max</li>
+<li>min: 単位元 +∞、演算 min</li>
+<li>GCD: 単位元 0、演算 gcd</li>
+<li>XOR: 単位元 0、演算 ^</li>
+</ul>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[セグ木テンプレ] --&gt; M[演算と単位元を差し替え]
+  M --&gt; R[max/sum/min/GCD/XOR…]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 転倒数への応用 (B59)</h2>
+    <div class="law-section-body">
+      <p><strong>「自分より大きい要素の個数」を BIT / セグ木で逐次集計</strong> すれば、全体 O(N log N) で転倒数が求まる。<strong>座標圧縮 (A15)</strong> との合わせ技が定番。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 区間最小値最短ジャンプ (B58)</h2>
+    <div class="law-section-body">
+      <p>DP + セグ木の合わせ技。<code>dp[i] = 1 + min(dp[i - R], ..., dp[i - L])</code> のような遷移をセグ木の RMQ で取ると O(N log N)。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>単位元を演算の <strong>左右で同じ</strong> にする (i.e., 可換でなくても結合則は必要)。</li>
+<li>区間和なら <code>int</code> のオーバーフローを (Python は OK だが C/C++ は注意)。</li>
+<li>平方分割や Fenwick (BIT) でも代用できることがある。問題の制約に応じて選択。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A58.html">A58: セグメント木 (RMQ) — 区間最大値を O(log N) で</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A59.html">A59</a><a class="law-chip" href="../problems/B59.html">B59</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A58.html"><div class="nav-label">前の法則</div><div class="nav-title">A58: セグメント木 (RMQ) — 区間最大値を O(log N) で</div></a>
+    <a class="next" href="A60.html"><div class="nav-label">次の法則</div><div class="nav-title">A60: スタックの活用 — 「自分以上の最後の日」を線形時間で</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

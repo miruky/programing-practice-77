@@ -69,6 +69,13 @@
       <span class="applied-banner-summary">区間最大値クエリを O(log N) で処理するセグメント木。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B58: Jumping (A58 応用 ─ DP + セグメント木 (RMQ))</h1>
+<h2>概要</h2>
+<p>座標 X[0..N-1] (昇順) の上を、「現在地から距離 [L, R] の範囲」に 一回でジャンプできるカエルがいる。X[0] から X[N-1] まで最少何回で 着くかを求める (届かなければ INF)。</p>
+<h2>アルゴリズム</h2>
+<p>dp[i] = i 番目の点に着くための最少ジャンプ数。 dp[i] = min{ dp[j] : x_j ∈ [X[i]-R, X[i]-L] } + 1 X はソート済みなので、座標範囲 → 配列添字範囲は二分探索で求まる。 区間最小は RMQ 用セグメント木で O(log N)。</p>
+<h2>計算量</h2>
+<p>O(N log N)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B58.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +95,11 @@
         <ol><li>葉に元配列の値を置く。</li><li>親を max / sum などの演算で作る。</li><li>クエリでは関係ない区間を捨て、完全に含まれる区間だけ使う。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 半開区間 [l, r) で統一すると実装のズレが減ります。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">DP</span><span class="tag">セグメント木</span><span class="tag">二分探索</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A58.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A58: セグメント木 (RMQ) — 区間最大値を O(log N) で →</span>
+      </a>
       </div>
 
       <div class="visual visual-tree" aria-hidden="true">
@@ -96,19 +108,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B58: Jumping (A58 応用 ─ DP + セグメント木 (RMQ))
-# ---------------------------------------------------------------------
-# 【概要】座標 X[0..N-1] (昇順) の上を、「現在地から距離 [L, R] の範囲」に
-#         一回でジャンプできるカエルがいる。X[0] から X[N-1] まで最少何回で
-#         着くかを求める (届かなければ INF)。
-# 【アルゴリズム】dp[i] = i 番目の点に着くための最少ジャンプ数。
-#         dp[i] = min{ dp[j] : x_j ∈ [X[i]-R, X[i]-L] } + 1
-#         X はソート済みなので、座標範囲 → 配列添字範囲は二分探索で求まる。
-#         区間最小は RMQ 用セグメント木で O(log N)。
-# 【計算量】O(N log N)。
-# =====================================================================
-import bisect
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import bisect
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: DP / セグメント木 / 二分探索 / 難易度目安: ★5
@@ -233,4 +233,24 @@ print(dp[-1])
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

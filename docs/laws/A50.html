@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A50: 差分計算 — 全部計算し直さず差だけ更新 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A50: 差分計算 — 全部計算し直さず差だけ更新 ─ 変更したのは一部だけ。だから差だけ再計算。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">7章: ヒューリスティック</span> /
+    <strong>法則 A50</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A50</span>
+    <h1>差分計算 — 全部計算し直さず差だけ更新</h1>
+    <p class="law-tagline">変更したのは一部だけ。だから差だけ再計算</p>
+  </div>
+
+  <section class="law-intro">
+    <p>ヒューリスティックの内側ループで、<strong>毎回スコア全体を計算するのは無駄</strong>。状態を 1 箇所だけ変えたなら、<strong>そこの差分だけを足し引きすれば</strong> 全体スコアが O(1) で更新できる。</p>
+<p>TSP の 2-opt なら、「外した 2 辺と、新しい 2 辺」の差を計算するだけで O(1)。ループ回数を 100 倍に増やせる本気の高速化テクニック。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: スコアを構造的に分解</h2>
+    <div class="law-section-body">
+      <p>「全体スコア = Σ 個別寄与」の形に書き直す。TSP なら 各辺の長さの和、最大カット問題なら各辺の貢献度の和、など。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  TS[全体スコア] --&gt; S[Σ 個別寄与]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 変更箇所の差分だけ計算</h2>
+    <div class="law-section-body">
+      <p>変更前の寄与を引いて、変更後の寄与を足す。TSP 2-opt なら <strong>2 辺の差</strong> で O(1)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  C[&quot;current_score&quot;] --&gt; M[&quot;- 旧辺コスト&quot;]
+  M --&gt; P[&quot;+ 新辺コスト&quot;]
+  P --&gt; N[&quot;new_score&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: numpy などで更に高速化</h2>
+    <div class="law-section-body">
+      <p>Python のオーバーヘッドが効くときは <strong>numpy</strong> で配列演算化する手も。C 言語並みの速度が出ることがある。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>差分計算で <strong>小さなバグ</strong> が入ると最終答えがズレる。  たまに全部再計算してチェックする手もアリ。</li>
+<li>浮動小数の累積誤差。1000 ループに 1 回くらい全部再計算でリセット。</li>
+<li>状態のコピーを deepcopy で行うとそれ自体が遅い。<strong>シャロー化</strong> や <strong>元に戻す方式</strong> を検討。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A47.html">A47: 山登り法 — 改善する変更だけ受理</a><a class="law-chip" href="A48.html">A48: 焼きなまし法 — 確率で悪化も受理する</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A50.html">A50</a><a class="law-chip" href="../problems/A50_extra.html">A50_extra</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A49.html"><div class="nav-label">前の法則</div><div class="nav-title">A49: ビームサーチ — 状態を上位 W 件に絞って前進</div></a>
+    <a class="next" href="A51.html"><div class="nav-label">次の法則</div><div class="nav-title">A51: スタック — 後入れ先出し (LIFO)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

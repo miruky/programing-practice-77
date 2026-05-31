@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A15: 座標圧縮 — 値を「順位」に置き換える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A15: 座標圧縮 — 値を「順位」に置き換える ─ 値の絶対サイズに依存しない処理に書き換える定石。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">3章: 二分探索</span> /
+    <strong>法則 A15</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A15</span>
+    <h1>座標圧縮 — 値を「順位」に置き換える</h1>
+    <p class="law-tagline">値の絶対サイズに依存しない処理に書き換える定石</p>
+  </div>
+
+  <section class="law-intro">
+    <p>値が <code>10^9</code> まで取りうるが、要素数は <code>10^5</code> しかないとき、<strong>配列のサイズが値に依存して大きくなりがちな問題</strong> (BIT、セグ木、頻度配列…) を<strong>「値 → 順位」</strong> に置き換えて N サイズに圧縮するテクニック。</p>
+<p>ソートして重複を除けば順位が決まり、<code>bisect_left(sorted_unique, x)</code> で順位を引ける。<strong>転倒数 (B59)</strong> や <strong>座標による分類</strong> の前処理として頻出。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 重複を除いてソート</h2>
+    <div class="law-section-body">
+      <p><code>B = sorted(set(A))</code> で、A の値を昇順かつ重複なしの順位対応表に変換。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[&quot;A = [50, 10, 30, 30, 80]&quot;] --&gt; B[&quot;B = sorted set A = [10,30,50,80]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 順位に変換</h2>
+    <div class="law-section-body">
+      <p>各 <code>A[i]</code> を <code>bisect_left(B, A[i])</code> で順位に変換。値 10 → 0, 30 → 1, 50 → 2, 80 → 3。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[&quot;A = [50, 10, 30, 30, 80]&quot;] --&gt; R[&quot;順位 = [2, 0, 1, 1, 3]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 後続処理は順位で</h2>
+    <div class="law-section-body">
+      <p>頻度配列の長さが <code>len(B)</code> で済む。BIT、セグメント木、累積和などが「値域に対して」ではなく「要素数に対して」のサイズで作れる。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>重複の扱い: <code>set</code> は重複を除く。重複を残したい場合は <code>sorted(A)</code> を使う。</li>
+<li>順位は 0-indexed か 1-indexed か。BIT 系は 1-indexed が多い。</li>
+<li>元の値が必要な場合は順位 → 値のテーブル <code>B</code> を残しておく。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a><a class="law-chip" href="A59.html">A59: セグメント木 (RSQ) — 区間和に演算を取り替える</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A15.html">A15</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A14.html"><div class="nav-label">前の法則</div><div class="nav-title">A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙</div></a>
+    <a class="next" href="A16.html"><div class="nav-label">次の法則</div><div class="nav-title">A16: 1 次元 DP の基本 — dp[i] の意味を 1 行で言える</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

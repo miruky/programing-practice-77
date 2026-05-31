@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A04: 進法変換 — 10 進数と 2 進数を行き来する | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A04: 進法変換 — 10 進数と 2 進数を行き来する ─ 数を「位」で分解する。コンピュータ世界の母国語。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">1章: アルゴリズムと計算量</span> /
+    <strong>法則 A04</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A04</span>
+    <h1>進法変換 — 10 進数と 2 進数を行き来する</h1>
+    <p class="law-tagline">数を「位」で分解する。コンピュータ世界の母国語</p>
+  </div>
+
+  <section class="law-intro">
+    <p>10 進数の <code>5</code> は、2 進数では <code>101</code>、つまり <code>1·4 + 0·2 + 1·1</code> です。進法変換は、数を <strong>位 (= 重み)</strong> に分解して考える練習です。</p>
+<p>ビット演算 (A23, A70 など) や繰り返し二乗法 (A29) は、「数の 2 進数表記」を直接扱います。ここで進法の扱いに慣れておくと、後のビット系の問題が一気に読みやすくなります。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 上位桁から見る</h2>
+    <div class="law-section-body">
+      <p>10 桁 (= 2^9) で表すなら、まず <code>2^9 = 512</code> の桁を <code>N // 512 % 2</code> で取り出し、次に <code>2^8 = 256</code> の桁、… と上位から並べると 2 進数になります。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N[N=5] --&gt; A[&quot;N//8 %2 = 0&quot;]
+  N --&gt; B[&quot;N//4 %2 = 1&quot;]
+  N --&gt; C[&quot;N//2 %2 = 0&quot;]
+  N --&gt; D[&quot;N//1 %2 = 1&quot;]
+  A &amp; B &amp; C &amp; D --&gt; R[0101]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 下位桁から逆順に作る別解</h2>
+    <div class="law-section-body">
+      <p><code>N % 2</code> で最下位ビットを取り、<code>N //= 2</code> で右シフト、を繰り返して逆順に積む方法もあります。短く書けますが、出力時に <strong>逆順に並べ替える</strong> ステップが必要。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N0[N=5] --&gt; M0[5 mod 2 = 1]
+  M0 --&gt; N1[N=2]
+  N1 --&gt; M1[2 mod 2 = 0]
+  M1 --&gt; N2[N=1]
+  N2 --&gt; M2[1 mod 2 = 1]
+  M2 --&gt; O[&quot;[&#x27;1&#x27;,&#x27;0&#x27;,&#x27;1&#x27;]  → 逆順 → 101&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 2 進数文字列 → 整数</h2>
+    <div class="law-section-body">
+      <p>逆方向の変換は <code>int(s, 2)</code> 一発。学習目的では <code>for c in s: x = x * 2 + int(c)</code> のように、「位を 1 つ進めるたびに 2 を掛ける」流儀で書けると進法の理解が深まります。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「0 詰めの桁数」を間違えると WA。10 桁指定なら必ず 10 桁出す。</li>
+<li>Python の <code>bin(N)</code> は <code>&#x27;0b101&#x27;</code> のように接頭辞が付くので <code>[2:]</code> で剥がす。</li>
+<li>文字 <code>&#x27;0&#x27;</code> と整数 <code>0</code> は別物。<code>int(c)</code> を入れ忘れない。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A23.html">A23: bitDP — 集合を整数 1 個に圧縮</a><a class="law-chip" href="A29.html">A29: 繰り返し二乗法 — a^b を O(log b) で</a><a class="law-chip" href="A70.html">A70: 状態 BFS — 2^N 通りの状態を頂点に持つ</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A04.html">A04</a><a class="law-chip" href="../problems/B04.html">B04</a><a class="law-chip" href="../problems/C05.html">C05</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A03.html"><div class="nav-label">前の法則</div><div class="nav-title">A03: 二重ループ全探索 — 2 つの軸を独立に試す</div></a>
+    <a class="next" href="A05.html"><div class="nav-label">次の法則</div><div class="nav-title">A05: 三重ループ全探索 — O(N³) でもまだ戦える</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

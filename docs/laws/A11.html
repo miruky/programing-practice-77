@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A11: 二分探索 — ソート済み列の真ん中を狙う | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A11: 二分探索 — ソート済み列の真ん中を狙う ─ 毎回半分捨てれば、N=10^18 でも 60 回で答えに到達。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">3章: 二分探索</span> /
+    <strong>法則 A11</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A11</span>
+    <h1>二分探索 — ソート済み列の真ん中を狙う</h1>
+    <p class="law-tagline">毎回半分捨てれば、N=10^18 でも 60 回で答えに到達</p>
+  </div>
+
+  <section class="law-intro">
+    <p>ソート済みの配列で「目的の値の位置」を探すとき、毎回真ん中と比較して <strong>半分を捨てる</strong> だけで、O(log N) で到達できます。</p>
+<p>N=10^6 でも 20 回、N=10^18 でも 60 回程度の比較で済む脅威的な速さ。Python では <code>bisect.bisect_left</code> を使えば 1 行ですが、<strong>「NG と OK の境目を探す」</strong> という考え方は次の A12 (答えで二分探索) で必須になります。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: ループ不変条件</h2>
+    <div class="law-section-body">
+      <p><code>left, right</code> は <strong>答えがある可能性のある範囲</strong> を表す。毎回 <code>mid = (left + right) // 2</code> で半分に分け、片側を捨てる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  L[&quot;left&quot;] --&gt; M[&quot;mid = (l+r)//2&quot;]
+  M --&gt; R[&quot;right&quot;]
+  M --&gt; J{&quot;A[mid] と target を比較&quot;}
+  J -- target が左 --&gt; NL[&quot;right = mid&quot;]
+  J -- target が右 --&gt; NR[&quot;left = mid + 1&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: bisect_left と bisect_right の違い</h2>
+    <div class="law-section-body">
+      <p><code>bisect_left(A, x)</code> は「x を入れてもソートが崩れない最も左の位置」、<code>bisect_right(A, x)</code> は「最も右の位置」。重複がある場合、左境界と右境界が変わるので使い分けが必要。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[&quot;配列: 1 2 3 3 3 5&quot;] --&gt; L[bisect_left x=3 = 2]
+  A --&gt; R[bisect_right x=3 = 5]
+  L --&gt; D[&quot;差 = 3 の個数&quot;]
+  R --&gt; D</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 自前実装テンプレ</h2>
+    <div class="law-section-body">
+      <p>ライブラリに頼らない実装パターン:</p>
+<pre><code class="language-python">left, right = 0, N
+while left &lt; right:
+    mid = (left + right) // 2
+    if A[mid] &gt;= x:
+        right = mid
+    else:
+        left = mid + 1
+# left は『A[i] &gt;= x となる最初の位置』</code></pre>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><strong>配列がソートされていない</strong> と二分探索は機能しない。最初に <code>sort()</code> を忘れない。</li>
+<li><code>mid = (l + r) // 2</code> で <code>l == r-1</code> のときに <code>mid == l</code> となり、  <code>l = mid + 1</code> の代わりに <code>l = mid</code> を書いていると <strong>無限ループ</strong>。</li>
+<li><code>bisect_right - bisect_left</code> で出現回数を数えるのは超頻出イディオム。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A12.html">A12: 答えで二分探索 — 「答えが x 以下か」を直接判定</a><a class="law-chip" href="A14.html">A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙</a><a class="law-chip" href="A15.html">A15: 座標圧縮 — 値を「順位」に置き換える</a><a class="law-chip" href="A77.html">A77: 切り方の最大化 — 「最小区間長 ≥ x」で二分探索</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A11.html">A11</a><a class="law-chip" href="../problems/B11.html">B11</a><a class="law-chip" href="../problems/C07.html">C07</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A10.html"><div class="nav-label">前の法則</div><div class="nav-title">A10: 区間最大値クエリ — 前後 2 方向の累積最大値</div></a>
+    <a class="next" href="A12.html"><div class="nav-label">次の法則</div><div class="nav-title">A12: 答えで二分探索 — 「答えが x 以下か」を直接判定</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

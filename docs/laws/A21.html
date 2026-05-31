@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A21: 区間 DP — 区間 [l, r] を状態にする | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A21: 区間 DP — 区間 [l, r] を状態にする ─ 小さい区間から大きい区間へ。LEN を外ループに置くのが定石。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A21</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A21</span>
+    <h1>区間 DP — 区間 [l, r] を状態にする</h1>
+    <p class="law-tagline">小さい区間から大きい区間へ。LEN を外ループに置くのが定石</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「両端から処理して中央に向かう」「最後に切る場所を全部試す」といった構造の問題で、<strong>区間 [l, r] を状態とする 2 次元 DP</strong>。</p>
+<p><strong>区間長 LEN を外側でループ</strong> するのが定石。小さい区間の答えが先に確定するように順序を制御する必要があるからです。回文 (B21)、切り方 (C18)、ブロック取り (A21) など応用の幅が広い。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 状態の定義</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[l][r] = 区間 [l, r] に対する最適値</code></strong>。「ブロック取りなら累積スコア」「回文なら最長回文部分列長」など、問題ごとに意味は変わる。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 2: ループの順序</h2>
+    <div class="law-section-body">
+      <p><strong>区間長 LEN を外側、左端 l を内側</strong>。これで「短い区間の <code>dp</code> を先に確定」できる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  L1[LEN=1] --&gt; L2[LEN=2]
+  L2 --&gt; L3[LEN=3]
+  L3 --&gt; LN[...]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 遷移パターン</h2>
+    <div class="law-section-body">
+      <p>両端を 1 つずつ縮める / 中央で 2 分割する / 端を取り外すなど、<strong>「区間をどう分解するか」</strong> で式が決まる。</p>
+<p>ブロック取りなら <code>dp[l][r] = max(dp[l-1][r] + score(l-1), dp[l][r+1] + score(r+1))</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  D[&quot;dp[l][r]&quot;] --&gt; A[&quot;dp[l-1][r] + 左端の得点&quot;]
+  D --&gt; B[&quot;dp[l][r+1] + 右端の得点&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>外ループは <strong>必ず区間長</strong> にする。l, r を独立にループすると <code>dp[l+1][r-1]</code> が未確定で参照失敗。</li>
+<li>中央で 2 分割するタイプ (C18) は内側の <strong>分割点 k</strong> も全探索する 3 重ループ → O(N³)。</li>
+<li>1-indexed と 0-indexed の混在に注意。本サイトは入力配列にダミーを詰めて 1-indexed に揃える流儀。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A21.html">A21</a><a class="law-chip" href="../problems/B21.html">B21</a><a class="law-chip" href="../problems/C12.html">C12</a><a class="law-chip" href="../problems/C18.html">C18</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A20.html"><div class="nav-label">前の法則</div><div class="nav-title">A20: LCS — 最長共通部分列</div></a>
+    <a class="next" href="A22.html"><div class="nav-label">次の法則</div><div class="nav-title">A22: すごろく型 DP — 前向き遷移で書く</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

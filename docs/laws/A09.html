@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A09: 2 次元いもす法 — 矩形加算を 4 隅で表現 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A09: 2 次元いもす法 — 矩形加算を 4 隅で表現 ─ 長方形を毎回塗らない。四隅に + / − を置いて累積和で面に戻す。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <strong>法則 A09</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A09</span>
+    <h1>2 次元いもす法 — 矩形加算を 4 隅で表現</h1>
+    <p class="law-tagline">長方形を毎回塗らない。四隅に + / − を置いて累積和で面に戻す</p>
+  </div>
+
+  <section class="law-intro">
+    <p>A07 の 2 次元版。複数の矩形加算をまとめて処理したいとき、<strong>矩形を毎回塗る代わりに 4 隅に印だけ置き</strong>、最後に 2 次元累積和を取ると一気に面が復元できます。</p>
+<p>1 回のクエリで 4 点更新だけ、最後の累積和も O(HW)。N=10^5 個の矩形を 10^3 × 10^3 のグリッドに加算するような問題が瞬時に解けます。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 4 隅の符号付き加算</h2>
+    <div class="law-section-body">
+      <p>矩形 (A,B)-(C,D) に +v するときの印の置き方は次の通り。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  AB[&quot;X[A][B] += v&quot;] --&gt; R[四隅に印を置く]
+  AD[&quot;X[A][D+1] -= v&quot;] --&gt; R
+  CB[&quot;X[C+1][B] -= v&quot;] --&gt; R
+  CD[&quot;X[C+1][D+1] += v&quot;] --&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 横方向に累積</h2>
+    <div class="law-section-body">
+      <p>印が「右に伸びる横帯」を 4 本作る。上 2 本 (符号 +、−) と下 2 本 (符号 −、+) があり、上下で打ち消しの準備が整う。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[+v / -v が左右に対] --&gt;|累積| B[+v が l〜r に分布]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 縦方向に累積</h2>
+    <div class="law-section-body">
+      <p>縦累積を取ると、上下の符号が打ち消し合って、最終的に矩形 (A,B)-(C,D) だけに +v が残る。印 4 点 → 横累積 → 縦累積 で、面が復元されたことになる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[横帯 4 本] --&gt;|縦累積| B[&quot;矩形 A,B - C,D に +v&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>配列サイズは余裕を持って <code>(H+2) × (W+2)</code> 取ると、<code>+1</code> のはみ出しを心配しなくて済む。</li>
+<li>順序: 4 点印 → 横累積 → 縦累積 (順は入れ替えても OK だが必ず両方やる)。</li>
+<li>半開区間で渡されたら、右端の <code>+1</code> を消す。問題文の区間記法は最初に確認。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A07.html">A07: いもす法 — 区間加算を端点だけで処理する</a><a class="law-chip" href="A08.html">A08: 2 次元累積和 — 矩形の和を O(1) で答える</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A09.html">A09</a><a class="law-chip" href="../problems/B09.html">B09</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A08.html"><div class="nav-label">前の法則</div><div class="nav-title">A08: 2 次元累積和 — 矩形の和を O(1) で答える</div></a>
+    <a class="next" href="A10.html"><div class="nav-label">次の法則</div><div class="nav-title">A10: 区間最大値クエリ — 前後 2 方向の累積最大値</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

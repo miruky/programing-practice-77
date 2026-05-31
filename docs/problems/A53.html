@@ -65,6 +65,27 @@
     </a>
 
   </div>
+  <section class="problem-doc" hidden><h1>A53: 優先度付きキュー (最小ヒープ)</h1>
+<h2>概要</h2>
+<p>3 種類のクエリ: &quot;1 x&quot;: 値 x を入れる / &quot;2&quot;: 最小値を表示 / &quot;3&quot;: 最小値を取り除く</p>
+<h2>データ構造</h2>
+<p>heapq モジュール (二分ヒープ) Python の heapq は &quot;最小ヒープ&quot; のみ。最大値が欲しいときは符号反転。</p>
+<h2>計算量</h2>
+<p>挿入・削除 O(log N), 最小値参照 O(1)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: データ構造 / ヒープ / 難易度目安: ★2</li>
+<li>要約: ヒープで最小値を取り出す優先度付きキュー。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。</li>
+<li>各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。</li>
+<li>小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A53.py ─ Python 3</span>
     <div class="actions">
@@ -84,33 +105,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">データ構造</span><span class="tag">ヒープ</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A53.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A53: 優先度付きキュー (最小ヒープ)
-# ---------------------------------------------------------------------
-# 【概要】3 種類のクエリ:
-#   &quot;1 x&quot;: 値 x を入れる / &quot;2&quot;: 最小値を表示 / &quot;3&quot;: 最小値を取り除く
-# 【データ構造】heapq モジュール (二分ヒープ)
-#   Python の heapq は &quot;最小ヒープ&quot; のみ。最大値が欲しいときは符号反転。
-# 【計算量】挿入・削除 O(log N), 最小値参照 O(1)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: データ構造 / ヒープ / 難易度目安: ★2
-# - 要約: ヒープで最小値を取り出す優先度付きキュー。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
-# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
-# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
-# ---------------------------------------------------------------------
-
-import heapq
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import heapq
 
 # --- 入力 -----------------------------------------------------------
 Q = int(input())
@@ -158,4 +162,24 @@ for q in queries:
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

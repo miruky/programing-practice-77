@@ -69,6 +69,13 @@
       <span class="applied-banner-summary">4 つの集合の組合せを 2 つに分け、和の集合を二分探索で照合する。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B14: Another Subset Sum (A14 応用 ─ 半分全列挙)</h1>
+<h2>概要</h2>
+<p>N 枚のカード A[0..N-1] からいくつか選んで合計を K にできるかを 判定する。N が 30〜40 程度のとき素朴な 2^N は重い。</p>
+<h2>アルゴリズム</h2>
+<p>N 枚を半分に分け、それぞれの「あり得る合計」を 2^(N/2) 通り全列挙し、片方をソートして二分探索で K - 合計 を探す。</p>
+<h2>計算量</h2>
+<p>O(2^(N/2) · N)。N = 40 でも 2^20 ≒ 10^6 で十分高速。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B14.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +95,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">二分探索</span><span class="tag">半分全列挙</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A14.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙 →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -96,16 +108,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B14: Another Subset Sum (A14 応用 ─ 半分全列挙)
-# ---------------------------------------------------------------------
-# 【概要】N 枚のカード A[0..N-1] からいくつか選んで合計を K にできるかを
-#         判定する。N が 30〜40 程度のとき素朴な 2^N は重い。
-# 【アルゴリズム】N 枚を半分に分け、それぞれの「あり得る合計」を 2^(N/2)
-#                 通り全列挙し、片方をソートして二分探索で K - 合計 を探す。
-# 【計算量】O(2^(N/2) · N)。N = 40 でも 2^20 ≒ 10^6 で十分高速。
-# =====================================================================
-import bisect
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import bisect
 import sys
 # ---------------------------------------------------------------------
 # 【読み方の地図】
@@ -205,4 +208,24 @@ print(&quot;No&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

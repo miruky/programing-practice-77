@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">(a,b) を全探索し、各組に対して条件を満たす要素を数える。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B42: Two Faced Cards (A42 応用 ─ 全探索 + 貪欲)</h1>
+<h2>概要</h2>
+<p>N 枚のカードはそれぞれ表 A[i] と裏 B[i] の値を持つ。任意の枚数の カードを選んで「表の総和」「裏の総和」を作るとき、(|表の総和| + |裏の総和|) を最大化する。</p>
+<h2>アルゴリズム</h2>
+<p>「表の総和の符号」「裏の総和の符号」の 4 通り (++/+-/-+/--) を全探索する。各場合、カード i を選ぶか否かは独立に決められ、 「(符号付き)表 + (符号付き)裏 ≧ 0 なら選ぶ」貪欲で最適。</p>
+<h2>計算量</h2>
+<p>O(4N)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 全探索 / 考察 / 難易度目安: ★3</li>
+<li>要約: 「表の総和の符号」「裏の総和の符号」の 2×2 通りを全探索して最大値を求める。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。</li>
+<li>各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。</li>
+<li>小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B42.py ─ Python 3</span>
     <div class="actions">
@@ -88,35 +109,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">全探索</span><span class="tag">考察</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A42.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A42: 2 軸を全探索 — (a, b) の組を全部試す →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B42: Two Faced Cards (A42 応用 ─ 全探索 + 貪欲)
-# ---------------------------------------------------------------------
-# 【概要】N 枚のカードはそれぞれ表 A[i] と裏 B[i] の値を持つ。任意の枚数の
-#         カードを選んで「表の総和」「裏の総和」を作るとき、(|表の総和| +
-#         |裏の総和|) を最大化する。
-# 【アルゴリズム】「表の総和の符号」「裏の総和の符号」の 4 通り (++/+-/-+/--)
-#                 を全探索する。各場合、カード i を選ぶか否かは独立に決められ、
-#                 「(符号付き)表 + (符号付き)裏 ≧ 0 なら選ぶ」貪欲で最適。
-# 【計算量】O(4N)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 全探索 / 考察 / 難易度目安: ★3
-# - 要約: 「表の総和の符号」「裏の総和の符号」の 2×2 通りを全探索して最大値を求める。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
-# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
-# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
-# ---------------------------------------------------------------------
-
-# 与えられた符号 (1 = 正, 2 = 負) の組み合わせで最大化する関数。
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># 与えられた符号 (1 = 正, 2 = 負) の組み合わせで最大化する関数。
 def solve(omote, ura, A, B):
     s = 0
     for i in range(N):
@@ -181,4 +183,24 @@ print(max(Answer1, Answer2, Answer3, Answer4))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A52: キュー — 先入れ先出し (FIFO) | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A52: キュー — 先入れ先出し (FIFO) ─ 入った順に取り出す。BFS の中核。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <strong>法則 A52</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A52</span>
+    <h1>キュー — 先入れ先出し (FIFO)</h1>
+    <p class="law-tagline">入った順に取り出す。BFS の中核</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>先入れ先出し (FIFO)</strong> のデータ構造。最初に入れたものを最初に取り出す。Python では <code>collections.deque</code> を使う (list は <code>popleft</code> が O(N) で遅い)。</p>
+<p><strong>BFS、シミュレーション、生産消費</strong> などで使う。両端から O(1) で操作できる <code>deque</code> は、スタック/キューの両方の役割をこなせる優秀なデータ構造。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 操作</h2>
+    <div class="law-section-body">
+      <ul>
+<li><strong>enqueue</strong>: 末尾に追加 (<code>q.append(x)</code>)</li>
+<li><strong>dequeue</strong>: 先頭を取り出す (<code>q.popleft()</code>)</li>
+<li><strong>front</strong>: 先頭を見る (<code>q[0]</code>)</li>
+</ul>
+<p>全て O(1)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  E[空] --&gt;|append 1| Q1[1]
+  Q1 --&gt;|append 2| Q2[&quot;1, 2&quot;]
+  Q2 --&gt;|append 3| Q3[&quot;1, 2, 3&quot;]
+  Q3 --&gt;|popleft = 1| Q4[&quot;2, 3&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: BFS の典型実装</h2>
+    <div class="law-section-body">
+      <pre><code class="language-python">from collections import deque
+q = deque([start])
+dist[start] = 0
+while q:
+    v = q.popleft()
+    for u in G[v]:
+        if dist[u] == -1:
+            dist[u] = dist[v] + 1
+            q.append(u)</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: deque は両端 O(1)</h2>
+    <div class="law-section-body">
+      <p><code>append</code>, <code>pop</code>, <code>appendleft</code>, <code>popleft</code> 全て O(1)。両端から取り出せる <strong>デック (double-ended queue)</strong> として、0-1 BFS や C17 のような特殊用途にも便利。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>list.pop(0)</code> は O(N) で遅い。<strong>必ず <code>deque.popleft()</code></strong> を使う。</li>
+<li>空のときの <code>popleft()</code> は IndexError。</li>
+<li><code>queue</code> モジュール (Queue 標準ライブラリ) はスレッド安全な代わりに遅い。競プロでは deque。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A51.html">A51: スタック — 後入れ先出し (LIFO)</a><a class="law-chip" href="A63.html">A63: BFS — 幅優先探索で最短歩数</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A52.html">A52</a><a class="law-chip" href="../problems/B52.html">B52</a><a class="law-chip" href="../problems/C17.html">C17</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A51.html"><div class="nav-label">前の法則</div><div class="nav-title">A51: スタック — 後入れ先出し (LIFO)</div></a>
+    <a class="next" href="A53.html"><div class="nav-label">次の法則</div><div class="nav-title">A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A26: 素数判定 — √N までの試し割り | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A26: 素数判定 — √N までの試し割り ─ N の約数は必ず √N までに 1 つは入っている。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <strong>法則 A26</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A26</span>
+    <h1>素数判定 — √N までの試し割り</h1>
+    <p class="law-tagline">N の約数は必ず √N までに 1 つは入っている</p>
+  </div>
+
+  <section class="law-intro">
+    <p><code>N</code> が素数かを判定するには、<strong>2 から √N までの整数で割れるか</strong> を試すだけ。計算量 <strong>O(√N)</strong>、N=10^12 でも 10^6 回程度の試し割りで判定できます。</p>
+<p>鍵は <strong>「N の約数の組 (a, b) (a≤b) は a ≤ √N」</strong> という性質。片方を √N まで探せば、もう片方は自動で見つかる。約数列挙 (C04) やエラトステネス (B26) もこの性質の応用です。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: なぜ √N まででよいか</h2>
+    <div class="law-section-body">
+      <p>N = a × b (a, b は整数, a ≤ b) なら、a² ≤ N、つまり a ≤ √N。なので a を √N まで探せば、ペアの b は自動で対応する数になる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N[&quot;N = a × b&quot;] --&gt; C[&quot;a ≤ b&quot;]
+  C --&gt; R[&quot;a² ≤ N&quot;]
+  R --&gt; S[&quot;a ≤ √N&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 試し割り</h2>
+    <div class="law-section-body">
+      <p><code>for i in range(2, int(N**0.5) + 1): if N % i == 0: 素数でない</code>。途中で 1 つでも割り切れたら合成数。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  L[&quot;i = 2, 3, ..., √N&quot;] --&gt; C{N mod i == 0?}
+  C -- Yes --&gt; NO[合成数]
+  C -- No --&gt; L
+  L --&gt; P[素数]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 例外処理</h2>
+    <div class="law-section-body">
+      <p><strong>N=1 は素数ではない</strong>。<code>if N &lt; 2: return False</code> を入れておく。<code>int(N<strong>0.5)</code> は浮動小数の誤差で 1 ずれることがある。<code>int(N</strong>0.5) + 1</code> で安全側に倒す。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>N=1 を素数と判定しないように。</li>
+<li>浮動小数の <code>N**0.5</code> は誤差を含む。<code>isqrt(N)</code> (Python 3.8+) を使うと厳密。</li>
+<li>「N 以下の素数を全部欲しい」なら <strong>エラトステネスのふるい (B26)</strong> に切り替え。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A26.html">A26</a><a class="law-chip" href="../problems/B26.html">B26</a><a class="law-chip" href="../problems/C04.html">C04</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A25.html"><div class="nav-label">前の法則</div><div class="nav-title">A25: 経路数え上げ — 2 次元 DP で数える典型</div></a>
+    <a class="next" href="A27.html"><div class="nav-label">次の法則</div><div class="nav-title">A27: ユークリッド互除法 — 最大公約数を O(log) で</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

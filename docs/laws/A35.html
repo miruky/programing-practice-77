@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A35: 交互最善 DP — min と max を交互に切り替える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A35: 交互最善 DP — min と max を交互に切り替える ─ 先手は max、後手は min。階層で交互に。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <strong>法則 A35</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A35</span>
+    <h1>交互最善 DP — min と max を交互に切り替える</h1>
+    <p class="law-tagline">先手は max、後手は min。階層で交互に</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「2 人が交互に最善手を打つ」ゲームで、<strong>先手は自分の得を最大化、後手は先手の得を最小化</strong>するときの最終スコアを求める DP。</p>
+<p><strong>奇数階層では max、偶数階層では min</strong> を取るだけ。後退解析 (A32) の応用形ですが、勝敗ではなく <strong>スコア</strong> を扱うので、min/max を交互に使う点が特徴。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 状態の定義</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[i][j] = ピラミッドの (i, j) からゲームを開始したときの最終スコア</code></strong> とする。「先手の累計スコア」と読み替えてもよい。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 最下段は値そのもの</h2>
+    <div class="law-section-body">
+      <p>ピラミッドの最下段 (i = N) は、その値がそのまま最終スコア。<code>dp[N][j] = A[j-1]</code>。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 上段は子の max / min</h2>
+    <div class="law-section-body">
+      <p><strong>奇数段は先手 = max、偶数段は後手 = min</strong>。</p>
+<pre><code class="language-python">if i % 2 == 1:  # 先手の手番
+    dp[i][j] = max(dp[i+1][j], dp[i+1][j+1])
+else:           # 後手の手番
+    dp[i][j] = min(dp[i+1][j], dp[i+1][j+1])</code></pre>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  P[親 i j] --&gt; C1[子 i+1 j]
+  P --&gt; C2[子 i+1 j+1]
+  P -.奇数段 = max.- C1
+  P -.偶数段 = min.- C2</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「先手」「後手」のどちらが max / min を取るかは問題文を慎重に読む。</li>
+<li>階層の偶奇でなく <strong>手番数の偶奇</strong> で切り替える問題もある。</li>
+<li>「先手のスコア − 後手のスコア」を最大化する問題は別の DP に書き換える (= 差分 DP)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A32.html">A32: ゲーム後退解析 — 終端から勝ち負けを伝播</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A35.html">A35</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A34.html"><div class="nav-label">前の法則</div><div class="nav-title">A34: Grundy 数 — 独立ゲームを Nim に変換する</div></a>
+    <a class="next" href="A36.html"><div class="nav-label">次の法則</div><div class="nav-title">A36: 偶奇の不変量 — Parity は変わらない</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

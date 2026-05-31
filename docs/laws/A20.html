@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A20: LCS — 最長共通部分列 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A20: LCS — 最長共通部分列 ─ 2 つの文字列の「共通骨格」を測る古典 DP。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A20</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A20</span>
+    <h1>LCS — 最長共通部分列</h1>
+    <p class="law-tagline">2 つの文字列の「共通骨格」を測る古典 DP</p>
+  </div>
+
+  <section class="law-intro">
+    <p>2 つの文字列 S, T に共通して現れる部分列のうち、<strong>最長のものの長さ</strong> を求める。部分列は連続でなくてもよい (順序だけ保つ)。</p>
+<p><strong><code>dp[i][j] = S[0..i) と T[0..j) の LCS 長</code></strong> の 2 次元 DP。「最後の文字が一致するか?」で遷移が 2 分岐するパターンは、<strong>編集距離 (B20)</strong> や <strong>回文部分列 (B21)</strong> にも共通する万能の型。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 状態の定義</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[i][j] = S の先頭 i 文字と T の先頭 j 文字の LCS の長さ</code></strong>。初期状態は <code>dp[0][j] = dp[i][0] = 0</code> (空文字列との LCS は 0)。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 一致する場合の遷移</h2>
+    <div class="law-section-body">
+      <p><code>S[i-1] == T[j-1]</code> なら、<strong>この文字を LCS に追加できる</strong>。<code>dp[i][j] = dp[i-1][j-1] + 1</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P[&quot;dp[i-1][j-1]&quot;] --&gt; A[&quot;+1&quot;]
+  A --&gt; D[&quot;dp[i][j]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 一致しない場合</h2>
+    <div class="law-section-body">
+      <p>S か T のどちらかを 1 文字捨てた状態の <strong>max</strong> を取る。<code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P1[&quot;dp[i-1][j] (S の最後を捨てる)&quot;] --&gt; M[max]
+  P2[&quot;dp[i][j-1] (T の最後を捨てる)&quot;] --&gt; M
+  M --&gt; D[&quot;dp[i][j]&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「最長共通<strong>部分列</strong>」と「最長共通<strong>部分文字列</strong> (連続)」は別物。  部分文字列だと遷移が違う。</li>
+<li>0 行目・0 列目を 0 で初期化するだけで境界処理が消える。番兵の威力。</li>
+<li>LCS そのもの (文字列) を復元するには A17 と同じ要領で逆向きに辿る。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A17.html">A17: DP + 経路復元 — ゴールから戻って『どう来たか』を再構築</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A20.html">A20</a><a class="law-chip" href="../problems/B20.html">B20</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A19.html"><div class="nav-label">前の法則</div><div class="nav-title">A19: ナップサック問題 — 重さと価値の 2 次元 DP</div></a>
+    <a class="next" href="A21.html"><div class="nav-label">次の法則</div><div class="nav-title">A21: 区間 DP — 区間 [l, r] を状態にする</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

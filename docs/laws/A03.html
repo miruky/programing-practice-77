@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A03: 二重ループ全探索 — 2 つの軸を独立に試す | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A03: 二重ループ全探索 — 2 つの軸を独立に試す ─ 2 重の for 文だけで多くの問題が殴れる。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">1章: アルゴリズムと計算量</span> /
+    <strong>法則 A03</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A03</span>
+    <h1>二重ループ全探索 — 2 つの軸を独立に試す</h1>
+    <p class="law-tagline">2 重の for 文だけで多くの問題が殴れる</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「2 つの集合からそれぞれ 1 つずつ選ぶ」「2 つのインデックスの組を試す」といった問題は、外ループと内ループの <strong>二重 for</strong> で書けます。計算量は O(N²) なので、N が 5000 くらいまでなら通用します。</p>
+<p>全探索は <strong>「速さを犠牲にして、正解を確実に当てる」</strong> 戦略です。工夫した解法に行く前に、「全探索なら何秒?」をまず見積もる習慣をつけましょう。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: O(N²) の感覚</h2>
+    <div class="law-section-body">
+      <p>N=100 なら 10^4、N=1000 なら 10^6、N=5000 なら 2.5×10^7。Python では 10^7 操作で 1〜数秒なので、N=5000 がギリギリの目安。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[N=100&lt;br/&gt;10^4] --&gt; B[一瞬]
+  C[N=1000&lt;br/&gt;10^6] --&gt; D[余裕]
+  E[N=5000&lt;br/&gt;2.5x10^7] --&gt; F[Python だと際どい]
+  G[N=10^5&lt;br/&gt;10^10] --&gt; H[不可]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 順序付きの組 vs 順不同</h2>
+    <div class="law-section-body">
+      <p>(i, j) と (j, i) を区別するなら <code>for i in range(N): for j in range(N):</code>、区別しないなら内側を <code>for j in range(i+1, N):</code> にして<strong>重複を半分にカット</strong>します。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  A[2 つの添字を全部試したい] --&gt; B{順序を区別する?}
+  B -- する --&gt; C[i:0..N-1&lt;br/&gt;j:0..N-1]
+  B -- しない --&gt; D[i:0..N-1&lt;br/&gt;j:i+1..N-1]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 条件判定は内側で</h2>
+    <div class="law-section-body">
+      <p>外ループで a、内ループで b を固定し、その組について「条件を満たすか」をif で判定。マッチしたらカウンタを上げる、答えを出して終了する、などの処理を入れます。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>N=10^5 になると O(N²) = 10^10 で不可能。前処理や別の法則に切り替える。</li>
+<li>順不同の組を数えるとき、<code>j in range(N)</code> のままだと答えが 2 倍になる。</li>
+<li>二重 for の中で <code>print</code> を毎回呼ぶと I/O だけで遅くなる。答えは最後に 1 回。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A02.html">A02: 線形探索 — 端から順に全部見る</a><a class="law-chip" href="A05.html">A05: 三重ループ全探索 — O(N³) でもまだ戦える</a><a class="law-chip" href="A42.html">A42: 2 軸を全探索 — (a, b) の組を全部試す</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A03.html">A03</a><a class="law-chip" href="../problems/B03.html">B03</a><a class="law-chip" href="../problems/C02.html">C02</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A02.html"><div class="nav-label">前の法則</div><div class="nav-title">A02: 線形探索 — 端から順に全部見る</div></a>
+    <a class="next" href="A04.html"><div class="nav-label">次の法則</div><div class="nav-title">A04: 進法変換 — 10 進数と 2 進数を行き来する</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

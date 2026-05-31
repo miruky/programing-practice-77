@@ -57,6 +57,32 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>A77: 答えで二分探索 (棒の切り方)</h1>
+<h2>概要</h2>
+<p>長さ L の棒に N 個の &quot;印&quot; がある。そのうち K 個を選んで 切ったとき、できる N+1 個の区間の最小長を最大化する。</p>
+<h2>アルゴリズム</h2>
+<p>答えで二分探索</p>
+<ul>
+<li>「最小区間長を x 以上にできるか?」という判定問題に帰着する。</li>
+<li>印を左から見て、前回の切れ目から x 以上離れていれば切る (貪欲)。</li>
+<li>切った数が K 以上なら OK。x について単調なので二分探索が効く。</li>
+</ul>
+<h2>計算量</h2>
+<p>O(N log(10^9))</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 二分探索 / 貪欲 / 難易度目安: ★3</li>
+<li>要約: 切れ目の最小区間長を二分探索で最大化する典型問題。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。</li>
+<li>bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。</li>
+<li>LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A77.py ─ Python 3</span>
     <div class="actions">
@@ -76,6 +102,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">二分探索</span><span class="tag">貪欲</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A77.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A77: 切り方の最大化 — 「最小区間長 ≥ x」で二分探索 →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -84,31 +115,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A77: 答えで二分探索 (棒の切り方)
-# ---------------------------------------------------------------------
-# 【概要】長さ L の棒に N 個の &quot;印&quot; がある。そのうち K 個を選んで
-#         切ったとき、できる N+1 個の区間の最小長を最大化する。
-# 【アルゴリズム】答えで二分探索
-#   - 「最小区間長を x 以上にできるか?」という判定問題に帰着する。
-#   - 印を左から見て、前回の切れ目から x 以上離れていれば切る (貪欲)。
-#   - 切った数が K 以上なら OK。x について単調なので二分探索が効く。
-# 【計算量】O(N log(10^9))
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 二分探索 / 貪欲 / 難易度目安: ★3
-# - 要約: 切れ目の最小区間長を二分探索で最大化する典型問題。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。
-# - bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。
-# - LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, L = map(int, input().split())
 K = int(input())
 A = list(map(int, input().split()))
@@ -180,4 +187,24 @@ print(left)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

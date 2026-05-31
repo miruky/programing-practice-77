@@ -69,6 +69,13 @@
       <span class="applied-banner-summary">ソート済み配列から目的の整数の位置を二分探索で求める。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B11: Binary Search 2 (A11 応用)</h1>
+<h2>概要</h2>
+<p>配列 A をソートし、Q 個のクエリ X について「A の中で X 未満の 要素の個数」を答える。</p>
+<h2>アルゴリズム</h2>
+<p>bisect.bisect_left は「X を挿入できる最も左の位置」を 返す ─ これがそのまま「X 未満の要素数」になる。</p>
+<h2>計算量</h2>
+<p>ソート O(N log N) + 各クエリ O(log N)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B11.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +95,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">二分探索</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A11.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A11: 二分探索 — ソート済み列の真ん中を狙う →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -96,16 +108,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B11: Binary Search 2 (A11 応用)
-# ---------------------------------------------------------------------
-# 【概要】配列 A をソートし、Q 個のクエリ X について「A の中で X 未満の
-#         要素の個数」を答える。
-# 【アルゴリズム】bisect.bisect_left は「X を挿入できる最も左の位置」を
-#                 返す ─ これがそのまま「X 未満の要素数」になる。
-# 【計算量】ソート O(N log N) + 各クエリ O(log N)。
-# =====================================================================
-import bisect
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import bisect
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: 二分探索 / 難易度目安: ★3
@@ -167,4 +170,24 @@ for i in range(Q):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -65,6 +65,29 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_cl" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A13: しゃくとり法 (近いペアの数え上げ)</h1>
+<h2>概要</h2>
+<p>ソート済み配列 A から、差 A[j]-A[i] が K 以下となる (i, j) (i&lt;j) のペア数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>しゃくとり法 (Two pointers / Sliding window) i が右に進むほど、対応する R[i] (= 条件を満たす最大 j) も単調に増える。 したがって R は戻さずに前進だけする → 全体 O(N)。</p>
+<h2>計算量</h2>
+<p>O(N)</p>
+<h2>ポイント</h2>
+<p>L を i, R を「i から見て条件を満たす一番遠い右端」とする。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: しゃくとり法 / 難易度目安: ★3</li>
+<li>要約: 右端を尺取り虫のように動かして区間長を効率的に列挙する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>左端 l を固定し、条件を満たす限り右端 r を前に進める。</li>
+<li>r は戻さない。各要素が高々 1 回ずつ進むので全体 O(N) になる。</li>
+<li>現在の窓が何を満たしているかを、ループの不変条件として読む。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A13.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +107,11 @@
         <ol><li>左端 l を 1 つずつ進める。</li><li>条件を満たす限り右端 r を進める。</li><li>その l から作れる区間数をまとめて足す。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> r を毎回 l に戻さないことが高速化の本体です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">しゃくとり法</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A13.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A13: しゃくとり法 — 左右の窓を一方向に動かす →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -92,31 +120,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A13: しゃくとり法 (近いペアの数え上げ)
-# ---------------------------------------------------------------------
-# 【概要】ソート済み配列 A から、差 A[j]-A[i] が K 以下となる (i, j) (i&lt;j)
-#         のペア数を求める。
-# 【アルゴリズム】しゃくとり法 (Two pointers / Sliding window)
-#   i が右に進むほど、対応する R[i] (= 条件を満たす最大 j) も単調に増える。
-#   したがって R は戻さずに前進だけする → 全体 O(N)。
-# 【計算量】O(N)
-# 【ポイント】L を i, R を「i から見て条件を満たす一番遠い右端」とする。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: しゃくとり法 / 難易度目安: ★3
-# - 要約: 右端を尺取り虫のように動かして区間長を効率的に列挙する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 左端 l を固定し、条件を満たす限り右端 r を前に進める。
-# - r は戻さない。各要素が高々 1 回ずつ進むので全体 O(N) になる。
-# - 現在の窓が何を満たしているかを、ループの不変条件として読む。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, K = map(int, input().split())
 A = list(map(int, input().split()))
 
@@ -177,4 +181,24 @@ print(Answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A71: ソート + 貪欲 — 並べ替えで答えが決まる典型 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A71: ソート + 貪欲 — 並べ替えで答えが決まる典型 ─ 2 列の積和を最小化 = 昇順 × 降順。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>法則 A71</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A71</span>
+    <h1>ソート + 貪欲 — 並べ替えで答えが決まる典型</h1>
+    <p class="law-tagline">2 列の積和を最小化 = 昇順 × 降順</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「2 つの数列 A, B から 1 つずつ取って積を作り、合計を最小化」といった問題で、<strong>「A は昇順、B は降順に並べて掛ける」</strong> のが必ず最適。</p>
+<p>直感的には「大きいものは小さいものと組ませる」のが効率的。厳密には <strong>再配置不等式</strong> で証明される、基本的だが応用範囲の広い貪欲。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 並べ替える</h2>
+    <div class="law-section-body">
+      <p>A は昇順、B は降順 (またはどちらか片方ずつ) にソート。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[&quot;A: 大きい順&quot;] --&gt; P[ペア化]
+  B[&quot;B: 小さい順&quot;] --&gt; P
+  P --&gt; Q[積を計算]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 同じインデックスで積</h2>
+    <div class="law-section-body">
+      <p>ソート後の <code>A[i] × B[i]</code> を全 i について計算し合計する。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A1[A 1] --&gt; X[&quot;×&quot;]
+  B1[B 1 = 降順 1 番目] --&gt; X
+  X --&gt; S[合計]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 別バリエーション</h2>
+    <div class="law-section-body">
+      <ul>
+<li>最大化なら <strong>両方とも昇順 (or 両方とも降順)</strong> が最適。</li>
+<li>「ペアにできない」制約があるときは別の DP が必要 (A75)。</li>
+</ul>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>並びの方向を間違える (最小化なのに同方向にソート) と簡単に WA。</li>
+<li>数値型のオーバーフロー (Python は不要、C++ は注意)。</li>
+<li>「貪欲が最適」を証明できない問題には使わない (反例を作って確認するクセを)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A39.html">A39: 区間スケジューリング — 終了時刻でソート + 貪欲</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A71.html">A71</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A70.html"><div class="nav-label">前の法則</div><div class="nav-title">A70: 状態 BFS — 2^N 通りの状態を頂点に持つ</div></a>
+    <a class="next" href="A72.html"><div class="nav-label">次の法則</div><div class="nav-title">A72: ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

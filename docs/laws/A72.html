@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A72: ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A72: ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲 ─ 行は全探索、列は貪欲。組み合わせて最適化。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>法則 A72</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A72</span>
+    <h1>ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲</h1>
+    <p class="law-tagline">行は全探索、列は貪欲。組み合わせて最適化</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「行と列の両方に対して操作を選ぶ」ような 2 軸最適化問題で、<strong>片方 (例えば行) を 2^H 通り全探索し、他方 (列) を貪欲</strong> に決める手法。</p>
+<p>全探索なので最適性が保証される一方、列を全探索する必要がないので計算量を抑えられる。H ≤ 20 程度が現実的な上限。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 行のビット全探索</h2>
+    <div class="law-section-body">
+      <p>行 H 個の選び方を 2^H 通り全列挙。<code>itertools.product([0, 1], repeat=H)</code> か <code>for mask in range(1 &lt;&lt; H)</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  H[行 H 個] --&gt; M[2^H 通り]
+  M --&gt; S[各組み合わせを試す]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 各組み合わせで列を貪欲決定</h2>
+    <div class="law-section-body">
+      <p>行の使い方を固定したら、残り操作回数で <strong>列ごとに白マス数が多い順</strong> に塗る。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  F[行の使い方を固定] --&gt; R[残り操作回数 K&#x27;]
+  R --&gt; C[各列の白マス数を計算]
+  C --&gt; SO[降順ソート]
+  SO --&gt; A[上位 K&#x27; 個を塗る]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 全パターンの max</h2>
+    <div class="law-section-body">
+      <p>全パターンについて答えを計算し、max を取る。</p>
+<p>計算量: O(2^H × (H + W log W))。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>H = 20 が現実的な上限。H が大きいなら別アプローチ。</li>
+<li>列の貪欲で「降順ソート」を忘れない。</li>
+<li>残り操作回数が負になるパターンはスキップ。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A03.html">A03: 二重ループ全探索 — 2 つの軸を独立に試す</a><a class="law-chip" href="A23.html">A23: bitDP — 集合を整数 1 個に圧縮</a><a class="law-chip" href="A42.html">A42: 2 軸を全探索 — (a, b) の組を全部試す</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A72.html">A72</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A71.html"><div class="nav-label">前の法則</div><div class="nav-title">A71: ソート + 貪欲 — 並べ替えで答えが決まる典型</div></a>
+    <a class="next" href="A73.html"><div class="nav-label">次の法則</div><div class="nav-title">A73: 2 目的のダイクストラ — 重みに 10000 倍を仕込む</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

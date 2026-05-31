@@ -61,6 +61,27 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>C13: Select 2 (力試し問題)</h1>
+<h2>概要</h2>
+<p>整数列 A[1..N] と整数 P が与えられる。i &lt; j で A[i] · A[j] ≡ P (mod 10⁹+7) となるペアの個数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>各 i について、「j &lt; i かつ A[j] = P · A[i]⁻¹」となる j の 個数を辞書 Count から取り出して加算 → A[i] を Count に追加。 逆元は フェルマーの小定理で a^(mod-2) を繰り返し二乗法で求める。 A[i] = 0 の特殊ケース: P = 0 ならどんな j とも条件を満たす。</p>
+<h2>計算量</h2>
+<p>O(N · log mod)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 数学 / modular逆元 / 累積カウント / 難易度目安: ★4</li>
+<li>要約: mod 上で A[i]·A[j] ≡ P となるペア数を、mod 逆元と累積カウントで数える。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。</li>
+<li>小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。</li>
+<li>mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C13.py ─ Python 3</span>
     <div class="actions">
@@ -80,35 +101,16 @@
         <ol><li>何を数えたいかを集合や式に置き換える。</li><li>重複・余り・周期を確認する。</li><li>計算量が定数または log になっているか見る。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式変形だけを追うとつらいので、小さい例で 1 回手計算すると読みやすいです。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">数学</span><span class="tag">modular逆元</span><span class="tag">累積カウント</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A30.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A30: mod 逆元 — フェルマーの小定理で割り算を作る →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# C13: Select 2 (力試し問題)
-# ---------------------------------------------------------------------
-# 【概要】整数列 A[1..N] と整数 P が与えられる。i &lt; j で
-#         A[i] · A[j] ≡ P (mod 10⁹+7) となるペアの個数を求める。
-# 【アルゴリズム】各 i について、「j &lt; i かつ A[j] = P · A[i]⁻¹」となる j の
-#                 個数を辞書 Count から取り出して加算 → A[i] を Count に追加。
-#         逆元は フェルマーの小定理で a^(mod-2) を繰り返し二乗法で求める。
-#         A[i] = 0 の特殊ケース: P = 0 ならどんな j とも条件を満たす。
-# 【計算量】O(N · log mod)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 数学 / modular逆元 / 累積カウント / 難易度目安: ★4
-# - 要約: mod 上で A[i]·A[j] ≡ P となるペア数を、mod 逆元と累積カウントで数える。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
-# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
-# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
-# ---------------------------------------------------------------------
-
-mod = 1000000007
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">mod = 1000000007
 
 # a^b mod m を返す関数 (繰り返し二乗法)
 def Power(a, b, m):
@@ -197,4 +199,24 @@ print(Answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A67: MST — クラスカル法 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A67: MST — クラスカル法 ─ 辺を小さい順にソート + Union-Find で連結化。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">9章: グラフアルゴリズム</span> /
+    <strong>法則 A67</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A67</span>
+    <h1>MST — クラスカル法</h1>
+    <p class="law-tagline">辺を小さい順にソート + Union-Find で連結化</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>最小全域木 (MST)</strong> = 全頂点を繋ぐ部分グラフのうち辺重み和が最小のもの。<strong>クラスカル法</strong>: 辺を重み昇順にソートし、両端が違うグループなら採用。Union-Find (A66) で効率化して O(M log M)。</p>
+<p>「最大全域木」は降順にすれば同じ手順で求まる (B67)。プリム法 (ヒープベース) という別解もあるが、Python ではクラスカルが書きやすい。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 辺を重みでソート</h2>
+    <div class="law-section-body">
+      <p><code>edges.sort(key=lambda e: e[2])</code> で重み昇順。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  E[全辺] --&gt; S[重み昇順ソート]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 左から見て採用判定</h2>
+    <div class="law-section-body">
+      <p>辺 (a, b, c) について、<code>a</code> と <code>b</code> が <strong>違うグループ</strong> なら採用。Union-Find で <code>same(a, b)</code> を判定し、<code>unite(a, b)</code> で結合。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  E[辺 a b c] --&gt; J{same a b?}
+  J -- No --&gt; A[&quot;答えに c を加算; unite a b&quot;]
+  J -- Yes --&gt; SK[スキップ]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: なぜ最小か (= 交換論法)</h2>
+    <div class="law-section-body">
+      <p>ある最適 MST T と、クラスカルの結果 K が違うとする。K が選んで T が選ばなかった最初の辺 e を考えると、T に e を加えてサイクル中で重い辺と入れ替えると、より良いか同等の MST が作れる → 矛盾。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>連結グラフでない場合、選んだ辺の本数が N-1 にならない (= MST が存在しない)。</li>
+<li>最大全域木は <strong>降順</strong> ソートに変えるだけ (B67)。</li>
+<li>同じ重みの辺が複数あるときの結果は一意でない (どれを採用しても OK)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A66.html">A66: Union-Find — 連結成分の素集合データ構造</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A67.html">A67</a><a class="law-chip" href="../problems/B67.html">B67</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A66.html"><div class="nav-label">前の法則</div><div class="nav-title">A66: Union-Find — 連結成分の素集合データ構造</div></a>
+    <a class="next" href="A68.html"><div class="nav-label">次の法則</div><div class="nav-title">A68: 最大フロー — Ford-Fulkerson 法</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

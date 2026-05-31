@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A12: 答えで二分探索 — 「答えが x 以下か」を直接判定 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A12: 答えで二分探索 — 「答えが x 以下か」を直接判定 ─ 探すのは値じゃない。OK/NG の境目。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">3章: 二分探索</span> /
+    <strong>法則 A12</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A12</span>
+    <h1>答えで二分探索 — 「答えが x 以下か」を直接判定</h1>
+    <p class="law-tagline">探すのは値じゃない。OK/NG の境目</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「最大値を最小化したい」「最小値を最大化したい」「ちょうど K にしたい」といった最適化問題は、<strong>「答えが x 以下か?」という判定問題</strong> に書き換えると二分探索で解けます。これを <strong>「答えで二分探索」(めぐる式二分探索)</strong> と呼びます。</p>
+<p>肝は <strong>単調性</strong> : x を大きくすると判定結果が NG → OK と <strong>一方向にだけ変わる</strong>ことが保証されている必要があります。判定関数 <code>check(x)</code> を 1 つ書けばよく、全探索や微妙な貪欲よりも安全。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 単調性を確認</h2>
+    <div class="law-section-body">
+      <p>「時間 x 以上あれば終わるか」「容量 x 以下に収まるか」のように、x が大きくなるほど判定が易しくなる (NG → OK と切り替わる) ことを確認。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  X1[x=1&lt;br/&gt;NG] --&gt; X2[x=2&lt;br/&gt;NG]
+  X2 --&gt; X3[x=3&lt;br/&gt;OK]
+  X3 --&gt; X4[x=4&lt;br/&gt;OK]
+  X4 --&gt; X5[x=5&lt;br/&gt;OK]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: check(x) を実装</h2>
+    <div class="law-section-body">
+      <p>「x 分で K 枚印刷できる?」など、<strong>「x が与えられたら Yes/No を返す関数」</strong>を 1 つ書く。通常の解法 (貪欲、シミュレーションなど) より単純になることが多い。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 二分探索で境界を絞り込む</h2>
+    <div class="law-section-body">
+      <p><code>check(x)</code> が NG → OK に切り替わる <strong>最小の x</strong> を二分探索で見つける。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  S[&quot;left=1, right=10^9&quot;] --&gt; L[while left &lt; right]
+  L --&gt; M[&quot;mid = (l+r)//2&quot;]
+  M --&gt; C{check mid}
+  C -- NG --&gt; NL[&quot;left = mid + 1&quot;]
+  C -- OK --&gt; NR[&quot;right = mid&quot;]
+  NL --&gt; L
+  NR --&gt; L
+  L --&gt; A[&quot;left が答え&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>単調性がないと二分探索は使えない。「x を大きくしたのに NG に戻る」なら別の方法へ。</li>
+<li>整数二分探索なら <code>while left &lt; right</code>、実数二分探索なら <code>for _ in range(200)</code>。</li>
+<li>「最大化」のときは <code>while left &lt; right: mid = (l+r+1)//2; ...</code> と切り上げ版を使う  (A77 で使うテンプレ)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a><a class="law-chip" href="A77.html">A77: 切り方の最大化 — 「最小区間長 ≥ x」で二分探索</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A12.html">A12</a><a class="law-chip" href="../problems/B12.html">B12</a><a class="law-chip" href="../problems/C11.html">C11</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A11.html"><div class="nav-label">前の法則</div><div class="nav-title">A11: 二分探索 — ソート済み列の真ん中を狙う</div></a>
+    <a class="next" href="A13.html"><div class="nav-label">次の法則</div><div class="nav-title">A13: しゃくとり法 — 左右の窓を一方向に動かす</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

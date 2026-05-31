@@ -57,6 +57,32 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>A10: 区間最大値クエリ (累積max)</h1>
+<h2>概要</h2>
+<p>配列 A に対して、ある 1 区間 [L, R] を抜いた残りの最大値を Q 個の (L, R) に対して答える。</p>
+<h2>アルゴリズム</h2>
+<p>&quot;前方累積 max&quot; P と &quot;後方累積 max&quot; Q を前計算しておく。</p>
+<ul>
+<li>P[i] = A[0..i] の最大値</li>
+<li>Q[i] = A[i..N-1] の最大値</li>
+</ul>
+<p>削除区間 [L, R] の外側の最大値は max(P[L-2], Q[R]) で求められる。</p>
+<h2>計算量</h2>
+<p>前計算 O(N) + クエリ O(D)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 累積和 / 区間クエリ / 難易度目安: ★2</li>
+<li>要約: 左右からの累積最大値を前計算し、抜き取り後の最大値を求める。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>S[i] は先頭から i 個分の合計。S[0]=0 を置くと端の例外処理が消える。</li>
+<li>区間和は「右端までの合計 - 左手前までの合計」と読む。</li>
+<li>入力が 1-indexed、Python 配列が 0-indexed なので添字の変換だけ注意する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A10.py ─ Python 3</span>
     <div class="actions">
@@ -76,6 +102,11 @@
         <ol><li>S[0] = 0 を番兵として用意する。</li><li>S[i] = S[i-1] + A[i-1] で前から足す。</li><li>区間和は S[r] - S[l-1] または半開区間なら S[r] - S[l] と読む。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 問題が 1-indexed で来るか、Python の配列が 0-indexed かで式が 1 つずれます。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">累積和</span><span class="tag">区間クエリ</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A10.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A10: 区間最大値クエリ — 前後 2 方向の累積最大値 →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -84,31 +115,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A10: 区間最大値クエリ (累積max)
-# ---------------------------------------------------------------------
-# 【概要】配列 A に対して、ある 1 区間 [L, R] を抜いた残りの最大値を
-#         Q 個の (L, R) に対して答える。
-# 【アルゴリズム】&quot;前方累積 max&quot; P と &quot;後方累積 max&quot; Q を前計算しておく。
-#   - P[i] = A[0..i] の最大値
-#   - Q[i] = A[i..N-1] の最大値
-#   削除区間 [L, R] の外側の最大値は max(P[L-2], Q[R]) で求められる。
-# 【計算量】前計算 O(N) + クエリ O(D)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 累積和 / 区間クエリ / 難易度目安: ★2
-# - 要約: 左右からの累積最大値を前計算し、抜き取り後の最大値を求める。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - S[i] は先頭から i 個分の合計。S[0]=0 を置くと端の例外処理が消える。
-# - 区間和は「右端までの合計 - 左手前までの合計」と読む。
-# - 入力が 1-indexed、Python 配列が 0-indexed なので添字の変換だけ注意する。
-# ---------------------------------------------------------------------
-
-N = int(input())
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">N = int(input())
 A = list(map(int, input().split()))
 D = int(input())
 L = [None] * D
@@ -173,4 +180,24 @@ for d in range(D):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

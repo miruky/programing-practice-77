@@ -61,6 +61,29 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>C06: Regular Graph (力試し問題)</h1>
+<h2>概要</h2>
+<p>N 頂点 N 辺、すべての頂点の次数が 2 となるグラフ (=正則グラフ のうち単純な閉路) を 1 つ出力する。</p>
+<h2>アルゴリズム</h2>
+<p>サイクル 1-2-3-...-N-1 を出力する。 つまり辺は (i, i+1) (i = 1..N-1) と (N, 1)。</p>
+<h2>計算量</h2>
+<p>O(N)。</p>
+<h2>ポイント</h2>
+<p>i % N + 1 のイディオムで「i の次の頂点」を表現できる (N の次は 1 に戻る)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 構築 / グラフ / 難易度目安: ★2</li>
+<li>要約: 全頂点の次数が 2 となるサイクルを 1 つ構成して出力する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力をまず隣接リストやグリッドの隣接関係に変換している部分を見る。</li>
+<li>visited や dist は「もう見たか」「何手で来たか」を記録するための配列。</li>
+<li>DFS は深く進む、BFS は近い順に広がる。この違いだけ先に押さえる。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C06.py ─ Python 3</span>
     <div class="actions">
@@ -80,6 +103,11 @@
         <ol><li>まず入力を隣接リスト G に変換する。</li><li>visited / dist で、訪問済みや距離を記録する。</li><li>DFS は深く、BFS は近い順に広げると読む。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> グリッド問題も、各マスを頂点だと思えば同じ形になります。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">構築</span><span class="tag">グラフ</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A61.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A61: グラフの表現 — 隣接リストが基本 →</span>
+      </a>
       </div>
 
       <div class="visual visual-graph" aria-hidden="true">
@@ -88,31 +116,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# C06: Regular Graph (力試し問題)
-# ---------------------------------------------------------------------
-# 【概要】N 頂点 N 辺、すべての頂点の次数が 2 となるグラフ (=正則グラフ
-#         のうち単純な閉路) を 1 つ出力する。
-# 【アルゴリズム】サイクル 1-2-3-...-N-1 を出力する。
-#                 つまり辺は (i, i+1) (i = 1..N-1) と (N, 1)。
-# 【計算量】O(N)。
-# 【ポイント】i % N + 1 のイディオムで「i の次の頂点」を表現できる
-#             (N の次は 1 に戻る)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 構築 / グラフ / 難易度目安: ★2
-# - 要約: 全頂点の次数が 2 となるサイクルを 1 つ構成して出力する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力をまず隣接リストやグリッドの隣接関係に変換している部分を見る。
-# - visited や dist は「もう見たか」「何手で来たか」を記録するための配列。
-# - DFS は深く進む、BFS は近い順に広がる。この違いだけ先に押さえる。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N = int(input())
 
 # --- 出力 -----------------------------------------------------------
@@ -144,4 +148,24 @@ print(&quot;\n&quot;.join(out))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -65,6 +65,27 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_el" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A65: 木上の DP (部下数を数える)</h1>
+<h2>概要</h2>
+<p>社員 1 を根とする木が与えられ、各社員の部下の総数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>木 DP (葉から根に向かって集計) dp[i] = 社員 i の (直接 + 間接) 部下の数 dp[i] = Σ (dp[子] + 1) 全社員を i=N から 1 へ逆順に走査するだけで葉から計算できる (上司 &lt; 部下 という入力の性質を利用)。</p>
+<h2>計算量</h2>
+<p>O(N)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: グラフ / 木DP / 難易度目安: ★3</li>
+<li>要約: 木の葉から根へ向かって部下数を集計する木 DP。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。</li>
+<li>初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。</li>
+<li>遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A65.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +105,11 @@
         <ol><li>dp の添字が何を表すかを先に固定する。</li><li>初期状態だけを手で入れる。</li><li>小さい状態から大きい状態へ、使う/使わない・進む/進まないで遷移する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式を先に暗記するより、dp[i] の意味を日本語で読めるかを優先します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">グラフ</span><span class="tag">木DP</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A65.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A65: 木上の DP — 葉から根へ集計 →</span>
+      </a>
       </div>
 
       <div class="visual visual-dp" aria-hidden="true">
@@ -92,31 +118,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A65: 木上の DP (部下数を数える)
-# ---------------------------------------------------------------------
-# 【概要】社員 1 を根とする木が与えられ、各社員の部下の総数を求める。
-# 【アルゴリズム】木 DP (葉から根に向かって集計)
-#   dp[i] = 社員 i の (直接 + 間接) 部下の数
-#   dp[i] = Σ (dp[子] + 1)
-#   全社員を i=N から 1 へ逆順に走査するだけで葉から計算できる
-#   (上司 &lt; 部下 という入力の性質を利用)。
-# 【計算量】O(N)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: グラフ / 木DP / 難易度目安: ★3
-# - 要約: 木の葉から根へ向かって部下数を集計する木 DP。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。
-# - 初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。
-# - 遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。
-# ---------------------------------------------------------------------
-
-# --- 入力 (A[2..N] が「i の上司」を表す) -----------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 (A[2..N] が「i の上司」を表す) -----------------------------
 N = int(input())
 # A[0], A[1] はダミー (社員 1 には上司なし)
 A = [0] * 2 + list(map(int, input().split()))
@@ -165,4 +167,24 @@ print(*dp[1:])
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

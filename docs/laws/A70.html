@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A70: 状態 BFS — 2^N 通りの状態を頂点に持つ | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A70: 状態 BFS — 2^N 通りの状態を頂点に持つ ─ 集合を整数で表し、状態空間グラフを BFS。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">9章: グラフアルゴリズム</span> /
+    <strong>法則 A70</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A70</span>
+    <h1>状態 BFS — 2^N 通りの状態を頂点に持つ</h1>
+    <p class="law-tagline">集合を整数で表し、状態空間グラフを BFS</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「ランプの ON/OFF」「マスの色」のような <strong>N ビットの状態</strong> を、整数 0..2^N-1 で表現。<strong>状態を頂点、1 回の操作を辺とするグラフ</strong> を構築し、BFS で最短手数を求める。</p>
+<p>N = 20 でも状態数 10^6 程度で現実的。<strong>bitDP (A23) と発想は同じ</strong> で、両者は親戚のような関係。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 状態を整数化</h2>
+    <div class="law-section-body">
+      <p>ランプ N 個の状態は <code>state = Σ (lamp[i] &lt;&lt; i)</code> のような N ビット整数。状態数は 2^N。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  L[&quot;ランプ [1, 0, 1, 1]&quot;] --&gt; S[&quot;state = 13 = 1011_2&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 状態遷移グラフを構築</h2>
+    <div class="law-section-body">
+      <p>各状態から、各操作で行ける次状態を計算。「ランプ x, y, z を反転」なら <strong>XOR</strong> で <code>next = state ^ (1&lt;&lt;x) ^ (1&lt;&lt;y) ^ (1&lt;&lt;z)</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[state] --&gt; O1[操作 1: XOR]
+  O1 --&gt; N1[次状態 1]
+  S --&gt; O2[操作 2: XOR]
+  O2 --&gt; N2[次状態 2]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: BFS で最短</h2>
+    <div class="law-section-body">
+      <p>初期状態 (= 入力されたランプ配置) からゴール (= 全 1) までの BFS。距離が答え。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>状態数 2^N がメモリに乗るか確認。N = 25 でも 33M で厳しい。</li>
+<li>XOR で集合反転は強力。<code>s ^ mask</code> で複数 bit を同時反転できる (A70_extra)。</li>
+<li>「最短」が問題なら BFS、「到達可能性」だけなら DFS でも可。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A23.html">A23: bitDP — 集合を整数 1 個に圧縮</a><a class="law-chip" href="A63.html">A63: BFS — 幅優先探索で最短歩数</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A70.html">A70</a><a class="law-chip" href="../problems/A70_extra.html">A70_extra</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A69.html"><div class="nav-label">前の法則</div><div class="nav-title">A69: 二部マッチング — 最大フローへの帰着</div></a>
+    <a class="next" href="A71.html"><div class="nav-label">次の法則</div><div class="nav-title">A71: ソート + 貪欲 — 並べ替えで答えが決まる典型</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

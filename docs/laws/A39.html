@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A39: 区間スケジューリング — 終了時刻でソート + 貪欲 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A39: 区間スケジューリング — 終了時刻でソート + 貪欲 ─ 終了が早いものから取れば、必ず最適。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A39</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A39</span>
+    <h1>区間スケジューリング — 終了時刻でソート + 貪欲</h1>
+    <p class="law-tagline">終了が早いものから取れば、必ず最適</p>
+  </div>
+
+  <section class="law-intro">
+    <p>N 個の区間から <strong>重ならないように最大個数選ぶ</strong> 古典問題。「<strong>終了時刻で昇順ソートし、左から見て採用可能なら採用</strong>」という貪欲法が <strong>必ず最適</strong> であることが証明されています。</p>
+<p>「他の貪欲基準 (開始時刻順、長さ順) はダメ」というのが意外な点。終了時刻が一番早いものを取れば、残った時間に他の区間を入れる余地が最大化される、という直感が証明の核心。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 終了時刻でソート</h2>
+    <div class="law-section-body">
+      <p>全区間を <code>(終了, 開始)</code> のペアでソート。終了時刻の昇順が基準。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  R[元の区間群] --&gt; S[終了時刻昇順にソート]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 左から貪欲に採用</h2>
+    <div class="law-section-body">
+      <p>現在の「最後に採用した区間の終了時刻 <code>cur_end</code>」を持ち、次の区間の開始 ≥ <code>cur_end</code> なら採用。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  S[&quot;sorted intervals&quot;] --&gt; L[for each]
+  L --&gt; C{start &gt;= cur_end?}
+  C -- Yes --&gt; A[採用: cur_end = end, cnt += 1]
+  C -- No --&gt; SK[スキップ]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 正しさの証明</h2>
+    <div class="law-section-body">
+      <p>「最適解 OPT に対し、終了が最も早い区間 g を採用して残りを処理する貪欲も同じ個数取れる」を交換論法で示す。直感的には <strong>早く終わる = 残り時間に余裕</strong> が増える。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「重なる/重ならない」の境目: 端点が一致するときに重なるか? は問題による。</li>
+<li><strong>開始時刻ソート</strong> や <strong>長さソート</strong> にすると反例が作れて WA。</li>
+<li>「給料最大化」のような重み付きは別の DP (B39, C15) が必要。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A39.html">A39</a><a class="law-chip" href="../problems/B39.html">B39</a><a class="law-chip" href="../problems/C15.html">C15</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A38.html"><div class="nav-label">前の法則</div><div class="nav-title">A38: 左右からの累積 — 各位置の上限を独立に求める</div></a>
+    <a class="next" href="A40.html"><div class="nav-label">次の法則</div><div class="nav-title">A40: 個数集計と組合せ数え上げ — 値ごとに数えて C(n, k) で合計</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

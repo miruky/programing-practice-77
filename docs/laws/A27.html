@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A27: ユークリッド互除法 — 最大公約数を O(log) で | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A27: ユークリッド互除法 — 最大公約数を O(log) で ─ `gcd(a, b) = gcd(b, a mod b)` を繰り返すだけ。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <strong>法則 A27</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A27</span>
+    <h1>ユークリッド互除法 — 最大公約数を O(log) で</h1>
+    <p class="law-tagline">`gcd(a, b) = gcd(b, a mod b)` を繰り返すだけ</p>
+  </div>
+
+  <section class="law-intro">
+    <p>2 つの整数の最大公約数 (GCD) を <strong><code>gcd(a, b) = gcd(b, a mod b)</code></strong> というシンプルな漸化式で求める、紀元前のアルゴリズム。計算量は <strong>O(log min(a, b))</strong>、a, b が 10^18 でも 90 回程度で終わります。</p>
+<p><strong>LCM (最小公倍数)</strong> は <code>a * b // gcd(a, b)</code>、<strong>3 個以上の GCD</strong> は順に取れば求まる。Python なら <code>math.gcd</code> で 1 行ですが、原理を 1 回手で書いて理解しておくと拡張ユークリッド互除法・mod 逆元 (A30) に繋がります。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 漸化式</h2>
+    <div class="law-section-body">
+      <p>「a を b で割った余り = a mod b」は、a と同じ約数を b と共有する。なので gcd(a, b) = gcd(b, a mod b) が成り立つ。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  G1[gcd 24 18] --&gt; G2[gcd 18 6]
+  G2 --&gt; G3[gcd 6 0]
+  G3 --&gt; A[&quot;答え = 6&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 停止条件</h2>
+    <div class="law-section-body">
+      <p>b が 0 になったとき、a が答え。</p>
+<pre><code class="language-python">def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: LCM への応用</h2>
+    <div class="law-section-body">
+      <p><code>lcm(a, b) = a * b // gcd(a, b)</code>。3 個以上の LCM は <code>lcm(lcm(a, b), c)</code> のように畳み込む。</p>
+<p><strong>先に gcd で割ってから掛ける</strong> とオーバーフロー回避になる (Python では不要)。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>a, b のどちらかが 0 のときの挙動: <code>gcd(a, 0) = a</code> (Python の <code>math.gcd</code> も同じ)。</li>
+<li>LCM は値が爆発する。3 個以上の問題で <code>int</code> 範囲を超えるかチェック (Python なら任意精度)。</li>
+<li><code>a, b = b, a % b</code> の同時代入を <code>a = b; b = a % b</code> と分けると順序ミス。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A30.html">A30: mod 逆元 — フェルマーの小定理で割り算を作る</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A27.html">A27</a><a class="law-chip" href="../problems/B27.html">B27</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A26.html"><div class="nav-label">前の法則</div><div class="nav-title">A26: 素数判定 — √N までの試し割り</div></a>
+    <a class="next" href="A28.html"><div class="nav-label">次の法則</div><div class="nav-title">A28: mod 計算 — 毎回余りを取って小さく保つ</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

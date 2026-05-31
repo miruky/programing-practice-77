@@ -65,6 +65,27 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_ch" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A09: 2次元いもす法</h1>
+<h2>概要</h2>
+<p>N 個の矩形領域への &quot;+1&quot; 操作を行い、最終的な各セルの値を答える。</p>
+<h2>アルゴリズム</h2>
+<p>2 次元いもす法 矩形 (A,B)-(C,D) への加算は、4 隅への符号付き加算で表現できる: X[A][B]   += 1 X[A][D+1] -= 1 X[C+1][B] -= 1 X[C+1][D+1] += 1 その後 2 次元累積和を取れば、各セルの最終値が得られる。</p>
+<h2>計算量</h2>
+<p>O(N + HW)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 累積和 / いもす法 / 2次元 / 難易度目安: ★3</li>
+<li>要約: 矩形領域への加算を四隅の操作だけで表現し、2 次元累積和で復元。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>長方形の全マスを直接更新せず、四隅に +1/-1 の印だけ置く。</li>
+<li>印を置いた時点では答えではない。横方向・縦方向の累積和で面に戻す。</li>
+<li>閉区間か半開区間かで、-1 を置く座標が 1 つずれるので最初に確認する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A09.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +105,11 @@
         <ol><li>まず四隅への更新だけを追う。ここではまだ完成形ではない。</li><li>横方向の累積で印を横に伸ばす。</li><li>縦方向の累積で面に復元し、必要なセルを数える。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 右端・下端に置く -1 は、矩形の外側を止めるための印です。閉区間か半開区間かだけを必ず確認します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">累積和</span><span class="tag">いもす法</span><span class="tag">2次元</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A09.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A09: 2 次元いもす法 — 矩形加算を 4 隅で表現 →</span>
+      </a>
       </div>
 
       <div class="visual visual-imos2d" aria-hidden="true">
@@ -92,33 +118,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A09: 2次元いもす法
-# ---------------------------------------------------------------------
-# 【概要】N 個の矩形領域への &quot;+1&quot; 操作を行い、最終的な各セルの値を答える。
-# 【アルゴリズム】2 次元いもす法
-#   矩形 (A,B)-(C,D) への加算は、4 隅への符号付き加算で表現できる:
-#     X[A][B]   += 1
-#     X[A][D+1] -= 1
-#     X[C+1][B] -= 1
-#     X[C+1][D+1] += 1
-#   その後 2 次元累積和を取れば、各セルの最終値が得られる。
-# 【計算量】O(N + HW)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 累積和 / いもす法 / 2次元 / 難易度目安: ★3
-# - 要約: 矩形領域への加算を四隅の操作だけで表現し、2 次元累積和で復元。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 長方形の全マスを直接更新せず、四隅に +1/-1 の印だけ置く。
-# - 印を置いた時点では答えではない。横方向・縦方向の累積和で面に戻す。
-# - 閉区間か半開区間かで、-1 を置く座標が 1 つずれるので最初に確認する。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 H, W, N = map(int, input().split())
 A = [None] * N
 B = [None] * N
@@ -196,4 +196,24 @@ for i in range(1, H + 1):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A45: 不変量の発見 — 操作で保たれる量を見抜く | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A45: 不変量の発見 — 操作で保たれる量を見抜く ─ A36 の発展形。総和、mod、bit ごとの偶奇など。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A45</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A45</span>
+    <h1>不変量の発見 — 操作で保たれる量を見抜く</h1>
+    <p class="law-tagline">A36 の発展形。総和、mod、bit ごとの偶奇など</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「操作を繰り返してある状態にできるか?」の判定で、<strong>操作で必ず保たれる量 (不変量)</strong> を見つければ、最初と目標を比べるだけで答えが出る。</p>
+<p>偶奇 (A36) は特殊な不変量。他にも <strong>総和、特定の mod、各 bit の偶奇、XOR 値、置換のパリティ</strong> など、問題ごとに様々な不変量がある。<strong>手で 1 ステップ試して観察する</strong> のが最短ルート。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 操作を 1 回試す</h2>
+    <div class="law-section-body">
+      <p>「(a, b, c) のうち 2 つを +1 / -1 する」のような操作を、具体例で試す。結果を観察し、<strong>何が変わって何が変わらないか</strong> をリストアップ。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S1[&quot;(2, 3, 5)&quot;] --&gt;|操作| S2[&quot;(3, 4, 5)&quot;]
+  S2 -.差.- D[&quot;a+b 変化、c 不変、a+b+c +2&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 不変量の候補をリスト化</h2>
+    <div class="law-section-body">
+      <ul>
+<li>総和</li>
+<li>各要素の偶奇 (mod 2)</li>
+<li>mod 3, mod 4, ...</li>
+<li>特定の関数の値 (例: XOR、product)</li>
+</ul>
+<p>操作を複数回試して、本当に不変かを確認。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 必要十分性の確認</h2>
+    <div class="law-section-body">
+      <p>不変量が一致 = 必要条件しか言えていない場合がある。<strong>「一致するなら本当に到達可能か」</strong> を別途証明する必要がある (構成的に動かしてみる、など)。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「不変量が一致 = Yes」とは限らない。<strong>必要十分</strong> を確認する。</li>
+<li>不変量は複数あることが多い。問題に効くのはどれか? を試行錯誤。</li>
+<li>不変量を発見できないときは、状態数が小さければ BFS で全探索する。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A32.html">A32: ゲーム後退解析 — 終端から勝ち負けを伝播</a><a class="law-chip" href="A36.html">A36: 偶奇の不変量 — Parity は変わらない</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A45.html">A45</a><a class="law-chip" href="../problems/B45.html">B45</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A44.html"><div class="nav-label">前の法則</div><div class="nav-title">A44: 遅延処理 — 物理操作の代わりにフラグ管理</div></a>
+    <a class="next" href="A46.html"><div class="nav-label">次の法則</div><div class="nav-title">A46: 貪欲法 (Nearest Neighbor) — その場で最良を取る</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

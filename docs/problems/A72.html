@@ -57,6 +57,31 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>A72: 行のビット全探索 + 列の貪欲法</h1>
+<h2>概要</h2>
+<p>H×W のグリッドを K 回の &quot;行/列まるごと黒く塗る&quot; 操作で塗り、 黒マスを最大化する。</p>
+<h2>アルゴリズム</h2>
+<p>H が小さいので、行の使い方は 2^H 通り全探索。</p>
+<ul>
+<li>行に対する選び方を固定したら、残り操作数で塗る列を貪欲に選ぶ</li>
+</ul>
+<p>(列ごとの白マス数が多いものから順に塗ると総黒マス数が最大)。</p>
+<h2>計算量</h2>
+<p>O(2^H * H * W * log W)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 全探索 / 貪欲 / 難易度目安: ★3</li>
+<li>要約: 行の選び方を 2^H 通り全探索し、列は貪欲に処理する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>貪欲法は、何を基準に並べるか・どの候補を先に取るかが本体。</li>
+<li>コードより先に「その選択をしても後で損しない理由」をコメントで確認する。</li>
+<li>ソート後は、左から順に決めて戻らない構造になっているかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A72.py ─ Python 3</span>
     <div class="actions">
@@ -76,34 +101,16 @@
         <ol><li>何を基準に並べるかを確認する。</li><li>先頭から見て、採用できるものを採用する。</li><li>なぜ後で取り返しがつく/つかないかをコメントで確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 貪欲は実装より「その選び方でよい理由」が本体です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">全探索</span><span class="tag">貪欲</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A72.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A72: ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲 →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A72: 行のビット全探索 + 列の貪欲法
-# ---------------------------------------------------------------------
-# 【概要】H×W のグリッドを K 回の &quot;行/列まるごと黒く塗る&quot; 操作で塗り、
-#         黒マスを最大化する。
-# 【アルゴリズム】H が小さいので、行の使い方は 2^H 通り全探索。
-#   - 行に対する選び方を固定したら、残り操作数で塗る列を貪欲に選ぶ
-#     (列ごとの白マス数が多いものから順に塗ると総黒マス数が最大)。
-# 【計算量】O(2^H * H * W * log W)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 全探索 / 貪欲 / 難易度目安: ★3
-# - 要約: 行の選び方を 2^H 通り全探索し、列は貪欲に処理する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 貪欲法は、何を基準に並べるか・どの候補を先に取るかが本体。
-# - コードより先に「その選択をしても後で損しない理由」をコメントで確認する。
-# - ソート後は、左から順に決めて戻らない構造になっているかを見る。
-# ---------------------------------------------------------------------
-
-import itertools
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import itertools
 
 
 def paint_row(H, W, d, remaining_steps):
@@ -197,4 +204,24 @@ print(answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

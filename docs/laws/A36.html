@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A36: 偶奇の不変量 — Parity は変わらない | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A36: 偶奇の不変量 — Parity は変わらない ─ 操作で「偶奇」が変わらないなら、その偶奇を見れば必ず答えが分かる。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A36</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A36</span>
+    <h1>偶奇の不変量 — Parity は変わらない</h1>
+    <p class="law-tagline">操作で「偶奇」が変わらないなら、その偶奇を見れば必ず答えが分かる</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「特定の操作を K 回行ったあとに、ある状態になれるか?」を問う問題で、<strong>操作で変化しない量 (不変量)</strong> を見つけられれば、最初と目標の不変量を比較するだけで判定できます。</p>
+<p><strong>偶奇 (parity)</strong> は最も基本的な不変量。「2 マスずつ動く」「2 つの値を同時に増減」のような操作は偶奇を変えないことが多く、初期偶奇と目標偶奇が一致するかを見るだけで Yes/No が決まります。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 不変量の発見</h2>
+    <div class="law-section-body">
+      <p>操作を 1 回試してみて、<strong>「何が必ず変わらないか?」</strong> を観察。総和、偶奇、mod の値、要素数などが候補。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[初期状態] --&gt;|操作| S2[状態 2]
+  S2 --&gt;|操作| S3[状態 3]
+  S -.不変量 X.- I[X]
+  S2 -.不変量 X.- I
+  S3 -.不変量 X.- I</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 必要条件 vs 必要十分条件</h2>
+    <div class="law-section-body">
+      <p>「不変量が一致しないなら No」は <strong>必要条件</strong>。「一致するなら本当に Yes か?」を別途確認する必要がある。</p>
+<p>A36 では「ON 個数の偶奇」が一致すれば必ず実現可能なことが示せる (= 必要十分)。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 実装は数行</h2>
+    <div class="law-section-body">
+      <p>ON の個数を数えて、その偶奇と K の偶奇を比較。</p>
+<pre><code class="language-python">numON = S.count(&#x27;1&#x27;)
+print(&#x27;Yes&#x27; if numON % 2 == K % 2 else &#x27;No&#x27;)</code></pre>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「偶奇が一致 = Yes」とは限らない。必要条件しか言えていない場合がある。</li>
+<li>不変量は <strong>一意ではない</strong>。複数見つかったらどれが本質的かを考える。</li>
+<li>A45 のような「総和の不変性」も同じ枠組み。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A45.html">A45: 不変量の発見 — 操作で保たれる量を見抜く</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A36.html">A36</a><a class="law-chip" href="../problems/B36.html">B36</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A35.html"><div class="nav-label">前の法則</div><div class="nav-title">A35: 交互最善 DP — min と max を交互に切り替える</div></a>
+    <a class="next" href="A37.html"><div class="nav-label">次の法則</div><div class="nav-title">A37: 貢献度分解 — 各要素を独立に数える</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

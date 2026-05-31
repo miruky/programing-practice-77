@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">二部グラフのマッチングを最大フローに帰着して解く。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B69: Black Company 2 (A69 応用 ─ 二部マッチング / 最大フロー)</h1>
+<h2>概要</h2>
+<p>N 人の社員が、24 時間のうちどの時間に出勤可能かが文字列で与え られる。各社員は最大 10 時間勤務、各時間帯はちょうど M 人で 埋まる必要がある。可能か判定する。</p>
+<h2>アルゴリズム</h2>
+<p>最大フローに帰着: 源点 S → 社員 i: 容量 10 社員 i → 時刻 j: 容量 1 (出勤可能なら) 時刻 j → 終点 T: 容量 M 最大フローが M × 24 (必要総人時) と一致すれば Yes。</p>
+<h2>計算量</h2>
+<p>Ford-Fulkerson は最悪 O(VE · F) だが本問は小規模で十分。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: グラフ / マッチング / 最大フロー / 難易度目安: ★5</li>
+<li>要約: 1 人 10 時間制約付きシフトを二部マッチング (最大フロー) で組む。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>残余グラフでは「まだ流せる容量」を見る。逆辺は流れを戻せる余地を表す。</li>
+<li>s から t までの増加路を 1 本見つけ、流せる最小容量だけ流す、を繰り返す。</li>
+<li>二部マッチング系は「左側 → 右側」の辺に容量 1 を張る変換を先に理解する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B69.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +109,11 @@
         <ol><li>各辺に逆辺を追加して残余グラフを作る。</li><li>s から t まで流せる道を探す。</li><li>流した分だけ順辺を減らし、逆辺を増やす。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 逆辺は「あとで流れを取り消せる余地」を表します。ここが最大フローの一番見落としやすい点です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">グラフ</span><span class="tag">マッチング</span><span class="tag">最大フロー</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A69.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A69: 二部マッチング — 最大フローへの帰着 →</span>
+      </a>
       </div>
 
       <div class="visual visual-flow" aria-hidden="true">
@@ -96,33 +122,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B69: Black Company 2 (A69 応用 ─ 二部マッチング / 最大フロー)
-# ---------------------------------------------------------------------
-# 【概要】N 人の社員が、24 時間のうちどの時間に出勤可能かが文字列で与え
-#         られる。各社員は最大 10 時間勤務、各時間帯はちょうど M 人で
-#         埋まる必要がある。可能か判定する。
-# 【アルゴリズム】最大フローに帰着:
-#                 源点 S → 社員 i: 容量 10
-#                 社員 i → 時刻 j: 容量 1 (出勤可能なら)
-#                 時刻 j → 終点 T: 容量 M
-#         最大フローが M × 24 (必要総人時) と一致すれば Yes。
-# 【計算量】Ford-Fulkerson は最悪 O(VE · F) だが本問は小規模で十分。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: グラフ / マッチング / 最大フロー / 難易度目安: ★5
-# - 要約: 1 人 10 時間制約付きシフトを二部マッチング (最大フロー) で組む。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 残余グラフでは「まだ流せる容量」を見る。逆辺は流れを戻せる余地を表す。
-# - s から t までの増加路を 1 本見つけ、流せる最小容量だけ流す、を繰り返す。
-# - 二部マッチング系は「左側 → 右側」の辺に容量 1 を張る変換を先に理解する。
-# ---------------------------------------------------------------------
-
-INF = 1 &lt;&lt; 61
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">INF = 1 &lt;&lt; 61
 
 
 class Edge:
@@ -275,4 +275,24 @@ print(&quot;Yes&quot; if g.max_flow(S, T) == M * 24 else &quot;No&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

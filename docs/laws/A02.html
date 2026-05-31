@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A02: 線形探索 — 端から順に全部見る | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A02: 線形探索 — 端から順に全部見る ─ まずは全部見る。それで間に合うなら勝ち。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">1章: アルゴリズムと計算量</span> /
+    <strong>法則 A02</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A02</span>
+    <h1>線形探索 — 端から順に全部見る</h1>
+    <p class="law-tagline">まずは全部見る。それで間に合うなら勝ち</p>
+  </div>
+
+  <section class="law-intro">
+    <p>配列の中に目的の値があるかを知りたいとき、最も素朴な方法が <strong>線形探索</strong> です。「先頭から最後まで 1 個ずつ照合する」だけのアルゴリズムで、計算量は O(N)。</p>
+<p>二分探索やハッシュよりも遅いと思われがちですが、<strong><code>N</code> がせいぜい 10^6 程度なら線形探索で十分間に合う</strong>ことが多く、余計なバグの心配もありません。「速さよりまず正しさ」を学ぶ第一歩です。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 全部見る = O(N)</h2>
+    <div class="law-section-body">
+      <p>配列の要素数 <code>N</code> 個を 1 回ずつ見るので、計算量は <strong>O(N)</strong>。N が 10^7 を超え始めると 1 秒に間に合わなくなるので、そのときに二分探索やハッシュへの切り替えを考えます。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A0[A0] --&gt;|一致?| A1[A1]
+  A1 --&gt;|一致?| A2[A2]
+  A2 --&gt;|一致?| A3[A3]
+  A3 --&gt;|一致?| A4[A4]
+  A4 --&gt; R{見つかった?}</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 「あるかどうか」と「位置」</h2>
+    <div class="law-section-body">
+      <p>Python なら <code>X in A</code> で存在判定 (内部は線形探索)、<code>A.index(X)</code> で位置取得 (見つからないと例外)。競プロでは自前ループの方がフラグ管理・早期 return が直感的です。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 早期終了で平均を速くする</h2>
+    <div class="law-section-body">
+      <p>見つかった瞬間 <code>break</code> すれば、最悪は変わらないが平均的に半分の計算量で済みます。ループ後に <code>else</code> を付けると「最後まで <code>break</code> されなかった」場合の処理が書けます。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  L[for x in A] --&gt; C{x == X?}
+  C -- Yes --&gt; Y[Yes と出力して break]
+  C -- No --&gt; L
+  L -.最後まで no_break.-&gt; N[No と出力]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「ある」しか調べないなら早期 <code>break</code> を入れる。性能と読みやすさの両得。</li>
+<li>N が 10^7 を超えるなら、線形探索ではなく <strong>二分探索 (A11)</strong> や  辞書 (A54) に切り替えるサイン。</li>
+<li>入力に重複が含まれるかで、「最初に見つけた」「全部数える」の挙動が変わる。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a><a class="law-chip" href="A54.html">A54: 連想配列 — 辞書による key-value 管理</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A02.html">A02</a><a class="law-chip" href="../problems/B02.html">B02</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A01.html"><div class="nav-label">前の法則</div><div class="nav-title">A01: 標準入出力 — プログラムの入口と出口</div></a>
+    <a class="next" href="A03.html"><div class="nav-label">次の法則</div><div class="nav-title">A03: 二重ループ全探索 — 2 つの軸を独立に試す</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

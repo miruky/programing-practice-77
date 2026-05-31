@@ -69,6 +69,13 @@
       <span class="applied-banner-summary">ヒープで最小値を取り出す優先度付きキュー。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B53: Job Scheduling (A53 応用 ─ 優先度付きキュー)</h1>
+<h2>概要</h2>
+<p>N 件の仕事があり、仕事 i は X[i] 日目以降に開放され、給料は Y[i]。 1 日に 1 件ずつ、D 日間で得られる総給料の最大値を求める。</p>
+<h2>アルゴリズム</h2>
+<p>貪欲: 日付 i について「現時点で開放済みの仕事」の中で 最大給料のものを取る ─ これを優先度付きキュー (ヒープ) で 効率化する。Python の heapq は最小ヒープなので、給料に -1 を掛けて入れる。</p>
+<h2>計算量</h2>
+<p>O((N + D) log N)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B53.py ─ Python 3</span>
     <div class="actions">
@@ -88,22 +95,16 @@
         <ol><li>何を基準に並べるかを確認する。</li><li>先頭から見て、採用できるものを採用する。</li><li>なぜ後で取り返しがつく/つかないかをコメントで確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 貪欲は実装より「その選び方でよい理由」が本体です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">データ構造</span><span class="tag">ヒープ</span><span class="tag">貪欲</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A53.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B53: Job Scheduling (A53 応用 ─ 優先度付きキュー)
-# ---------------------------------------------------------------------
-# 【概要】N 件の仕事があり、仕事 i は X[i] 日目以降に開放され、給料は Y[i]。
-#         1 日に 1 件ずつ、D 日間で得られる総給料の最大値を求める。
-# 【アルゴリズム】貪欲: 日付 i について「現時点で開放済みの仕事」の中で
-#                 最大給料のものを取る ─ これを優先度付きキュー (ヒープ) で
-#                 効率化する。Python の heapq は最小ヒープなので、給料に
-#                 -1 を掛けて入れる。
-# 【計算量】O((N + D) log N)。
-# =====================================================================
-import heapq
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import heapq
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: データ構造 / ヒープ / 貪欲 / 難易度目安: ★3
@@ -177,4 +178,24 @@ print(Answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

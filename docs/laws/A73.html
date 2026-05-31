@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A73: 2 目的のダイクストラ — 重みに 10000 倍を仕込む | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A73: 2 目的のダイクストラ — 重みに 10000 倍を仕込む ─ 第一基準 × 10000 + 第二基準。1 本に集約。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>法則 A73</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A73</span>
+    <h1>2 目的のダイクストラ — 重みに 10000 倍を仕込む</h1>
+    <p class="law-tagline">第一基準 × 10000 + 第二基準。1 本に集約</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「距離を最小化したい、同じ距離なら木の本数も最少化したい」のような <strong>2 つの最適化基準</strong> を、<strong>重みに <code>10000</code> を仕込む</strong> ことで 1 つのダイクストラに集約するテクニック。</p>
+<p>新しい重み = (第一基準) × 10000 + (第二基準)。第一基準が支配的で、同点の場合だけ第二基準が効く。10000 は「第二基準の最大値 + α」で十分。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 重みの設計</h2>
+    <div class="law-section-body">
+      <p>各辺の重みを <strong>(距離) × 10000 − (木の本数だけ −1)</strong> に変換。距離が支配的で、同距離内では木の本数が少ない方が小さい値になる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  E[&quot;辺 c, d&quot;] --&gt; N[&quot;新重み = 10000c - (d == 1 ? 1 : 0)&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 普通のダイクストラ</h2>
+    <div class="law-section-body">
+      <p>A64 と同じ実装。重みが変わっているだけ。答えは <code>cur[N]</code>。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 結果の解読</h2>
+    <div class="law-section-body">
+      <p><strong><code>distance = (cur[N] + 9999) // 10000</code></strong> (切り上げ)。 <strong><code>num_trees = distance × 10000 - cur[N]</code></strong> (差分)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  C[&quot;cur[N]&quot;] --&gt; D[&quot;distance = ceil(/10000)&quot;]
+  C --&gt; T[&quot;num_trees = d*10000 - cur&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>10000 は <strong>第二基準の取りうる値の最大 + 1 以上</strong> にする。  本数が 10000 を超える問題では 10^5 や 10^6 に。</li>
+<li>整数オーバーフローに注意 (Python なら平気)。</li>
+<li>同点処理の方向 (max / min) を間違えると符号がズレる。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A64.html">A64: ダイクストラ法 — 重み付き最短路</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A73.html">A73</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A72.html"><div class="nav-label">前の法則</div><div class="nav-title">A72: ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲</div></a>
+    <a class="next" href="A74.html"><div class="nav-label">次の法則</div><div class="nav-title">A74: 転倒数分解 — スライドパズルを行・列に分ける</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

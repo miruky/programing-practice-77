@@ -58,6 +58,7 @@ const ICONS = {
   const strippedBlock = document.querySelector('.code-block-stripped');
   if (!fullBlock || !strippedBlock) return;
   const explainPanels = document.querySelectorAll('.explain-panel');
+  const problemDocs = document.querySelectorAll('.problem-doc');
 
   let commentsHidden = true;
 
@@ -65,6 +66,9 @@ const ICONS = {
     fullBlock.hidden = commentsHidden;
     strippedBlock.hidden = !commentsHidden;
     explainPanels.forEach(panel => {
+      panel.hidden = commentsHidden;
+    });
+    problemDocs.forEach(panel => {
       panel.hidden = commentsHidden;
     });
   }

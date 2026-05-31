@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A49: ビームサーチ — 状態を上位 W 件に絞って前進 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A49: ビームサーチ — 状態を上位 W 件に絞って前進 ─ 毎ターン上位 W 件だけ残し、その全候補を次に展開。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">7章: ヒューリスティック</span> /
+    <strong>法則 A49</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A49</span>
+    <h1>ビームサーチ — 状態を上位 W 件に絞って前進</h1>
+    <p class="law-tagline">毎ターン上位 W 件だけ残し、その全候補を次に展開</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>全状態を持つと爆発するが、上位 W 件 (= ビーム幅) だけ残せば現実的</strong>、という探索法。</p>
+<p>1 手前進するごとに、現在の W 個の状態それぞれから可能な遷移を全列挙、全候補をスコア順にソートして上位 W 個だけ次のステップに残す。<strong>「貪欲ではちょっと足りない、全探索は無理」</strong> な中間で活躍。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 初期状態 1 個</h2>
+    <div class="law-section-body">
+      <p>ビーム <code>beam[0] = [初期状態]</code>。手番 i = 0..T-1 で 1 個ずつ進む。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  B0[1 個] --&gt; B1[W 個まで膨張]
+  B1 --&gt; B2[W 個]
+  B2 --&gt; B3[W 個]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 全候補を展開</h2>
+    <div class="law-section-body">
+      <p>現在の beam の各状態から <strong>可能な遷移を全部</strong> 試し、新しい状態の候補を集める。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  S1[状態 1] --&gt; N1A[遷移 A]
+  S1 --&gt; N1B[遷移 B]
+  S2[状態 2] --&gt; N2A[遷移 A]
+  S2 --&gt; N2B[遷移 B]
+  N1A &amp; N1B &amp; N2A &amp; N2B --&gt; C[候補プール]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 上位 W 件に絞る</h2>
+    <div class="law-section-body">
+      <p>候補プールをスコア順にソート、上位 W 件だけ <code>beam[i+1]</code> に残す。<strong>W を大きくすると質は上がるが計算量も増える</strong> (W = 100〜10000 が目安)。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>状態のコピーが重い (deepcopy)。差分更新で高速化することが多い。</li>
+<li>状態のハッシュで重複除去すると効果絶大。</li>
+<li>復元用に「前の手番のどこから来たか」を各状態に持たせる。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A48.html">A48: 焼きなまし法 — 確率で悪化も受理する</a><a class="law-chip" href="A50.html">A50: 差分計算 — 全部計算し直さず差だけ更新</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A49.html">A49</a><a class="law-chip" href="../problems/A49_greedy1.html">A49_greedy1</a><a class="law-chip" href="../problems/A49_greedy2.html">A49_greedy2</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A48.html"><div class="nav-label">前の法則</div><div class="nav-title">A48: 焼きなまし法 — 確率で悪化も受理する</div></a>
+    <a class="next" href="A50.html"><div class="nav-label">次の法則</div><div class="nav-title">A50: 差分計算 — 全部計算し直さず差だけ更新</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

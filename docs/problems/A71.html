@@ -57,6 +57,31 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>A71: 並び替えによる積和の最小化</h1>
+<h2>概要</h2>
+<p>2 つの長さ N の配列 A, B を並び替えて A[i]*B[i] の総和を 最小化する。</p>
+<h2>アルゴリズム</h2>
+<p>貪欲法 (並び替え不等式)</p>
+<ul>
+<li>一方を昇順、もう一方を降順に並べると積和は最小。</li>
+<li>直観: 大きい数 × 大きい数 を作らない。</li>
+</ul>
+<h2>計算量</h2>
+<p>O(N log N)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 貪欲 / ソート / 難易度目安: ★2</li>
+<li>要約: 大小の積を最小化するときは昇順×降順の足し算が最小。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>貪欲法は、何を基準に並べるか・どの候補を先に取るかが本体。</li>
+<li>コードより先に「その選択をしても後で損しない理由」をコメントで確認する。</li>
+<li>ソート後は、左から順に決めて戻らない構造になっているかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A71.py ─ Python 3</span>
     <div class="actions">
@@ -76,34 +101,16 @@
         <ol><li>何を基準に並べるかを確認する。</li><li>先頭から見て、採用できるものを採用する。</li><li>なぜ後で取り返しがつく/つかないかをコメントで確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 貪欲は実装より「その選び方でよい理由」が本体です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">貪欲</span><span class="tag">ソート</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A71.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A71: ソート + 貪欲 — 並べ替えで答えが決まる典型 →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A71: 並び替えによる積和の最小化
-# ---------------------------------------------------------------------
-# 【概要】2 つの長さ N の配列 A, B を並び替えて A[i]*B[i] の総和を
-#         最小化する。
-# 【アルゴリズム】貪欲法 (並び替え不等式)
-#   - 一方を昇順、もう一方を降順に並べると積和は最小。
-#   - 直観: 大きい数 × 大きい数 を作らない。
-# 【計算量】O(N log N)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 貪欲 / ソート / 難易度目安: ★2
-# - 要約: 大小の積を最小化するときは昇順×降順の足し算が最小。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 貪欲法は、何を基準に並べるか・どの候補を先に取るかが本体。
-# - コードより先に「その選択をしても後で損しない理由」をコメントで確認する。
-# - ソート後は、左から順に決めて戻らない構造になっているかを見る。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N = int(input())
 A = list(map(int, input().split()))
 B = list(map(int, input().split()))
@@ -140,4 +147,24 @@ print(sum([A[i] * B[i] for i in range(N)]))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

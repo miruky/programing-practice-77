@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A64: ダイクストラ法 — 重み付き最短路 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A64: ダイクストラ法 — 重み付き最短路 ─ 未確定の中で最小距離の頂点から確定していく。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">9章: グラフアルゴリズム</span> /
+    <strong>法則 A64</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A64</span>
+    <h1>ダイクストラ法 — 重み付き最短路</h1>
+    <p class="law-tagline">未確定の中で最小距離の頂点から確定していく</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>非負重み</strong> のグラフで、頂点 s から各頂点までの最短距離を求める。優先度付きキュー (ヒープ) で実装すると O((V+E) log V)。</p>
+<p><strong>手順</strong>: 「未確定の中で距離最小の頂点」を取り出して確定 → その頂点から伸びる辺で隣の距離を更新。繰り返し。<strong>負の重み</strong> がある場合は使えない (Bellman-Ford や SPFA へ)。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 初期化</h2>
+    <div class="law-section-body">
+      <p>全頂点の距離 <code>cur</code> を INF に。<code>cur[s] = 0</code>。ヒープに <code>(0, s)</code> を入れる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[start s] --&gt; D[&quot;cur[s] = 0&quot;]
+  D --&gt; H[&quot;heap = [(0, s)]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 取り出して確定</h2>
+    <div class="law-section-body">
+      <p>ヒープから最小距離の頂点 v を取り出す。もう確定済みならスキップ。そうでなければ <strong>その距離を確定</strong>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  H[ヒープから取り出し v] --&gt; C{kakutei v?}
+  C -- Yes --&gt; SK[スキップ]
+  C -- No --&gt; K[&quot;kakutei[v] = True&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 隣接頂点の更新</h2>
+    <div class="law-section-body">
+      <p>v から伸びる各辺 (v→u, 重み w) について、<code>cur[u] &gt; cur[v] + w</code> なら <code>cur[u]</code> を更新してヒープに push。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  V[v 確定] --&gt; E[各辺 v→u]
+  E --&gt; J{cur u &gt; cur v + w?}
+  J -- Yes --&gt; U[&quot;cur[u]= cur[v]+w; push&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><strong>負の重みでは動かない</strong>。負があるなら Bellman-Ford。</li>
+<li>ヒープに古い候補 <code>(古い距離, v)</code> が残るので、取り出したとき <code>kakutei[v]</code> チェックは必須。</li>
+<li>答えが INF なら <strong>到達不能</strong>。-1 などで出力。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A53.html">A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す</a><a class="law-chip" href="A61.html">A61: グラフの表現 — 隣接リストが基本</a><a class="law-chip" href="A73.html">A73: 2 目的のダイクストラ — 重みに 10000 倍を仕込む</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A64.html">A64</a><a class="law-chip" href="../problems/B64.html">B64</a><a class="law-chip" href="../problems/C14.html">C14</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A63.html"><div class="nav-label">前の法則</div><div class="nav-title">A63: BFS — 幅優先探索で最短歩数</div></a>
+    <a class="next" href="A65.html"><div class="nav-label">次の法則</div><div class="nav-title">A65: 木上の DP — 葉から根へ集計</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

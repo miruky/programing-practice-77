@@ -65,6 +65,29 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_cj" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A11: 二分探索 (1から始まる位置を返す)</h1>
+<h2>概要</h2>
+<p>昇順にソートされた配列 A の中から、整数 X の位置を求める。 位置は 1-indexed で出力する。</p>
+<h2>アルゴリズム</h2>
+<p>古典的な二分探索 (binary search) 範囲 [L, R] を半分に絞り続け、A[M] と x を比較する。</p>
+<h2>計算量</h2>
+<p>O(log N) ─ 配列を毎回半分にするため。</p>
+<h2>補足</h2>
+<p>Python では bisect モジュールでも同じことができる。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 二分探索 / 難易度目安: ★2</li>
+<li>要約: ソート済み配列から目的の整数の位置を二分探索で求める。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。</li>
+<li>bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。</li>
+<li>LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A11.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +107,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">二分探索</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A11.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A11: 二分探索 — ソート済み列の真ん中を狙う →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -92,30 +120,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A11: 二分探索 (1から始まる位置を返す)
-# ---------------------------------------------------------------------
-# 【概要】昇順にソートされた配列 A の中から、整数 X の位置を求める。
-#         位置は 1-indexed で出力する。
-# 【アルゴリズム】古典的な二分探索 (binary search)
-#   範囲 [L, R] を半分に絞り続け、A[M] と x を比較する。
-# 【計算量】O(log N) ─ 配列を毎回半分にするため。
-# 【補足】Python では bisect モジュールでも同じことができる。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 二分探索 / 難易度目安: ★2
-# - 要約: ソート済み配列から目的の整数の位置を二分探索で求める。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。
-# - bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。
-# - LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。
-# ---------------------------------------------------------------------
-
-# 整数 x の位置 (0-indexed) を返す。見つからなければ -1。
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># 整数 x の位置 (0-indexed) を返す。見つからなければ -1。
 def search(x, A):
     L = 0
     R = N - 1
@@ -174,4 +179,24 @@ print(Answer + 1)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

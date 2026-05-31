@@ -69,6 +69,39 @@
       <span class="applied-banner-summary">残余グラフへの DFS で増加路を見つけ、フローを増やす。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B68: ALGO Express (A68 応用 ─ プロジェクト選択問題 / 最小カット)</h1>
+<h2>概要</h2>
+<p>N 個の駅にスコア P[i] が与えられる (正/負あり)。M 個の有向制約 「a を選んだら b も選ぶ」がある。選び方の利益を最大化する。</p>
+<h2>アルゴリズム</h2>
+<p>プロジェクト選択問題 → 最小カット (= 最大フロー) に帰着。</p>
+<ul>
+<li>P[i] &gt; 0: 源点 S → i に容量 P[i] (= 「i を選ばないと</li>
+</ul>
+<p>損する利益」)</p>
+<ul>
+<li>P[i] &lt; 0: i → 終点 T に容量 -P[i] (= 「i を選ぶときの</li>
+</ul>
+<p>コスト」)</p>
+<ul>
+<li>制約 a→b: a → b に容量 ∞</li>
+</ul>
+<p>利益最大化値 = (P[i] &gt; 0 の総和) − 最大フロー。</p>
+<h2>計算量</h2>
+<p>Ford-Fulkerson は最悪 O(VE · 最大フロー) だが、本問は小さいので OK。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: グラフ / 最大フロー / プロジェクト選択 / 難易度目安: ★5</li>
+<li>要約: プロジェクト選択問題を最小カット (= 最大フロー) に帰着して解く。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>残余グラフでは「まだ流せる容量」を見る。逆辺は流れを戻せる余地を表す。</li>
+<li>s から t までの増加路を 1 本見つけ、流せる最小容量だけ流す、を繰り返す。</li>
+<li>二部マッチング系は「左側 → 右側」の辺に容量 1 を張る変換を先に理解する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B68.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +121,11 @@
         <ol><li>各辺に逆辺を追加して残余グラフを作る。</li><li>s から t まで流せる道を探す。</li><li>流した分だけ順辺を減らし、逆辺を増やす。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 逆辺は「あとで流れを取り消せる余地」を表します。ここが最大フローの一番見落としやすい点です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">グラフ</span><span class="tag">最大フロー</span><span class="tag">プロジェクト選択</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A68.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A68: 最大フロー — Ford-Fulkerson 法 →</span>
+      </a>
       </div>
 
       <div class="visual visual-flow" aria-hidden="true">
@@ -96,34 +134,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B68: ALGO Express (A68 応用 ─ プロジェクト選択問題 / 最小カット)
-# ---------------------------------------------------------------------
-# 【概要】N 個の駅にスコア P[i] が与えられる (正/負あり)。M 個の有向制約
-#         「a を選んだら b も選ぶ」がある。選び方の利益を最大化する。
-# 【アルゴリズム】プロジェクト選択問題 → 最小カット (= 最大フロー) に帰着。
-#                 - P[i] &gt; 0: 源点 S → i に容量 P[i] (= 「i を選ばないと
-#                   損する利益」)
-#                 - P[i] &lt; 0: i → 終点 T に容量 -P[i] (= 「i を選ぶときの
-#                   コスト」)
-#                 - 制約 a→b: a → b に容量 ∞
-#         利益最大化値 = (P[i] &gt; 0 の総和) − 最大フロー。
-# 【計算量】Ford-Fulkerson は最悪 O(VE · 最大フロー) だが、本問は小さいので OK。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: グラフ / 最大フロー / プロジェクト選択 / 難易度目安: ★5
-# - 要約: プロジェクト選択問題を最小カット (= 最大フロー) に帰着して解く。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 残余グラフでは「まだ流せる容量」を見る。逆辺は流れを戻せる余地を表す。
-# - s から t までの増加路を 1 本見つけ、流せる最小容量だけ流す、を繰り返す。
-# - 二部マッチング系は「左側 → 右側」の辺に容量 1 を張る変換を先に理解する。
-# ---------------------------------------------------------------------
-
-INF = 1 &lt;&lt; 61
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">INF = 1 &lt;&lt; 61
 
 
 class Edge:
@@ -284,4 +295,24 @@ print(offset - g.max_flow(S, T))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

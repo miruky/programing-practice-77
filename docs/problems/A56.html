@@ -65,6 +65,29 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_ec" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A56: ローリングハッシュ</h1>
+<h2>概要</h2>
+<p>文字列 S の部分列 S[l..r] と S[c..d] が一致するかをクエリで判定。</p>
+<h2>アルゴリズム</h2>
+<p>ローリングハッシュ H[i] = ハッシュ(S[0..i-1])  とすると、 部分列 S[l..r] のハッシュは H[r] - H[l-1] * 100^(r-l+1)  (mod M) 各部分列を 1 つの数値で比較できるため、各クエリ O(1)。</p>
+<h2>計算量</h2>
+<p>前計算 O(N) + クエリ O(Q)。</p>
+<h2>注意</h2>
+<p>M を素数、底 (= 100) を 1 より大きい値にする。衝突確率は 1/M。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 文字列 / ハッシュ / 難易度目安: ★4</li>
+<li>要約: 部分文字列のハッシュを O(1) で比較する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。</li>
+<li>各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。</li>
+<li>小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A56.py ─ Python 3</span>
     <div class="actions">
@@ -84,35 +107,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">文字列</span><span class="tag">ハッシュ</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A56.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A56: ローリングハッシュ — 部分文字列を 1 個の数値に →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A56: ローリングハッシュ
-# ---------------------------------------------------------------------
-# 【概要】文字列 S の部分列 S[l..r] と S[c..d] が一致するかをクエリで判定。
-# 【アルゴリズム】ローリングハッシュ
-#   H[i] = ハッシュ(S[0..i-1])  とすると、
-#   部分列 S[l..r] のハッシュは H[r] - H[l-1] * 100^(r-l+1)  (mod M)
-#   各部分列を 1 つの数値で比較できるため、各クエリ O(1)。
-# 【計算量】前計算 O(N) + クエリ O(Q)。
-# 【注意】M を素数、底 (= 100) を 1 より大きい値にする。衝突確率は 1/M。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 文字列 / ハッシュ / 難易度目安: ★4
-# - 要約: 部分文字列のハッシュを O(1) で比較する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
-# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
-# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, Q = map(int, input().split())
 S = input()
 queries = [list(map(int, input().split())) for _ in range(Q)]
@@ -194,4 +198,24 @@ for a, b, c, d in queries:
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

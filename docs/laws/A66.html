@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A66: Union-Find — 連結成分の素集合データ構造 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A66: Union-Find — 連結成分の素集合データ構造 ─ 2 つの要素が同じグループか? 結合する。それだけ。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">9章: グラフアルゴリズム</span> /
+    <strong>法則 A66</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A66</span>
+    <h1>Union-Find — 連結成分の素集合データ構造</h1>
+    <p class="law-tagline">2 つの要素が同じグループか? 結合する。それだけ</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>「同じグループか?」「グループを併合する」</strong> の 2 操作を <strong>ほぼ O(1)</strong> で行うデータ構造。<strong>経路圧縮</strong> と <strong>Union by size/rank</strong> を組み合わせれば、1 操作あたり O(α(N)) ≒ O(1) という驚異の速さ。</p>
+<p>MST (A67)、オフライン連結性 (B66)、グラフの連結成分など、多くの問題で土台となる。「辺を追加していくときの連結性」が得意。<strong>辺の削除は苦手</strong> (時系列を逆順にして追加に変換するのが定石)。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 各要素の親を持つ</h2>
+    <div class="law-section-body">
+      <p><code>par[x] = x の親 (= 同じグループの代表)</code>。初期状態は <code>par[x] = -1</code> (各自が根)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P1[par 1 = -1] -.- G1[1 単独]
+  P2[par 2 = -1] -.- G2[2 単独]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: root(x) — 根を辿る</h2>
+    <div class="law-section-body">
+      <p><code>par[x] != -1</code> の間、親に進む。<strong>経路圧縮</strong>: 辿った頂点を全部 <strong>根に直結</strong> して、次回以降高速化。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  X[x] --&gt; P[par x]
+  P --&gt; P2[par par x]
+  P2 --&gt; R[根]
+  X -.経路圧縮で直接.-&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: unite(u, v) — 結合</h2>
+    <div class="law-section-body">
+      <p><code>root(u)</code> と <code>root(v)</code> が違うなら、<strong>小さい木を大きい木に繋ぐ</strong> (union by size)。サイズが揃うと木が深くならない。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>経路圧縮なしの素朴版は <strong>最悪 O(N)</strong>。両方の最適化を必ず入れる。</li>
+<li>辺削除には弱い。<strong>オフライン + 時系列逆順 + 追加</strong> に書き換えるのが王道。</li>
+<li>配列サイズ N+1 にして 1-indexed に揃えると問題と一致して読みやすい。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A67.html">A67: MST — クラスカル法</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A66.html">A66</a><a class="law-chip" href="../problems/B66.html">B66</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A65.html"><div class="nav-label">前の法則</div><div class="nav-title">A65: 木上の DP — 葉から根へ集計</div></a>
+    <a class="next" href="A67.html"><div class="nav-label">次の法則</div><div class="nav-title">A67: MST — クラスカル法</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

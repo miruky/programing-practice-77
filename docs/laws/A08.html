@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A08: 2 次元累積和 — 矩形の和を O(1) で答える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A08: 2 次元累積和 — 矩形の和を O(1) で答える ─ 左上から (i, j) までの合計を持っておけば、長方形は引き算 3 回で求まる。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <strong>法則 A08</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A08</span>
+    <h1>2 次元累積和 — 矩形の和を O(1) で答える</h1>
+    <p class="law-tagline">左上から (i, j) までの合計を持っておけば、長方形は引き算 3 回で求まる</p>
+  </div>
+
+  <section class="law-intro">
+    <p>1 次元累積和 (A06) の 2 次元版です。<code>Z[i][j] = 「左上 (1,1) から (i,j) までの合計」</code> を前計算しておけば、任意の矩形 (A,B)-(C,D) の和は <strong><code>Z[C][D] - Z[A-1][D] - Z[C][B-1] + Z[A-1][B-1]</code></strong> で O(1)。</p>
+<p>重要なのは「最後の <code>+Z[A-1][B-1]</code>」。これは <strong>包除原理</strong> で、2 回引かれてしまった左上の長方形を 1 回戻すための補正です。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: Z[i][j] の構築</h2>
+    <div class="law-section-body">
+      <p>0 行目・0 列目は 0 (番兵) のまま残し、<code>Z[i][j] = X[i-1][j-1] + Z[i-1][j] + Z[i][j-1] - Z[i-1][j-1]</code> で埋める。「今のマス + 上 + 左 − 左上の重複」の式が、まさに小さい矩形の包除そのもの。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  TL[左上 Z i-1 j-1] --&gt; SUB[&quot;−&quot;]
+  T[上 Z i-1 j] --&gt; ADD[&quot;+&quot;]
+  L[左 Z i j-1] --&gt; ADD
+  X[X i-1 j-1] --&gt; ADD
+  ADD --&gt; R[&quot;Z[i][j]&quot;]
+  SUB --&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 矩形の和</h2>
+    <div class="law-section-body">
+      <p>矩形 (A,B)-(C,D) の和は次の図のように 4 つの長方形の組み合わせで表せます。「大きい長方形 − 上の余り − 左の余り + 左上の戻し」。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  Z_CD[&quot;Z[C][D]&quot;] --&gt; R[&quot;答え&quot;]
+  Z_AD[&quot;−Z[A-1][D]&quot;] --&gt; R
+  Z_CB[&quot;−Z[C][B-1]&quot;] --&gt; R
+  Z_AB[&quot;+Z[A-1][B-1]&quot;] --&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 2 パスで作る別実装</h2>
+    <div class="law-section-body">
+      <p>「横方向に累積 → 縦方向に累積」の 2 回パスでも同じ <code>Z</code> が得られます。包除の式を覚えるのが苦手なら、こちらの方が直感的に書ける場面もあります。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  X[元配列 X] --&gt;|横累積| H[各行が前から累積された配列]
+  H --&gt;|縦累積| Z[2 次元累積和 Z]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>配列の境界 (0 行目・0 列目) を <strong>必ず 0 で残す</strong>。番兵がないとクエリ式の <code>-1</code> がマイナス添字になる。</li>
+<li>包除の <code>+Z[A-1][B-1]</code> を忘れがち。1 つでも符号を間違えると致命的。</li>
+<li>半開区間と閉区間の混在に注意。問題文の (A,B)-(C,D) が閉なら今回の式、半開なら <code>-1</code> をすべて取り除く。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A06.html">A06: 1 次元累積和 — 区間和を O(1) で答える</a><a class="law-chip" href="A09.html">A09: 2 次元いもす法 — 矩形加算を 4 隅で表現</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A08.html">A08</a><a class="law-chip" href="../problems/B08.html">B08</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A07.html"><div class="nav-label">前の法則</div><div class="nav-title">A07: いもす法 — 区間加算を端点だけで処理する</div></a>
+    <a class="next" href="A09.html"><div class="nav-label">次の法則</div><div class="nav-title">A09: 2 次元いもす法 — 矩形加算を 4 隅で表現</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

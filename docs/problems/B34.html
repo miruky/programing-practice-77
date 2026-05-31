@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">複数山の独立ゲームを Grundy 数の XOR で解く。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B34: Game 7 (A34 応用 ─ Grundy 数 (周期))</h1>
+<h2>概要</h2>
+<p>N 山の石ゲームを 2 人で行う。1 回の手番では 1 山から 1〜4 個の石を 取り除ける。取れなくなった方が負け。先後判定。</p>
+<h2>アルゴリズム</h2>
+<p>各山の Grundy 数を計算すると、5 で割った余りに対し [0, 0, 1, 1, 2] のパターンになる (簡易な手計算 / 後退解析で確認可)。 全山の Grundy 数の XOR が 0 でなければ先手必勝。</p>
+<h2>計算量</h2>
+<p>O(N)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: ゲーム / Grundy / 難易度目安: ★5</li>
+<li>要約: 石を 1,2,3,4 個取れるゲームの Grundy 数は 5 周期になることを利用する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。</li>
+<li>小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。</li>
+<li>mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B34.py ─ Python 3</span>
     <div class="actions">
@@ -88,34 +109,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">ゲーム</span><span class="tag">Grundy</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A34.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A34: Grundy 数 — 独立ゲームを Nim に変換する →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B34: Game 7 (A34 応用 ─ Grundy 数 (周期))
-# ---------------------------------------------------------------------
-# 【概要】N 山の石ゲームを 2 人で行う。1 回の手番では 1 山から 1〜4 個の石を
-#         取り除ける。取れなくなった方が負け。先後判定。
-# 【アルゴリズム】各山の Grundy 数を計算すると、5 で割った余りに対し
-#                 [0, 0, 1, 1, 2] のパターンになる (簡易な手計算 / 後退解析で確認可)。
-#                 全山の Grundy 数の XOR が 0 でなければ先手必勝。
-# 【計算量】O(N)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: ゲーム / Grundy / 難易度目安: ★5
-# - 要約: 石を 1,2,3,4 個取れるゲームの Grundy 数は 5 周期になることを利用する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
-# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
-# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, X, Y = map(int, input().split())
 A = list(map(int, input().split()))
 
@@ -154,4 +157,24 @@ print(&quot;First&quot; if XOR_Sum != 0 else &quot;Second&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

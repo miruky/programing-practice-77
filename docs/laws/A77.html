@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A77: 切り方の最大化 — 「最小区間長 ≥ x」で二分探索 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A77: 切り方の最大化 — 「最小区間長 ≥ x」で二分探索 ─ A12 と同じ枠組み。OK/NG の境目を最大化。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #8b5cf6">10章: 総合問題・力試し問題</span> /
+    <strong>法則 A77</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A77</span>
+    <h1>切り方の最大化 — 「最小区間長 ≥ x」で二分探索</h1>
+    <p class="law-tagline">A12 と同じ枠組み。OK/NG の境目を最大化</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「N 個の印から K 個選んで棒を切り、できる N+1 個の区間の最小長を最大化」という古典問題。<strong>「最小区間長 ≥ x にできるか?」</strong> という判定問題に書き換えれば、x について <strong>NG → OK が単調</strong> に変わるので二分探索。</p>
+<p>判定は <strong>左から見て「直前の切れ目から x 以上離れていれば切る」</strong> の貪欲。判定 + 二分探索 = 「答えで二分探索」(A12) の典型パターン。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 判定関数 check(x)</h2>
+    <div class="law-section-body">
+      <p>「最小区間長 ≥ x にできるか?」を判定。<strong>左から貪欲</strong>: <code>last_kireme</code> から x 以上離れていれば切る、を繰り返す。 切れ目の数が K 以上なら OK。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  S[直前の切れ目 last] --&gt; I[次の印 A i]
+  I --&gt; C{A i - last &gt;= x AND L - A i &gt;= x?}
+  C -- Yes --&gt; A[切る; last = A i; cnt += 1]
+  C -- No --&gt; SK[スキップ]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 二分探索の方向</h2>
+    <div class="law-section-body">
+      <p>答えを最大化したいので <strong>切り上げ版</strong> の二分探索を使う。</p>
+<pre><code class="language-python">while left &lt; right:
+    mid = (left + right + 1) // 2  # 切り上げ
+    if check(mid):
+        left = mid
+    else:
+        right = mid - 1</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 範囲</h2>
+    <div class="law-section-body">
+      <p><code>left = 1, right = L</code>。「答え x は 1 〜 L の間にある」と分かっているので、その範囲で二分。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>最大化のときは <strong><code>mid = (l + r + 1) // 2</code></strong> で切り上げ。  切り上げ忘れで無限ループ。</li>
+<li>「最小値を最大化」「最大値を最小化」は両方とも答えで二分探索の出番。</li>
+<li>判定関数 <code>check(x)</code> の貪欲が本当に正しいか手で確認。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A12.html">A12: 答えで二分探索 — 「答えが x 以下か」を直接判定</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A77.html">A77</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A76.html"><div class="nav-label">前の法則</div><div class="nav-title">A76: 区間 DP の高速化 — 累積和で遷移を O(1) に</div></a>
+    <a class="next disabled"><div class="nav-label">次の法則</div><div class="nav-title">─</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

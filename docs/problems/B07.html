@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">区間加算を端点だけで処理し、累積和で復元するテクニック。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B07: Convenience Store 2 (A07 応用 ─ いもす法)</h1>
+<h2>概要</h2>
+<p>時刻 0..T-1 において、それぞれの時刻に滞在中の人数を出力する。 入店時刻 L[i]、退店時刻 R[i] (退店の瞬間にはいない) が N 件。</p>
+<h2>アルゴリズム</h2>
+<p>「差分配列」B に対し B[L]+=1, B[R]-=1 を加え、最後に 累積和を取れば各時刻の人数が分かる ─ これがいもす法。</p>
+<h2>計算量</h2>
+<p>O(N + T)。区間加算が定数時間でできるのが肝。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 累積和 / いもす法 / 難易度目安: ★3</li>
+<li>要約: いもす法で各時刻に滞在中の客数を求める。A07 の練習。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>区間全体を更新せず、始点で +、終点の次で - を置く。</li>
+<li>最後に左から累積和を取ると、各位置に実際の加算結果が広がる。</li>
+<li>右端を含む区間か、半開区間かで - を置く場所が変わる。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B07.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +109,11 @@
         <ol><li>各区間の左端に加算、右端の次に減算する。</li><li>差分配列を左から累積して本当の値に戻す。</li><li>復元後の配列を出力・集計する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 右端が含まれる区間なら r+1 に -、半開区間 [l, r) なら r に - を置きます。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">累積和</span><span class="tag">いもす法</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A07.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A07: いもす法 — 区間加算を端点だけで処理する →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -96,29 +122,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B07: Convenience Store 2 (A07 応用 ─ いもす法)
-# ---------------------------------------------------------------------
-# 【概要】時刻 0..T-1 において、それぞれの時刻に滞在中の人数を出力する。
-#         入店時刻 L[i]、退店時刻 R[i] (退店の瞬間にはいない) が N 件。
-# 【アルゴリズム】「差分配列」B に対し B[L]+=1, B[R]-=1 を加え、最後に
-#                 累積和を取れば各時刻の人数が分かる ─ これがいもす法。
-# 【計算量】O(N + T)。区間加算が定数時間でできるのが肝。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 累積和 / いもす法 / 難易度目安: ★3
-# - 要約: いもす法で各時刻に滞在中の客数を求める。A07 の練習。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 区間全体を更新せず、始点で +、終点の次で - を置く。
-# - 最後に左から累積和を取ると、各位置に実際の加算結果が広がる。
-# - 右端を含む区間か、半開区間かで - を置く場所が変わる。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 T = int(input())
 N = int(input())
 L = [None] * N
@@ -179,4 +183,24 @@ for d in range(T):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

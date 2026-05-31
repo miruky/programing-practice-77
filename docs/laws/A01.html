@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A01: 標準入出力 — プログラムの入口と出口 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A01: 標準入出力 — プログラムの入口と出口 ─ まず「読む・書く」だけの最小プログラムを書けるようになる。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">1章: アルゴリズムと計算量</span> /
+    <strong>法則 A01</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A01</span>
+    <h1>標準入出力 — プログラムの入口と出口</h1>
+    <p class="law-tagline">まず「読む・書く」だけの最小プログラムを書けるようになる</p>
+  </div>
+
+  <section class="law-intro">
+    <p>競技プログラミングでは、入力を <strong>標準入力</strong> から受け取り、答えを <strong>標準出力</strong> に書き出します。Python では <code>input()</code> と <code>print()</code> がその窓口で、他のすべての法則はこの土台の上に乗っています。</p>
+<p>ここを「呼び出すだけの儀式」と捉えてしまうと、後で <code>int()</code> の付け忘れや、改行・空白の罠で詰まります。1 行ずつ <strong>「どの変数に、どんな型で何が入るか」</strong> を意識して書き始めましょう。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 入力の流れを掴む</h2>
+    <div class="law-section-body">
+      <p><code>input()</code> は標準入力から 1 行を <strong>文字列</strong> として取得します。整数として使いたければ <code>int(input())</code> で変換します。複数の数字が空白区切りで並んだ行は <code>map(int, input().split())</code> で個別の整数列にできます。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[標準入力&lt;br/&gt;&#x27;5&#x27;] --&gt;|input| B[&quot;&#x27;5&#x27; (str)&quot;]
+  B --&gt;|int| C[5 int]
+  C --&gt; D[計算]
+  D --&gt;|print| E[標準出力&lt;br/&gt;&#x27;25&#x27;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: print の挙動</h2>
+    <div class="law-section-body">
+      <p><code>print(x)</code> は <code>x</code> を文字列化して書き出し、最後に改行を入れます。改行を入れたくない場合は <code>print(x, end=&#x27;&#x27;)</code> のように指定します。複数の値を空白区切りで並べる際は <code>print(a, b, c)</code> で十分です。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  P[print x] --&gt; S[str x]
+  S --&gt; O[stdout に書き込み]
+  O --&gt; N[改行を追加]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 計算は中間に挟むだけ</h2>
+    <div class="law-section-body">
+      <p>「入力 → 計算 → 出力」の 3 段で必ず書けます。A01 は計算が <code>N * N</code> の 1 行だけですが、後の問題でもこの 3 段の骨格は変わりません。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>int()</code> を忘れて文字列のまま掛け算しないように。<code>&#x27;5&#x27; * &#x27;5&#x27;</code> は型エラー。</li>
+<li><code>input()</code> を 2 回呼ぶと 2 行読みます。1 行に複数の値があるときは  <code>split()</code> で 1 回の <code>input()</code> から分解する。</li>
+<li>末尾の改行が出力ジャッジで <code>WA</code> の原因になることがあります。  <code>print()</code> は自動で改行を付けるので安心です。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A02.html">A02: 線形探索 — 端から順に全部見る</a><a class="law-chip" href="A03.html">A03: 二重ループ全探索 — 2 つの軸を独立に試す</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A01.html">A01</a><a class="law-chip" href="../problems/B01.html">B01</a><a class="law-chip" href="../problems/C01.html">C01</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev disabled"><div class="nav-label">前の法則</div><div class="nav-title">─</div></a>
+    <a class="next" href="A02.html"><div class="nav-label">次の法則</div><div class="nav-title">A02: 線形探索 — 端から順に全部見る</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

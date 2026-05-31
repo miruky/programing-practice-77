@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A31: 包除原理 — 3 または 5 の倍数を数える型 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A31: 包除原理 — 3 または 5 の倍数を数える型 ─ A ∪ B = A + B − A ∩ B。重なりは 1 回だけ引く。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <strong>法則 A31</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A31</span>
+    <h1>包除原理 — 3 または 5 の倍数を数える型</h1>
+    <p class="law-tagline">A ∪ B = A + B − A ∩ B。重なりは 1 回だけ引く</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「3 の倍数または 5 の倍数」のような <strong>「または条件」</strong> を数えるとき、単純に「3 の倍数 + 5 の倍数」とすると、15 の倍数を <strong>二重カウント</strong> してしまう。</p>
+<p>包除原理は <code>|A ∪ B| = |A| + |B| − |A ∩ B|</code> という公式を使い、二重に数えた分を 1 回引いて補正する考え方。<strong>集合 3 個以上は符号を交互に + / − で増やす</strong> 一般形に拡張できます。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 2 集合の包除</h2>
+    <div class="law-section-body">
+      <p><code>|A ∪ B| = |A| + |B| − |A ∩ B|</code>。3 の倍数の個数を A、5 の倍数の個数を B、15 の倍数の個数を A∩B とすると、「3 か 5 の倍数」は A + B − A∩B。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[3 の倍数] --&gt; S[&quot;|A| + |B|&quot;]
+  B[5 の倍数] --&gt; S
+  AB[15 の倍数] --&gt; M[&quot;−|A∩B|&quot;]
+  S --&gt; R[答え]
+  M --&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 3 集合の包除</h2>
+    <div class="law-section-body">
+      <p><code>|A ∪ B ∪ C| = |A|+|B|+|C| − |A∩B|−|B∩C|−|A∩C| + |A∩B∩C|</code>。<strong>奇数集合は +、偶数集合は −</strong> の符号則。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S1[1 個ずつ: +] --&gt; R[結果]
+  S2[2 個ずつ: -] --&gt; R
+  S3[3 個全部: +] --&gt; R</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 倍数の個数</h2>
+    <div class="law-section-body">
+      <p>N 以下の <code>k</code> の倍数の個数は <code>N // k</code>。<code>A∩B</code> = lcm(3, 5) = 15 の倍数の個数 = <code>N // 15</code>。包除と LCM (A27) のコンボが基本。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「<code>A∩B</code> は AかつB」と「<code>A∪B</code> は AまたはB」。日本語と記号を混同しない。</li>
+<li>3 集合以上は符号則を間違えやすい。要素数 k の組には符号 <code>(-1)^(k+1)</code>。</li>
+<li>「ちょうど 1 つ満たす」のような問題は、包除を入れ子で適用する応用形。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A27.html">A27: ユークリッド互除法 — 最大公約数を O(log) で</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A31.html">A31</a><a class="law-chip" href="../problems/B31.html">B31</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A30.html"><div class="nav-label">前の法則</div><div class="nav-title">A30: mod 逆元 — フェルマーの小定理で割り算を作る</div></a>
+    <a class="next" href="A32.html"><div class="nav-label">次の法則</div><div class="nav-title">A32: ゲーム後退解析 — 終端から勝ち負けを伝播</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

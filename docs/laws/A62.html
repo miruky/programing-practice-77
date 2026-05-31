@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A62: DFS — 深さ優先探索で連結判定 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A62: DFS — 深さ優先探索で連結判定 ─ 行けるだけ進んで、戻ってきたら別の道。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #0ea5e9">9章: グラフアルゴリズム</span> /
+    <strong>法則 A62</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A62</span>
+    <h1>DFS — 深さ優先探索で連結判定</h1>
+    <p class="law-tagline">行けるだけ進んで、戻ってきたら別の道</p>
+  </div>
+
+  <section class="law-intro">
+    <p>頂点 v から <strong>「行けるだけ進む」</strong> 探索。再帰またはスタックで実装でき、計算量は O(V+E)。</p>
+<p>用途: 連結判定、橋・関節点検出、サイクル検出、トポロジカルソート、木 DP の前処理 など。再帰版は短く書けるが、<strong>Python は再帰上限 1000</strong> がデフォなので大きいグラフでは要拡張。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 再帰版</h2>
+    <div class="law-section-body">
+      <pre><code class="language-python">sys.setrecursionlimit(10**6)
+def dfs(v):
+    visited[v] = True
+    for u in G[v]:
+        if not visited[u]:
+            dfs(u)</code></pre>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  V[頂点 v] --&gt; M[visited v = True]
+  M --&gt; L[全隣接 u を確認]
+  L --&gt; R{visited u?}
+  R -- No --&gt; D[dfs u 再帰]
+  R -- Yes --&gt; L</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: スタック版 (非再帰)</h2>
+    <div class="law-section-body">
+      <p>再帰上限を気にせずに済む。深いグラフでは必須。</p>
+<pre><code class="language-python">stack = [start]
+visited[start] = True
+while stack:
+    v = stack.pop()
+    for u in G[v]:
+        if not visited[u]:
+            visited[u] = True
+            stack.append(u)</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 連結判定</h2>
+    <div class="law-section-body">
+      <p>DFS 後、<code>all(visited[1..N])</code> なら連結。</p>
+<p>用途を広げると、<strong>連結成分の個数</strong> = DFS を始められた回数。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>Python の再帰上限 1000。<code>sys.setrecursionlimit(10**6)</code> で拡張。</li>
+<li>グリッド系は (i, j) を 1 頂点として展開。隣接は上下左右 4 方向。</li>
+<li>visited 配列のサイズは V+1 (1-indexed の場合)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A51.html">A51: スタック — 後入れ先出し (LIFO)</a><a class="law-chip" href="A61.html">A61: グラフの表現 — 隣接リストが基本</a><a class="law-chip" href="A63.html">A63: BFS — 幅優先探索で最短歩数</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A62.html">A62</a><a class="law-chip" href="../problems/B62.html">B62</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A61.html"><div class="nav-label">前の法則</div><div class="nav-title">A61: グラフの表現 — 隣接リストが基本</div></a>
+    <a class="next" href="A63.html"><div class="nav-label">次の法則</div><div class="nav-title">A63: BFS — 幅優先探索で最短歩数</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

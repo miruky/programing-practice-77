@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A41: 鳩ノ巣原理 — 「必ず同じ箱に 2 つ入る」 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A41: 鳩ノ巣原理 — 「必ず同じ箱に 2 つ入る」 ─ N+1 個を N 個の箱に入れたら、必ずどこかに 2 個入る。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A41</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A41</span>
+    <h1>鳩ノ巣原理 — 「必ず同じ箱に 2 つ入る」</h1>
+    <p class="law-tagline">N+1 個を N 個の箱に入れたら、必ずどこかに 2 個入る</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>N+1 個の物を N 個の箱に入れたら、必ず 1 箱に 2 個以上入る</strong>、という当たり前すぎる原理 (鳩ノ巣原理)。</p>
+<p>「N+1 文字あれば必ず同じ文字が 2 個ある」「N+1 個の数から差が K になる組がある」といった存在性の証明に使い、<strong>「必ず存在する」ことを直接探索する</strong> プログラムへつなげる。A41 では「3 連続同じ文字が必ず存在する」を鳩ノ巣で示し、その位置を線形探索で見つける。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 箱と物の対応を考える</h2>
+    <div class="law-section-body">
+      <p>「物 = N+1 個の何か」「箱 = N 個の分類」を作って、数を比較し「箱に 2 個入る」状況を作り出す。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P[&quot;物 = N+1 個&quot;] --&gt; B[&quot;箱 = N 個&quot;]
+  B --&gt; R[&quot;必ず 1 箱に 2 個入る&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 存在を線形探索で確認</h2>
+    <div class="law-section-body">
+      <p>「必ず存在する」と数学的に分かったら、あとは線形探索で具体的に見つける。<strong>「探せば必ず見つかる」と保証されているのがポイント</strong>。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 応用 — 連続部分和 mod K</h2>
+    <div class="law-section-body">
+      <p>鳩ノ巣の典型応用: 「N 個の累積和 mod K を見ると、同じ余りが必ずある (N &gt; K)」 → その 2 つの差を取ると、和が K の倍数になる部分配列が見つかる。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><strong>鳩ノ巣は存在性しか保証しない</strong>。最適性や個数を求める問題には別法則。</li>
+<li>「箱の数 N、物の数 N+1」の関係を慎重に。「N+1 個」を確保できているか?</li>
+<li>「同じ文字が 3 連続」のような問題では、箱を「文字種類」、物を「3 個ずつ取った窓」と置く。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A41.html">A41</a><a class="law-chip" href="../problems/B41.html">B41</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A40.html"><div class="nav-label">前の法則</div><div class="nav-title">A40: 個数集計と組合せ数え上げ — 値ごとに数えて C(n, k) で合計</div></a>
+    <a class="next" href="A42.html"><div class="nav-label">次の法則</div><div class="nav-title">A42: 2 軸を全探索 — (a, b) の組を全部試す</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

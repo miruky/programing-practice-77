@@ -57,6 +57,32 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>A70: 状態 BFS (ランプ点灯ゲーム)</h1>
+<h2>概要</h2>
+<p>N 個のランプ (ON/OFF) の状態を頂点に持ち、M 種類の操作で 全 ON 状態 (2^N - 1) にする最小手数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>状態空間 BFS</p>
+<ul>
+<li>状態は 0..2^N-1 の整数で表せる (各ビットがランプ ON/OFF)</li>
+<li>各操作は (X, Y, Z) のランプを同時反転 → 状態遷移を構築する</li>
+<li>スタート → ゴールへの最短手数を BFS で求める</li>
+</ul>
+<h2>計算量</h2>
+<p>O(2^N * M)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: グラフ / BFS / bit / 難易度目安: ★4</li>
+<li>要約: 2^N 通りの状態を頂点に持つ BFS。XOR でビット反転を行う。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。</li>
+<li>1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。</li>
+<li>状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A70.py ─ Python 3</span>
     <div class="actions">
@@ -76,6 +102,11 @@
         <ol><li>状態 state を 2 進数で見て、どの要素が入っているか確認する。</li><li>1 &lt;&lt; k で k 番目の要素を表す。</li><li>OR や XOR で集合の追加・反転を行う。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 状態数は 2^N なので、N が小さい問題専用の考え方です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">グラフ</span><span class="tag">BFS</span><span class="tag">bit</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A70.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A70: 状態 BFS — 2^N 通りの状態を頂点に持つ →</span>
+      </a>
       </div>
 
       <div class="visual visual-bit" aria-hidden="true">
@@ -85,31 +116,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A70: 状態 BFS (ランプ点灯ゲーム)
-# ---------------------------------------------------------------------
-# 【概要】N 個のランプ (ON/OFF) の状態を頂点に持ち、M 種類の操作で
-#         全 ON 状態 (2^N - 1) にする最小手数を求める。
-# 【アルゴリズム】状態空間 BFS
-#   - 状態は 0..2^N-1 の整数で表せる (各ビットがランプ ON/OFF)
-#   - 各操作は (X, Y, Z) のランプを同時反転 → 状態遷移を構築する
-#   - スタート → ゴールへの最短手数を BFS で求める
-# 【計算量】O(2^N * M)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: グラフ / BFS / bit / 難易度目安: ★4
-# - 要約: 2^N 通りの状態を頂点に持つ BFS。XOR でビット反転を行う。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。
-# - 1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。
-# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。
-# ---------------------------------------------------------------------
-
-from collections import deque
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">from collections import deque
 
 # --- 入力 -----------------------------------------------------------
 N, M = map(int, input().split())
@@ -220,4 +227,24 @@ print(dist[goal])
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

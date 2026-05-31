@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A06: 1 次元累積和 — 区間和を O(1) で答える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A06: 1 次元累積和 — 区間和を O(1) で答える ─ 先に「先頭からの合計」を作っておけば、引き算で区間和が出る。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <strong>法則 A06</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A06</span>
+    <h1>1 次元累積和 — 区間和を O(1) で答える</h1>
+    <p class="law-tagline">先に「先頭からの合計」を作っておけば、引き算で区間和が出る</p>
+  </div>
+
+  <section class="law-intro">
+    <p>数列 <code>A[1..N]</code> に対して、<strong><code>S[i] = A[1] + A[2] + ... + A[i]</code></strong> を前計算しておけば、任意の区間和 <code>A[l] + ... + A[r]</code> は <code>S[r] - S[l-1]</code> で <strong>O(1)</strong> に求まります。</p>
+<p>「クエリの度に毎回足し算する O(Q · N)」を「前計算 O(N) + クエリ O(Q)」に圧縮する、競プロにおける最重要テクの 1 つ。<strong>2 次元 (A08) / いもす法 (A07) / セグメント木 (A58)</strong> など、ここを起点に多くの法則が広がっていきます。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 番兵の 0 を置く</h2>
+    <div class="law-section-body">
+      <p><code>S[0] = 0</code> と定義しておくと、<code>l=1</code> のような端のケースでも<code>S[r] - S[l-1] = S[r] - S[0]</code> で同じ式で書けます。Python の配列は 0-indexed ですが、<code>S</code> だけは 1-indexed に揃えると本の式と一致して読みやすい。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S0[&quot;S[0]=0&quot;] --&gt; S1[&quot;S[1]=A1&quot;]
+  S1 --&gt; S2[&quot;S[2]=A1+A2&quot;]
+  S2 --&gt; S3[&quot;S[3]=A1+A2+A3&quot;]
+  S3 --&gt; Sn[...]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 区間和は「右端 − 左手前」</h2>
+    <div class="law-section-body">
+      <p><code>A[l] + ... + A[r] = S[r] - S[l-1]</code>。下の図のように、長いバーから短いバーを引いて差分を取るイメージで覚えると一発で覚えられます。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  SR[&quot;S[r] = A1+...+Ar&quot;] --&gt; M[&quot;−&quot;]
+  SL[&quot;S[l-1] = A1+...+A(l-1)&quot;] --&gt; M
+  M --&gt; ANS[&quot;= Al + ... + Ar&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 半開区間で書く流儀</h2>
+    <div class="law-section-body">
+      <p><strong>半開区間 [l, r) (= r を含まない)</strong> で考えると、<code>S[r] - S[l]</code> と式から <code>-1</code> が消えてズレが減ります。セグメント木 (A58) など他の法則とも整合しやすく、慣れたらこちらの記法もおすすめ。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>S[l-1]</code> の <code>-1</code> は閉区間 [l, r] 用。  問題が <strong>半開区間</strong> で来たら <code>S[r] - S[l]</code> に書き換える。</li>
+<li><code>l = 1</code> のとき <code>S[0]</code> を参照する。番兵を置いていないと IndexError。</li>
+<li>答えが大きくなる問題では <code>int</code> のオーバーフローを気にする必要はない (Python は任意精度)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A07.html">A07: いもす法 — 区間加算を端点だけで処理する</a><a class="law-chip" href="A08.html">A08: 2 次元累積和 — 矩形の和を O(1) で答える</a><a class="law-chip" href="A10.html">A10: 区間最大値クエリ — 前後 2 方向の累積最大値</a><a class="law-chip" href="A38.html">A38: 左右からの累積 — 各位置の上限を独立に求める</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A06.html">A06</a><a class="law-chip" href="../problems/B06.html">B06</a><a class="law-chip" href="../problems/C03.html">C03</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A05.html"><div class="nav-label">前の法則</div><div class="nav-title">A05: 三重ループ全探索 — O(N³) でもまだ戦える</div></a>
+    <a class="next" href="A07.html"><div class="nav-label">次の法則</div><div class="nav-title">A07: いもす法 — 区間加算を端点だけで処理する</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

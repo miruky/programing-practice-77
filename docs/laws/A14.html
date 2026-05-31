@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙 ─ 2^40 は無理。2^20 × 2 なら間に合う。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #10b981">3章: 二分探索</span> /
+    <strong>法則 A14</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A14</span>
+    <h1>半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙</h1>
+    <p class="law-tagline">2^40 は無理。2^20 × 2 なら間に合う</p>
+  </div>
+
+  <section class="law-intro">
+    <p>N 個の要素から部分集合を選ぶ全探索は 2^N。N=40 だと 10^12 で完全に不可能。<strong>半分に分けて 2^(N/2) ずつ全列挙し、片方を二分探索 / set で照合する</strong> と計算量は O(2^(N/2) · N) に。</p>
+<p>N=40 でも 2^20 ≒ 10^6 × N で間に合う。「N=30〜40 で部分集合の最適化」と書いてあったら半分全列挙の出番。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 半分に分ける</h2>
+    <div class="law-section-body">
+      <p>前半 <code>L1 = A[0:N//2]</code>、後半 <code>L2 = A[N//2:]</code>。それぞれの部分集合の合計を <code>Sum1</code>, <code>Sum2</code> として全列挙 (各 2^(N/2) 個)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N[&quot;N 個&quot;] --&gt; L1[前半: N/2 個]
+  N --&gt; L2[後半: N/2 個]
+  L1 --&gt; S1[Sum1: 2^N/2 通り]
+  L2 --&gt; S2[Sum2: 2^N/2 通り]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 一方をソート</h2>
+    <div class="law-section-body">
+      <p><code>Sum2</code> をソートしておくと、<code>Sum1[i] + Sum2[j] == K</code> を満たす <code>Sum2[j]</code> を二分探索で O(log) で見つけられる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S2[Sum2 をソート] --&gt; B[&quot;各 Sum1 i に対し&lt;br/&gt;K-Sum1 i を二分探索&quot;]
+  B --&gt; ANS[該当する組が存在すれば Yes]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 計算量</h2>
+    <div class="law-section-body">
+      <p>前計算 O(2^(N/2) · N)、照合 O(2^(N/2) · log)。全体 <strong>O(2^(N/2) · N)</strong>。N=40 で約 4·10^7 オーダー。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>部分集合の全列挙は <code>for mask in range(1&lt;&lt;n): ...</code> でビット全探索。  <code>mask &gt;&gt; j &amp; 1</code> で j 番目を選ぶか判定。</li>
+<li>「ちょうど K」を探すなら <code>set</code> で O(1) 照合の方が簡単。</li>
+<li>N が奇数のときは前半・後半のサイズが 1 違う。<code>Sum2</code> の方を大きめに取ると無難。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a><a class="law-chip" href="A23.html">A23: bitDP — 集合を整数 1 個に圧縮</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A14.html">A14</a><a class="law-chip" href="../problems/B14.html">B14</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A13.html"><div class="nav-label">前の法則</div><div class="nav-title">A13: しゃくとり法 — 左右の窓を一方向に動かす</div></a>
+    <a class="next" href="A15.html"><div class="nav-label">次の法則</div><div class="nav-title">A15: 座標圧縮 — 値を「順位」に置き換える</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

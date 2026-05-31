@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A51: スタック — 後入れ先出し (LIFO) | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A51: スタック — 後入れ先出し (LIFO) ─ 最後に入れたものを最初に取り出す。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <strong>法則 A51</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A51</span>
+    <h1>スタック — 後入れ先出し (LIFO)</h1>
+    <p class="law-tagline">最後に入れたものを最初に取り出す</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>後入れ先出し (LIFO)</strong> のデータ構造。「最後に入れたもの」を最初に取り出すという挙動。Python では <code>list</code> の <code>append</code> / <code>pop</code> か、<code>collections.deque</code> の <code>append</code> / <code>pop</code> で実現。</p>
+<p><strong>関数の呼び出し履歴、DFS、括弧マッチング、Histogram の最大長方形</strong> など、「後で戻ってきて処理する」性質の問題で頻出。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 操作</h2>
+    <div class="law-section-body">
+      <ul>
+<li><strong>push</strong>: 末尾に追加 (<code>stack.append(x)</code>)</li>
+<li><strong>pop</strong>: 末尾を取り出す (<code>stack.pop()</code>)</li>
+<li><strong>top</strong>: 末尾を見る (<code>stack[-1]</code>)</li>
+</ul>
+<p>全て O(1)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  E[空] --&gt;|push 1| S1[1]
+  S1 --&gt;|push 2| S2[&quot;1, 2&quot;]
+  S2 --&gt;|push 3| S3[&quot;1, 2, 3&quot;]
+  S3 --&gt;|pop = 3| S4[&quot;1, 2&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: list vs deque</h2>
+    <div class="law-section-body">
+      <p>Python の <code>list</code> も末尾操作は O(1) なのでスタックとして使える。<code>deque</code> の方がメモリ効率が良いが、競プロでは <code>list</code> で十分。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: DFS のスタック実装</h2>
+    <div class="law-section-body">
+      <p>再帰 DFS を <strong>明示的なスタック</strong> で書けば、再帰上限を気にせず深い探索ができる。</p>
+<pre><code class="language-python">stack = [start]
+while stack:
+    v = stack.pop()
+    for u in G[v]:
+        if not visited[u]:
+            visited[u] = True
+            stack.append(u)</code></pre>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>空のスタックで <code>pop()</code> は IndexError。<code>if stack:</code> でガード。</li>
+<li><code>deque</code> の場合は <code>append</code> / <code>pop</code>、<code>popleft</code> は使わない (使うとキューになる)。</li>
+<li>再帰 DFS のスタック上限は Python 1000。<code>sys.setrecursionlimit(10**6)</code> で拡張可。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A60.html">A60: スタックの活用 — 「自分以上の最後の日」を線形時間で</a><a class="law-chip" href="A62.html">A62: DFS — 深さ優先探索で連結判定</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A51.html">A51</a><a class="law-chip" href="../problems/B51.html">B51</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A50.html"><div class="nav-label">前の法則</div><div class="nav-title">A50: 差分計算 — 全部計算し直さず差だけ更新</div></a>
+    <a class="next" href="A52.html"><div class="nav-label">次の法則</div><div class="nav-title">A52: キュー — 先入れ先出し (FIFO)</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

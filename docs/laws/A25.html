@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A25: 経路数え上げ — 2 次元 DP で数える典型 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A25: 経路数え上げ — 2 次元 DP で数える典型 ─ 格子上の経路数。障害物を `0` で消すだけ。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A25</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A25</span>
+    <h1>経路数え上げ — 2 次元 DP で数える典型</h1>
+    <p class="law-tagline">格子上の経路数。障害物を `0` で消すだけ</p>
+  </div>
+
+  <section class="law-intro">
+    <p>H × W の格子で、左上から右下まで「右」「下」だけで移動する経路数を求める。<strong><code>dp[i][j] = (0,0) から (i,j) に来る経路数</code></strong> という最も素直な 2 次元 DP。</p>
+<p>遷移は <strong><code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code></strong>。障害物 <code>#</code> のマスは <code>dp = 0</code> のまま残せばよく、「通れないなら 0 になる」という構造の美しさが光る。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: スタート地点を 1</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[0][0] = 1</code></strong> (スタート地点に来る方法は 1 通り、つまり最初からそこにいる)。他は <code>0</code> で初期化しておけば、障害物の処理が「触らない」だけで済む。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 遷移</h2>
+    <div class="law-section-body">
+      <p>「上から来る」+「左から来る」の和。</p>
+<p><strong><code>dp[i][j] = dp[i-1][j] + dp[i][j-1]</code></strong> (障害物なら <code>0</code> のまま)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  U[&quot;dp[i-1][j] (上から)&quot;] --&gt; P[+]
+  L[&quot;dp[i][j-1] (左から)&quot;] --&gt; P
+  P --&gt; D[&quot;dp[i][j]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 障害物 / 端の処理</h2>
+    <div class="law-section-body">
+      <p>障害物 <code>#</code> のマスは初期値 <code>0</code> のまま残す。端 (i=0 or j=0) は番兵を <code>0</code> で取っておけば <code>dp[-1][j]</code> などの参照を気にしなくてよい。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>経路数は <strong>mod 10^9+7</strong> で答えさせる場合が多い。最初に modulo の必要性を確認。</li>
+<li>スタートまたはゴールが障害物の問題も稀にある。<code>dp[0][0]</code> の初期化を慎重に。</li>
+<li>メモリが厳しいなら 1 行分の配列で in-place 更新できる (典型 1D 圧縮)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A16.html">A16: 1 次元 DP の基本 — dp[i] の意味を 1 行で言える</a><a class="law-chip" href="A30.html">A30: mod 逆元 — フェルマーの小定理で割り算を作る</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A25.html">A25</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A24.html"><div class="nav-label">前の法則</div><div class="nav-title">A24: LIS — 最長増加部分列</div></a>
+    <a class="next" href="A26.html"><div class="nav-label">次の法則</div><div class="nav-title">A26: 素数判定 — √N までの試し割り</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

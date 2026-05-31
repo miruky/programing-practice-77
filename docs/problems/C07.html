@@ -61,6 +61,13 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>C07: ALGO-MARKET (力試し問題)</h1>
+<h2>概要</h2>
+<p>N 個の商品の値段 C[1..N] と Q 件の予算 X[i] が与えられる。 各予算で買える商品の最大個数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>C を昇順ソートし累積和 S を取れば、「k 個買うときの 最小金額」が S[k]。S は単調非減少なので、「S[k] ≦ X」 を満たす最大 k を二分探索 (upper_bound - 1) で得られる。</p>
+<h2>計算量</h2>
+<p>O(N log N + Q log N)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C07.py ─ Python 3</span>
     <div class="actions">
@@ -80,6 +87,11 @@
         <ol><li>S[0] = 0 を番兵として用意する。</li><li>S[i] = S[i-1] + A[i-1] で前から足す。</li><li>区間和は S[r] - S[l-1] または半開区間なら S[r] - S[l] と読む。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 問題が 1-indexed で来るか、Python の配列が 0-indexed かで式が 1 つずれます。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">二分探索</span><span class="tag">累積和</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A11.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A11: 二分探索 — ソート済み列の真ん中を狙う →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -88,17 +100,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# C07: ALGO-MARKET (力試し問題)
-# ---------------------------------------------------------------------
-# 【概要】N 個の商品の値段 C[1..N] と Q 件の予算 X[i] が与えられる。
-#         各予算で買える商品の最大個数を求める。
-# 【アルゴリズム】C を昇順ソートし累積和 S を取れば、「k 個買うときの
-#                 最小金額」が S[k]。S は単調非減少なので、「S[k] ≦ X」
-#                 を満たす最大 k を二分探索 (upper_bound - 1) で得られる。
-# 【計算量】O(N log N + Q log N)。
-# =====================================================================
-import bisect
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import bisect
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: 二分探索 / 累積和 / 難易度目安: ★3
@@ -166,4 +168,24 @@ print(&quot;\n&quot;.join(out))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">2 つの文字列の LCS を 2 次元 DP で求める。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B20: Edit Distance (A20 応用 ─ 編集距離)</h1>
+<h2>概要</h2>
+<p>2 つの文字列 S, T の編集距離 (= 1 文字の挿入/削除/置換のみで S を T に変換する最小回数) を求める。</p>
+<h2>アルゴリズム</h2>
+<p>2 次元 DP。 dp[i][j] = 「S の先頭 i 文字を T の先頭 j 文字にする最小操作数」 遷移は: 挿入 dp[i][j-1]+1, 削除 dp[i-1][j]+1, 置換 dp[i-1][j-1]+0 or 1 (同字なら +0)。</p>
+<h2>計算量</h2>
+<p>O(|S| · |T|)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: DP / 編集距離 / 難易度目安: ★4</li>
+<li>要約: 編集距離（レーベンシュタイン距離）を 2 次元 DP で求める。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。</li>
+<li>初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。</li>
+<li>遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B20.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +109,11 @@
         <ol><li>dp の添字が何を表すかを先に固定する。</li><li>初期状態だけを手で入れる。</li><li>小さい状態から大きい状態へ、使う/使わない・進む/進まないで遷移する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式を先に暗記するより、dp[i] の意味を日本語で読めるかを優先します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">DP</span><span class="tag">編集距離</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A20.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A20: LCS — 最長共通部分列 →</span>
+      </a>
       </div>
 
       <div class="visual visual-dp" aria-hidden="true">
@@ -96,31 +122,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B20: Edit Distance (A20 応用 ─ 編集距離)
-# ---------------------------------------------------------------------
-# 【概要】2 つの文字列 S, T の編集距離 (= 1 文字の挿入/削除/置換のみで
-#         S を T に変換する最小回数) を求める。
-# 【アルゴリズム】2 次元 DP。
-#         dp[i][j] = 「S の先頭 i 文字を T の先頭 j 文字にする最小操作数」
-#         遷移は: 挿入 dp[i][j-1]+1, 削除 dp[i-1][j]+1,
-#                  置換 dp[i-1][j-1]+0 or 1 (同字なら +0)。
-# 【計算量】O(|S| · |T|)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: DP / 編集距離 / 難易度目安: ★4
-# - 要約: 編集距離（レーベンシュタイン距離）を 2 次元 DP で求める。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。
-# - 初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。
-# - 遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 S = input()
 T = input()
 
@@ -192,4 +194,24 @@ print(dp[len(S)][len(T)])
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

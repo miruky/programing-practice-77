@@ -69,6 +69,15 @@
       <span class="applied-banner-summary">DFS で連結性を判定する基本問題。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B62: Print a Path (A62 応用 ─ DFS で経路出力)</h1>
+<h2>概要</h2>
+<p>無向グラフで、頂点 1 から頂点 N までの単純パスを 1 つ出力する。</p>
+<h2>アルゴリズム</h2>
+<p>DFS で訪問しながらパスをスタックに積み、ゴールに着いたら そのまま出力して終了。バックトラック時は pop する。</p>
+<h2>計算量</h2>
+<p>O(N + M)。</p>
+<h2>注意</h2>
+<p>Python の再帰デフォルト上限は 1000 なので、N が大きいときは setrecursionlimit を引き上げる。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B62.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +97,11 @@
         <ol><li>まず入力を隣接リスト G に変換する。</li><li>visited / dist で、訪問済みや距離を記録する。</li><li>DFS は深く、BFS は近い順に広げると読む。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> グリッド問題も、各マスを頂点だと思えば同じ形になります。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">グラフ</span><span class="tag">DFS</span><span class="tag">経路復元</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A62.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A62: DFS — 深さ優先探索で連結判定 →</span>
+      </a>
       </div>
 
       <div class="visual visual-graph" aria-hidden="true">
@@ -96,17 +110,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B62: Print a Path (A62 応用 ─ DFS で経路出力)
-# ---------------------------------------------------------------------
-# 【概要】無向グラフで、頂点 1 から頂点 N までの単純パスを 1 つ出力する。
-# 【アルゴリズム】DFS で訪問しながらパスをスタックに積み、ゴールに着いたら
-#                 そのまま出力して終了。バックトラック時は pop する。
-# 【計算量】O(N + M)。
-# 【注意】Python の再帰デフォルト上限は 1000 なので、N が大きいときは
-#         setrecursionlimit を引き上げる。
-# =====================================================================
-import sys
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import sys
 sys.setrecursionlimit(1 &lt;&lt; 20)
 # ---------------------------------------------------------------------
 # 【読み方の地図】
@@ -200,4 +204,24 @@ dfs(0)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

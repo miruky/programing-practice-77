@@ -65,6 +65,27 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_dm" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A40: 個数集計と組合せ</h1>
+<h2>概要</h2>
+<p>配列 A から、同じ値の 3 つの組 (i&lt;j&lt;k) の選び方の数を求める。</p>
+<h2>アルゴリズム</h2>
+<p>値ごとに個数 cnt を数え、組合せ C(cnt, 3) を合計する。 C(n, 3) = n*(n-1)*(n-2) / 6</p>
+<h2>計算量</h2>
+<p>O(N + 100)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 数え上げ / 組合せ / 難易度目安: ★2</li>
+<li>要約: 値ごとの個数を数え、組合せ的に数え上げる。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。</li>
+<li>小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。</li>
+<li>mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A40.py ─ Python 3</span>
     <div class="actions">
@@ -84,32 +105,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">数え上げ</span><span class="tag">組合せ</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A40.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A40: 個数集計と組合せ数え上げ — 値ごとに数えて C(n, k) で合計 →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A40: 個数集計と組合せ
-# ---------------------------------------------------------------------
-# 【概要】配列 A から、同じ値の 3 つの組 (i&lt;j&lt;k) の選び方の数を求める。
-# 【アルゴリズム】値ごとに個数 cnt を数え、組合せ C(cnt, 3) を合計する。
-#   C(n, 3) = n*(n-1)*(n-2) / 6
-# 【計算量】O(N + 100)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 数え上げ / 組合せ / 難易度目安: ★2
-# - 要約: 値ごとの個数を数え、組合せ的に数え上げる。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
-# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
-# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N = int(input())
 A = list(map(int, input().split()))
 
@@ -152,4 +157,24 @@ print(Answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

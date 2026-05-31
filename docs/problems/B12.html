@@ -69,6 +69,29 @@
       <span class="applied-banner-summary">「答えが x 以下か」という判定問題に帰着させて二分探索する典型。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B12: Equation (A12 応用 ─ 実数の二分探索)</h1>
+<h2>概要</h2>
+<p>方程式 f(x) = x³ + x = N を満たす実数 x を 0 ≦ x ≦ 100 で求める。</p>
+<h2>アルゴリズム</h2>
+<p>f は単調増加なので二分探索が効く。20 回反復で誤差は (100/2^20) ≒ 10⁻⁴ となり、要求精度 10⁻⁶ にも近づく (本問は誤差 0.001 以下で AC)。</p>
+<h2>計算量</h2>
+<p>O(反復回数) = O(log(範囲 / 精度))。</p>
+<h2>ポイント</h2>
+<p>「答えで二分探索」の最も素朴な形 ─ x の値そのものを探す。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 二分探索 / 実数 / 難易度目安: ★4</li>
+<li>要約: x³+x=N となる実数 x を二分探索で求める。実数二分探索の練習。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。</li>
+<li>bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。</li>
+<li>LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B12.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +111,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">二分探索</span><span class="tag">実数</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A12.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A12: 答えで二分探索 — 「答えが x 以下か」を直接判定 →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -96,30 +124,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B12: Equation (A12 応用 ─ 実数の二分探索)
-# ---------------------------------------------------------------------
-# 【概要】方程式 f(x) = x³ + x = N を満たす実数 x を 0 ≦ x ≦ 100 で求める。
-# 【アルゴリズム】f は単調増加なので二分探索が効く。20 回反復で誤差は
-#                 (100/2^20) ≒ 10⁻⁴ となり、要求精度 10⁻⁶ にも近づく
-#                 (本問は誤差 0.001 以下で AC)。
-# 【計算量】O(反復回数) = O(log(範囲 / 精度))。
-# 【ポイント】「答えで二分探索」の最も素朴な形 ─ x の値そのものを探す。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 二分探索 / 実数 / 難易度目安: ★4
-# - 要約: x³+x=N となる実数 x を二分探索で求める。実数二分探索の練習。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。
-# - bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。
-# - LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。
-# ---------------------------------------------------------------------
-
-# f(x) = x³ + x。x が増えると単調に増える。
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># f(x) = x³ + x。x が増えると単調に増える。
 def f(x):
     return x * x * x + x
 
@@ -173,4 +178,24 @@ print(Mid)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

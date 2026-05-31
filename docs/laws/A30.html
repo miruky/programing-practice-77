@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A30: mod 逆元 — フェルマーの小定理で割り算を作る | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A30: mod 逆元 — フェルマーの小定理で割り算を作る ─ 素数 M なら b⁻¹ ≡ b^(M-2) (mod M)。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ef4444">5章: 数学的問題</span> /
+    <strong>法則 A30</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A30</span>
+    <h1>mod 逆元 — フェルマーの小定理で割り算を作る</h1>
+    <p class="law-tagline">素数 M なら b⁻¹ ≡ b^(M-2) (mod M)</p>
+  </div>
+
+  <section class="law-intro">
+    <p>mod の世界では普通の割り算 <code>a / b</code> は使えない。代わりに <strong><code>b</code> の mod 逆元 <code>b⁻¹</code> を掛ける</strong>: <code>a × b⁻¹ ≡ a / b (mod M)</code>。</p>
+<p>M が素数なら <strong>フェルマーの小定理</strong> から <code>b⁻¹ ≡ b^(M-2) (mod M)</code>。繰り返し二乗法 (A29) で O(log M) で計算できる。<strong><code>pow(b, M-2, M)</code></strong> の 1 行で出てきます。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 逆元の定義</h2>
+    <div class="law-section-body">
+      <p><code>b × b⁻¹ ≡ 1 (mod M)</code> を満たす <code>b⁻¹</code>。M が素数で b が M の倍数でなければ必ず存在する。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  B[b] --&gt;|× b⁻¹ mod M| O[&quot;1 (mod M)&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: フェルマーの小定理</h2>
+    <div class="law-section-body">
+      <p><strong>M が素数、b が M の倍数でないとき、<code>b^(M-1) ≡ 1 (mod M)</code></strong>。</p>
+<p>両辺を b で割れば <code>b^(M-2) ≡ b⁻¹ (mod M)</code>。Python の <code>pow(b, M-2, M)</code> でそのまま計算可能。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 二項係数への応用</h2>
+    <div class="law-section-body">
+      <p><code>nCr = n! / (r! × (n-r)!)</code> を mod で計算するには、分母を逆元で掛ける形に直す:</p>
+<p><strong><code>nCr mod M = n! × (r!)⁻¹ × ((n-r)!)⁻¹ mod M</code></strong></p>
+<p>階乗とその逆元を前計算しておけば各クエリ O(1)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N[n!] --&gt; X[&quot;× r!⁻¹&quot;]
+  X --&gt; Y[&quot;× (n-r)!⁻¹&quot;]
+  Y --&gt; R[nCr mod M]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>M が <strong>素数でない</strong> と、フェルマーの小定理は使えない (拡張ユークリッド互除法を使う)。</li>
+<li>b が M の倍数のときは逆元が存在しない (= 0 で割っているのと同じ)。</li>
+<li>階乗を毎回計算すると遅い。<strong><code>fact</code> と <code>inv_fact</code> を前計算</strong> しておくと O(N) 前計算 + クエリ O(1)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A28.html">A28: mod 計算 — 毎回余りを取って小さく保つ</a><a class="law-chip" href="A29.html">A29: 繰り返し二乗法 — a^b を O(log b) で</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A30.html">A30</a><a class="law-chip" href="../problems/B30.html">B30</a><a class="law-chip" href="../problems/C13.html">C13</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A29.html"><div class="nav-label">前の法則</div><div class="nav-title">A29: 繰り返し二乗法 — a^b を O(log b) で</div></a>
+    <a class="next" href="A31.html"><div class="nav-label">次の法則</div><div class="nav-title">A31: 包除原理 — 3 または 5 の倍数を数える型</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

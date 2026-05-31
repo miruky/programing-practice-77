@@ -61,6 +61,27 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>C10: A Long Grid (力試し問題)</h1>
+<h2>概要</h2>
+<p>2 行 W 列のグリッドを正しく塗り分ける方法数を mod 10⁹+7 で求める。 隣接 (左右・上下) は異なる色でなければならない (色は 4 色)。</p>
+<h2>アルゴリズム</h2>
+<p>数学的解析: 1 列目の塗り方は 4 × 3 = 12 通り。それ以降の 各列は 7 通り (前列に依存)。よって答え = 12 · 7^(W-1)。 7^(W-1) は繰り返し二乗法で O(log W)。</p>
+<h2>計算量</h2>
+<p>O(log W)。W = 10⁹ でも約 30 回ループで終わる。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 数学 / 繰り返し二乗法 / 難易度目安: ★3</li>
+<li>要約: 2 行 W 列の塗り分け方法数 = 12 · 7^(W-1) を繰り返し二乗法で mod 計算。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。</li>
+<li>小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。</li>
+<li>mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C10.py ─ Python 3</span>
     <div class="actions">
@@ -80,34 +101,16 @@
         <ol><li>何を数えたいかを集合や式に置き換える。</li><li>重複・余り・周期を確認する。</li><li>計算量が定数または log になっているか見る。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式変形だけを追うとつらいので、小さい例で 1 回手計算すると読みやすいです。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">数学</span><span class="tag">繰り返し二乗法</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A29.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A29: 繰り返し二乗法 — a^b を O(log b) で →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# C10: A Long Grid (力試し問題)
-# ---------------------------------------------------------------------
-# 【概要】2 行 W 列のグリッドを正しく塗り分ける方法数を mod 10⁹+7 で求める。
-#         隣接 (左右・上下) は異なる色でなければならない (色は 4 色)。
-# 【アルゴリズム】数学的解析: 1 列目の塗り方は 4 × 3 = 12 通り。それ以降の
-#                 各列は 7 通り (前列に依存)。よって答え = 12 · 7^(W-1)。
-#         7^(W-1) は繰り返し二乗法で O(log W)。
-# 【計算量】O(log W)。W = 10⁹ でも約 30 回ループで終わる。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 数学 / 繰り返し二乗法 / 難易度目安: ★3
-# - 要約: 2 行 W 列の塗り分け方法数 = 12 · 7^(W-1) を繰り返し二乗法で mod 計算。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
-# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
-# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
-# ---------------------------------------------------------------------
-
-mod = 1000000007
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">mod = 1000000007
 
 # a^b mod m を返す関数 (繰り返し二乗法)
 def Power(a, b, m):
@@ -158,4 +161,24 @@ print(12 * Power(7, W - 1, mod) % mod)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

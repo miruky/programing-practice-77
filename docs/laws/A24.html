@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A24: LIS — 最長増加部分列 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A24: LIS — 最長増加部分列 ─ O(N log N) で部分列の最長を求める伝説のアルゴリズム。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A24</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A24</span>
+    <h1>LIS — 最長増加部分列</h1>
+    <p class="law-tagline">O(N log N) で部分列の最長を求める伝説のアルゴリズム</p>
+  </div>
+
+  <section class="law-intro">
+    <p>配列 A から、<strong>狭義に増加する</strong> 部分列 (連続でなくてよい) のうち最長のものの長さ。素朴な DP は O(N²) ですが、<strong>二分探索を使うと O(N log N)</strong> に。</p>
+<p>「<code>L[k] = 長さ k+1 の増加部分列の最後の値の最小値</code>」という配列を作りながら走査する、<strong>情報を圧縮した DP</strong> の傑作。一見魔法に見えますが、<code>L</code> を保ち続けるだけ。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: L の意味</h2>
+    <div class="law-section-body">
+      <p><strong>`L[k] = 長さ k+1 の増加部分列を作るときの『最後の値の最小値』</strong>。短い部分列ほど、最後の値が小さい方が後で伸ばしやすい。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[&quot;A = [3, 1, 4, 1, 5, 9, 2, 6]&quot;] --&gt; L[&quot;L = [1, 2, 6, 9, ...]&quot;]
+  L --&gt; M[&quot;L[k] = 長さ k+1 のときの最後の値 min&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 走査と更新</h2>
+    <div class="law-section-body">
+      <p>各 <code>A[i]</code> について、<code>L</code> の中で「<code>A[i]</code> が入る位置」を <strong><code>bisect_left</code></strong> で求める。</p>
+<ul>
+<li>末尾なら append (LIS が 1 伸びる)</li>
+<li>そうでなければ <code>L[pos] = A[i]</code> で更新 (より小さい値で塗り替える)</li>
+</ul>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart TB
+  X[&quot;A[i]&quot;] --&gt; P[&quot;pos = bisect_left(L, A[i])&quot;]
+  P --&gt; J{pos == len L?}
+  J -- Yes --&gt; AP[&quot;L.append(A[i])&quot;]
+  J -- No --&gt; UP[&quot;L[pos] = A[i]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 答えは len(L)</h2>
+    <div class="law-section-body">
+      <p>走査終了時点での <code>len(L)</code> が LIS の長さ。<strong><code>L</code> 自体は LIS そのものではない</strong> ことに注意 (各位置で違う LIS を「上書き」しているため)。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>L</code> の中身は LIS の実体ではない。長さを取り出すだけで、復元には別途記録が必要。</li>
+<li>「<strong>真に</strong>増加」と「単調増加 (=同じ値も OK)」で <code>bisect_left</code> / <code>bisect_right</code> を使い分け。</li>
+<li>同じ長さでも様々な LIS がある。「いずれか 1 つを出力」なら復元時に最後の選択を保持。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A24.html">A24</a><a class="law-chip" href="../problems/A24_withoutDP.html">A24_withoutDP</a><a class="law-chip" href="../problems/B24.html">B24</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A23.html"><div class="nav-label">前の法則</div><div class="nav-title">A23: bitDP — 集合を整数 1 個に圧縮</div></a>
+    <a class="next" href="A25.html"><div class="nav-label">次の法則</div><div class="nav-title">A25: 経路数え上げ — 2 次元 DP で数える典型</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

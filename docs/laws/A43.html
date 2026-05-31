@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A43: 上界の最大 — 「各物体の最短距離」の max | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A43: 上界の最大 — 「各物体の最短距離」の max ─ 「全体最小」を「個別最大」に分解。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A43</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A43</span>
+    <h1>上界の最大 — 「各物体の最短距離」の max</h1>
+    <p class="law-tagline">「全体最小」を「個別最大」に分解</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「N 個の物体について、それぞれの最短距離 d_i の最大値を答えよ」のような問題。<strong>個別の最短距離をまず求め、その max を取る</strong> という単純な 2 段。</p>
+<p>個別の d_i の計算が O(M) ならば、全体 O(NM)。「最大値を最小化する」「最小値を最大化する」型の問題は、しばしば <strong>答えで二分探索 (A12)</strong> に書き換えられる。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 各物体の最短距離を独立に計算</h2>
+    <div class="law-section-body">
+      <p>BFS、ダイクストラ、距離公式など、問題に応じた方法で個別に計算。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  O[物体 1, 2, ..., N] --&gt; D[各 d_i を計算]
+  D --&gt; M[max d_i]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 全体の答えは個別の max</h2>
+    <div class="law-section-body">
+      <p><strong><code>answer = max(d_1, d_2, ..., d_N)</code></strong>。</p>
+<p>「最も困っている個体」が全体の上限を決める、というイメージ。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 二分探索への一般化</h2>
+    <div class="law-section-body">
+      <p>「max 距離 ≤ x 以下にできるか?」の判定問題に書き換えれば、二分探索 (A12) も使える。問題が大規模なときの選択肢。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>個別計算が遅いと全体も遅い。BFS / ダイクストラの選択を計算量で判断。</li>
+<li>「平均最短」「中央値」など他の集計関数を間違えない。</li>
+<li>max を min に取り換えるパターン (A38) と紛らわしいが、構造は同じ。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A38.html">A38: 左右からの累積 — 各位置の上限を独立に求める</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A43.html">A43</a><a class="law-chip" href="../problems/B43.html">B43</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A42.html"><div class="nav-label">前の法則</div><div class="nav-title">A42: 2 軸を全探索 — (a, b) の組を全部試す</div></a>
+    <a class="next" href="A44.html"><div class="nav-label">次の法則</div><div class="nav-title">A44: 遅延処理 — 物理操作の代わりにフラグ管理</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

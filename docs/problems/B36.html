@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">偶奇と最小歩数の上界に注目すれば必要十分条件が見える。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B36: Switching Lights (A36 応用 ─ 偶奇の不変量)</h1>
+<h2>概要</h2>
+<p>N 個のランプが各 0/1 で点いている。「2 つ選んで両方を反転する」 という操作を 1 回行うと、ON の個数は -2/0/+2 と必ず偶数回変化する。 K 回の操作後に「全消灯」にできるか判定する。</p>
+<h2>アルゴリズム</h2>
+<p>「ON の個数の偶奇」が不変量。K 回の操作で増減できるのも 偶数なので、初期 ON 数と K の偶奇が一致すれば Yes。</p>
+<h2>計算量</h2>
+<p>O(N)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 考察 / 偶奇 / 難易度目安: ★3</li>
+<li>要約: ON 状態のランプの個数の偶奇のみで答えが決まる不変量問題。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。</li>
+<li>各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。</li>
+<li>小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B36.py ─ Python 3</span>
     <div class="actions">
@@ -88,34 +109,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">考察</span><span class="tag">偶奇</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A36.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A36: 偶奇の不変量 — Parity は変わらない →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B36: Switching Lights (A36 応用 ─ 偶奇の不変量)
-# ---------------------------------------------------------------------
-# 【概要】N 個のランプが各 0/1 で点いている。「2 つ選んで両方を反転する」
-#         という操作を 1 回行うと、ON の個数は -2/0/+2 と必ず偶数回変化する。
-#         K 回の操作後に「全消灯」にできるか判定する。
-# 【アルゴリズム】「ON の個数の偶奇」が不変量。K 回の操作で増減できるのも
-#                 偶数なので、初期 ON 数と K の偶奇が一致すれば Yes。
-# 【計算量】O(N)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 考察 / 偶奇 / 難易度目安: ★3
-# - 要約: ON 状態のランプの個数の偶奇のみで答えが決まる不変量問題。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
-# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
-# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, K = map(int, input().split())
 S = input()
 
@@ -156,4 +159,24 @@ print(&quot;Yes&quot; if numON % 2 == K % 2 else &quot;No&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

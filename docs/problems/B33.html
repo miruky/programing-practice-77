@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">Nim ゲームは XOR が 0 でないとき先手必勝。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B33: Game 6 (A33 応用 ─ 2 次元 Nim)</h1>
+<h2>概要</h2>
+<p>H×W の盤面に N 個の駒が置かれている。各駒は左 or 下に好きな 距離だけ動かせる。動かせなくなった方が負け。先後判定。</p>
+<h2>アルゴリズム</h2>
+<p>各駒について「左に動ける距離 = A[i]-1」「下に動ける距離 = B[i]-1」を 2 山の Nim と見れば、(A[i]-1) と (B[i]-1) を まとめて XOR し、全駒の総 XOR が 0 でなければ先手必勝。</p>
+<h2>計算量</h2>
+<p>O(N)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: ゲーム / Nim / 難易度目安: ★4</li>
+<li>要約: 2 次元 Nim を、各駒の x-1, y-1 の XOR で勝敗判定する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。</li>
+<li>1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。</li>
+<li>状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B33.py ─ Python 3</span>
     <div class="actions">
@@ -88,34 +109,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★4</span><span><span class="tag">ゲーム</span><span class="tag">Nim</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A33.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A33: Nim ゲーム — XOR が 0 でなければ先手必勝 →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B33: Game 6 (A33 応用 ─ 2 次元 Nim)
-# ---------------------------------------------------------------------
-# 【概要】H×W の盤面に N 個の駒が置かれている。各駒は左 or 下に好きな
-#         距離だけ動かせる。動かせなくなった方が負け。先後判定。
-# 【アルゴリズム】各駒について「左に動ける距離 = A[i]-1」「下に動ける距離
-#                 = B[i]-1」を 2 山の Nim と見れば、(A[i]-1) と (B[i]-1) を
-#                 まとめて XOR し、全駒の総 XOR が 0 でなければ先手必勝。
-# 【計算量】O(N)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: ゲーム / Nim / 難易度目安: ★4
-# - 要約: 2 次元 Nim を、各駒の x-1, y-1 の XOR で勝敗判定する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 整数 state を 2 進数として見て、各 bit が ON/OFF の集合を表す。
-# - 1 &lt;&lt; k は k 番目だけが ON の集合。OR は追加、XOR は反転として読む。
-# - 状態数は 2^N。N が小さいからこそ成立する全探索 + DP/探索。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, H, W = map(int, input().split())
 A = [None] * N
 B = [None] * N
@@ -161,4 +164,24 @@ print(&quot;First&quot; if XOR_Sum != 0 else &quot;Second&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

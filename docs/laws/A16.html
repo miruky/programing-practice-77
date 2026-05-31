@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A16: 1 次元 DP の基本 — dp[i] の意味を 1 行で言える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A16: 1 次元 DP の基本 — dp[i] の意味を 1 行で言える ─ 状態 → 遷移 → 答えの 3 段で書く。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A16</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A16</span>
+    <h1>1 次元 DP の基本 — dp[i] の意味を 1 行で言える</h1>
+    <p class="law-tagline">状態 → 遷移 → 答えの 3 段で書く</p>
+  </div>
+
+  <section class="law-intro">
+    <p>動的計画法 (DP) は <strong>「途中までの最適解を覚えておき、それを使って次を求める」</strong> 手法。1 次元 DP は「現在位置 i」だけを状態に持つ最も基本の形。</p>
+<p>成功の鍵は <strong><code>dp[i]</code> の意味を日本語 1 行で固定する</strong> こと。「i 番目に到着するまでの最小コスト」「i 番目までで作れる最大価値」等、意味さえはっきりすれば、遷移式は問題文を絵にする作業に過ぎません。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 状態の定義</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[i] = 部屋 i にたどり着くまでの最小コスト</code></strong> と定義する。この 1 行を書ければ、半分終わったも同然。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  D[&quot;dp[i] の意味&quot;] --&gt; Q[&quot;日本語 1 行で言える?&quot;]
+  Q -- Yes --&gt; N[次へ]
+  Q -- No --&gt; R[問題文を読み直す]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 初期状態</h2>
+    <div class="law-section-body">
+      <p><strong>手で答えがわかる地点</strong> だけ埋める。今回なら <code>dp[1] = 0</code>、<code>dp[2] = A[2]</code>。「スタート地点」「空集合」「1 個だけ」のような自明な状態に対応。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S1[&quot;dp[1] = 0 (出発点)&quot;] --&gt; S2[&quot;dp[2] = A[2] (1→2 確定)&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 遷移式 (漸化式)</h2>
+    <div class="law-section-body">
+      <p>「i に来る方法」を全部列挙して、最小値 (最大化問題なら最大値) を取る。</p>
+<p>今回は「1 個前から」と「2 個前から」の 2 通りなので <code>dp[i] = min(dp[i-1] + A[i], dp[i-2] + B[i])</code>。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P1[&quot;dp[i-1] + A[i]&quot;] --&gt; M[min]
+  P2[&quot;dp[i-2] + B[i]&quot;] --&gt; M
+  M --&gt; R[&quot;dp[i]&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 4: 答えの取り出し</h2>
+    <div class="law-section-body">
+      <p>ゴールに対応する <code>dp[N]</code> がそのまま答え。問題によっては <code>max(dp)</code> や <code>dp[N][W]</code> のような 2 次元の値を見ることもある。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>dp[i]</code> の意味を <strong>数式ではなく日本語で固定</strong> する。意味が曖昧だと遷移が書けない。</li>
+<li>初期状態は <strong>手で答えがわかる地点だけ</strong>。それ以外は遷移に任せる。</li>
+<li>1-indexed と 0-indexed の混在に注意。本サイトは A の先頭にダミーを詰めて  1-indexed に揃えている (式が本と一致するため)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A17.html">A17: DP + 経路復元 — ゴールから戻って『どう来たか』を再構築</a><a class="law-chip" href="A22.html">A22: すごろく型 DP — 前向き遷移で書く</a><a class="law-chip" href="A25.html">A25: 経路数え上げ — 2 次元 DP で数える典型</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A16.html">A16</a><a class="law-chip" href="../problems/B16.html">B16</a><a class="law-chip" href="../problems/C09.html">C09</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A15.html"><div class="nav-label">前の法則</div><div class="nav-title">A15: 座標圧縮 — 値を「順位」に置き換える</div></a>
+    <a class="next" href="A17.html"><div class="nav-label">次の法則</div><div class="nav-title">A17: DP + 経路復元 — ゴールから戻って『どう来たか』を再構築</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

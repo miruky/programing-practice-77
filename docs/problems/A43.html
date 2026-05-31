@@ -65,6 +65,32 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_dp" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A43: 東西移動の上限</h1>
+<h2>概要</h2>
+<p>長さ L の道路上に N 人がいて、それぞれ東 (E) か西 (W) へ歩く。 最後に出会う 2 人の組がいる最大時間を求める。</p>
+<h2>アルゴリズム</h2>
+<p>考察</p>
+<ul>
+<li>西向きの最大値 max(A[i])  と</li>
+<li>東向きの「L - A[i]」の最大値</li>
+</ul>
+<p>のうち、大きい方が答え。</p>
+<h2>計算量</h2>
+<p>O(N)</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 考察 / 難易度目安: ★2</li>
+<li>要約: 各物体の最短距離の上限を考え、最大を答える。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力をまず隣接リストやグリッドの隣接関係に変換している部分を見る。</li>
+<li>visited や dist は「もう見たか」「何手で来たか」を記録するための配列。</li>
+<li>DFS は深く進む、BFS は近い順に広がる。この違いだけ先に押さえる。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A43.py ─ Python 3</span>
     <div class="actions">
@@ -84,35 +110,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">考察</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A43.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A43: 上界の最大 — 「各物体の最短距離」の max →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A43: 東西移動の上限
-# ---------------------------------------------------------------------
-# 【概要】長さ L の道路上に N 人がいて、それぞれ東 (E) か西 (W) へ歩く。
-#         最後に出会う 2 人の組がいる最大時間を求める。
-# 【アルゴリズム】考察
-#   - 西向きの最大値 max(A[i])  と
-#   - 東向きの「L - A[i]」の最大値
-#   のうち、大きい方が答え。
-# 【計算量】O(N)
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 考察 / 難易度目安: ★2
-# - 要約: 各物体の最短距離の上限を考え、最大を答える。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力をまず隣接リストやグリッドの隣接関係に変換している部分を見る。
-# - visited や dist は「もう見たか」「何手で来たか」を記録するための配列。
-# - DFS は深く進む、BFS は近い順に広がる。この違いだけ先に押さえる。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, L = map(int, input().split())
 A = [None] * N
 B = [None] * N
@@ -163,4 +170,24 @@ print(Answer)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

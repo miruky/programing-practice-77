@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A54: 連想配列 — 辞書による key-value 管理 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A54: 連想配列 — 辞書による key-value 管理 ─ ハッシュで平均 O(1) アクセス。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <strong>法則 A54</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A54</span>
+    <h1>連想配列 — 辞書による key-value 管理</h1>
+    <p class="law-tagline">ハッシュで平均 O(1) アクセス</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>「名前 → 値」のような任意のキーで O(1) アクセスできる</strong> データ構造。Python では <code>dict</code> がそれ。内部はハッシュテーブルで、平均 O(1) で挿入・参照。</p>
+<p>出現回数のカウント (<code>collections.Counter</code>)、グループごとの集計、メモ化など、競プロで最も多用するデータ構造の 1 つ。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 基本操作</h2>
+    <div class="law-section-body">
+      <ul>
+<li>挿入/更新: <code>d[key] = value</code></li>
+<li>取得: <code>d[key]</code> (存在しないと KeyError)</li>
+<li>安全に取得: <code>d.get(key, default)</code></li>
+</ul>
+<p>全て平均 O(1)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  K[key] --&gt; H[hash]
+  H --&gt; S[内部スロット]
+  S --&gt; V[value]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: Counter で頻度集計</h2>
+    <div class="law-section-body">
+      <pre><code class="language-python">from collections import Counter
+c = Counter(A)
+# c[&#x27;x&#x27;] = &#x27;x&#x27; の出現回数 (なければ 0)</code></pre>
+<p>競プロで最頻出のクラス。<code>most_common(k)</code> で上位 k 件を取れる。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: defaultdict で初期値自動</h2>
+    <div class="law-section-body">
+      <p><code>defaultdict(int)</code> は新しいキーへのアクセス時に自動で 0 を返す。「キーが存在しないかもしれない」のチェックが省略でき、コードが短くなる。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>同じキーを 2 回 push すると、値は上書きされる。<code>Counter</code> なら自動で加算してくれる。</li>
+<li>ハッシュ攻撃を意識する競技は稀。素直に <code>dict</code> を使って OK。</li>
+<li>イミュータブル (tuple, str) しかキーにできない。list はキーにできない。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A55.html">A55: 順序付き集合 — 値の挿入/削除と「以上/以下」検索</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A54.html">A54</a><a class="law-chip" href="../problems/B54.html">B54</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A53.html"><div class="nav-label">前の法則</div><div class="nav-title">A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す</div></a>
+    <a class="next" href="A55.html"><div class="nav-label">次の法則</div><div class="nav-title">A55: 順序付き集合 — 値の挿入/削除と「以上/以下」検索</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

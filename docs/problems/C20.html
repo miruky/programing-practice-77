@@ -61,6 +61,15 @@
     </div>
   </div>
 
+  <section class="problem-doc" hidden><h1>C20: Mayor&#x27;s Challenge (力試し問題 / ヒューリスティック)</h1>
+<h2>概要</h2>
+<p>N×N グリッドの K 個の区画を L 個の連結な特別区にまとめる。 各区画には人口 A、面積 B が与えられ、特別区ごとの (合計 A, 合計 B) の最小/最大比をスコアとする。スコアを最大化する。</p>
+<h2>アルゴリズム</h2>
+<p>Union-Find で「小さい連結成分から併合」する貪欲法で 初期解を作り、その後「ランダムに 1 区画の色を変えてみる」 焼きなまし法で改善する。</p>
+<h2>計算量</h2>
+<p>貪欲 O(K² + KE)、焼きなまし 0.95 秒のループ。</p>
+<h2>注意</h2>
+<p>Python は C++ より遅いため、C++ 版より得点が下がる可能性あり。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>C20.py ─ Python 3</span>
     <div class="actions">
@@ -80,6 +89,11 @@
         <ol><li>root(x) で x の代表を探す。</li><li>unite(a, b) で 2 つの集合を結合する。</li><li>same(a, b) で代表が同じかを見る。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 辺削除は苦手なので、削除クエリは逆順に見て追加へ変換することがあります。</p>
         <div class="explain-meta-line"><span>難易度目安: ★5</span><span><span class="tag">ヒューリスティック</span><span class="tag">焼きなまし</span><span class="tag">UnionFind</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A48.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A48: 焼きなまし法 — 確率で悪化も受理する →</span>
+      </a>
       </div>
 
       <div class="visual visual-uf" aria-hidden="true">
@@ -88,19 +102,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# C20: Mayor&#x27;s Challenge (力試し問題 / ヒューリスティック)
-# ---------------------------------------------------------------------
-# 【概要】N×N グリッドの K 個の区画を L 個の連結な特別区にまとめる。
-#         各区画には人口 A、面積 B が与えられ、特別区ごとの (合計 A, 合計 B)
-#         の最小/最大比をスコアとする。スコアを最大化する。
-# 【アルゴリズム】Union-Find で「小さい連結成分から併合」する貪欲法で
-#                 初期解を作り、その後「ランダムに 1 区画の色を変えてみる」
-#                 焼きなまし法で改善する。
-# 【計算量】貪欲 O(K² + KE)、焼きなまし 0.95 秒のループ。
-# 【注意】Python は C++ より遅いため、C++ 版より得点が下がる可能性あり。
-# =====================================================================
-import random
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import random
 import time
 # ---------------------------------------------------------------------
 # 【読み方の地図】
@@ -410,4 +412,24 @@ print(&quot;\n&quot;.join(str(answer[i]) for i in range(1, K + 1)))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

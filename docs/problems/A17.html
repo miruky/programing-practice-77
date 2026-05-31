@@ -65,6 +65,23 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_cp" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A17: ダンジョン2 (DP + 経路復元)</h1>
+<h2>概要</h2>
+<p>A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を出力する。</p>
+<h2>アルゴリズム</h2>
+<p>DP 後にゴール側から逆方向にトレースバックする経路復元。 ゴールから出発し、dp の値と一致する遷移をたどり直す。</p>
+<h2>計算量</h2>
+<p>O(N)</p>
+<h2>実装メモ</h2>
+<p>A16 と同じく A, B にダミーを詰めて 1-indexed 化することで、 dp[i] = min(dp[i-1]+A[i], dp[i-2]+B[i]) と書籍の数式に揃える。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: DP / 経路復元 / 難易度目安: ★3</li>
+<li>要約: DP で求めた最短距離をもとに、経路を復元する。</li>
+<li>dp[i] の意味は A16 と同じ。</li>
+<li>復元では「dp[i-1] + A[i] == dp[i] なら 1 個前から来た」を判定して</li>
+</ul>
+<p>遡るだけでよい (= が 2 つあるときは A 側 (1 個進む) を優先しても OK)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A17.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +101,11 @@
         <ol><li>dp の添字が何を表すかを先に固定する。</li><li>初期状態だけを手で入れる。</li><li>小さい状態から大きい状態へ、使う/使わない・進む/進まないで遷移する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式を先に暗記するより、dp[i] の意味を日本語で読めるかを優先します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">DP</span><span class="tag">経路復元</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A17.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A17: DP + 経路復元 — ゴールから戻って『どう来たか』を再構築 →</span>
+      </a>
       </div>
 
       <div class="visual visual-dp" aria-hidden="true">
@@ -92,26 +114,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A17: ダンジョン2 (DP + 経路復元)
-# ---------------------------------------------------------------------
-# 【概要】A16 と同じ問題で、さらに最短経路 (通過した部屋の列) を出力する。
-# 【アルゴリズム】DP 後にゴール側から逆方向にトレースバックする経路復元。
-#   ゴールから出発し、dp の値と一致する遷移をたどり直す。
-# 【計算量】O(N)
-# 【実装メモ】A16 と同じく A, B にダミーを詰めて 1-indexed 化することで、
-#             dp[i] = min(dp[i-1]+A[i], dp[i-2]+B[i]) と書籍の数式に揃える。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: DP / 経路復元 / 難易度目安: ★3
-# - 要約: DP で求めた最短距離をもとに、経路を復元する。
-# - dp[i] の意味は A16 と同じ。
-# - 復元では「dp[i-1] + A[i] == dp[i] なら 1 個前から来た」を判定して
-#   遡るだけでよい (= が 2 つあるときは A 側 (1 個進む) を優先しても OK)。
-# ---------------------------------------------------------------------
-
-# --- 入力 + DP (A16 と同じ) -----------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 + DP (A16 と同じ) -----------------------------------------
 N = int(input())
 A = [0, 0] + list(map(int, input().split()))      # A[2..N]
 B = [0, 0, 0] + list(map(int, input().split()))   # B[3..N]
@@ -184,4 +187,24 @@ print(&quot; &quot;.join(str(i) for i in Answer))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

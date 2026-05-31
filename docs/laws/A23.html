@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A23: bitDP — 集合を整数 1 個に圧縮 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A23: bitDP — 集合を整数 1 個に圧縮 ─ 2^N 通りの集合を 0..2^N-1 の整数で表す。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A23</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A23</span>
+    <h1>bitDP — 集合を整数 1 個に圧縮</h1>
+    <p class="law-tagline">2^N 通りの集合を 0..2^N-1 の整数で表す</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「どの要素を選んだか」の集合 S を、<strong>N ビットの整数</strong> として扱う DP。状態数が 2^N (= N=20 で約 10^6) なので、<strong>N が小さい全探索の代用品</strong> として使います。</p>
+<p>TSP (巡回セールスマン) を O(2^N · N²) で解いたり (B23)、クーポン券問題 (A23) を解いたりするのが代表例。<strong>ビット演算 (AND, OR, XOR, シフト)</strong> に慣れるのが第一歩。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: ビットと集合の対応</h2>
+    <div class="law-section-body">
+      <p>整数 <code>state</code> の <code>k</code> ビット目が 1 ⇔ 要素 k が集合に含まれる。<code>1 &lt;&lt; k</code> で「k 番目だけが ON」の集合を作れる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[&quot;state = 5 (=101 in binary)&quot;] --&gt; A[bit0 = 1: 要素0 含む]
+  S --&gt; B[bit1 = 0: 要素1 含まない]
+  S --&gt; C[bit2 = 1: 要素2 含む]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 集合演算</h2>
+    <div class="law-section-body">
+      <ul>
+<li>追加: <code>state | (1 &lt;&lt; k)</code></li>
+<li>削除: <code>state &amp; ~(1 &lt;&lt; k)</code></li>
+<li>反転: <code>state ^ (1 &lt;&lt; k)</code></li>
+<li>含む?: <code>(state &gt;&gt; k) &amp; 1</code></li>
+<li>和集合: <code>s1 | s2</code></li>
+<li>共通: <code>s1 &amp; s2</code></li>
+</ul>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: DP の形</h2>
+    <div class="law-section-body">
+      <p><strong><code>dp[i][state] = i 枚目まで処理し、状態 state を作る最小コスト</code></strong> のような 2 次元 DP。クーポン問題なら state は「無料になっている品物の集合」。</p>
+<p>遷移: 「i 枚目を使わない → state そのまま」「i 枚目を使う → state | coupon_i に行く」。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P[&quot;dp[i-1][state]&quot;] --&gt; N1[&quot;dp[i][state] (使わない)&quot;]
+  P --&gt; N2[&quot;dp[i][state | coupon_i] + 1 (使う)&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>状態数は 2^N。N=20 が現実的な上限 (約 10^6)。N=25 までなら工夫次第。</li>
+<li>ループ順は <code>for state in range(1 &lt;&lt; N)</code> で 0 から大きくしていくのが典型。</li>
+<li><code>state | next_state</code> で集合を結合できる。これが bitDP の万能ツール。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A18.html">A18: 部分和問題 — 「i 枚から合計 j 作れるか」の bool DP</a><a class="law-chip" href="A70.html">A70: 状態 BFS — 2^N 通りの状態を頂点に持つ</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A23.html">A23</a><a class="law-chip" href="../problems/B23.html">B23</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A22.html"><div class="nav-label">前の法則</div><div class="nav-title">A22: すごろく型 DP — 前向き遷移で書く</div></a>
+    <a class="next" href="A24.html"><div class="nav-label">次の法則</div><div class="nav-title">A24: LIS — 最長増加部分列</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

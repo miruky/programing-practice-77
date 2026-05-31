@@ -69,6 +69,13 @@
       <span class="applied-banner-summary">FIFO のキューを deque で実装。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B52: Ball Simulation (A52 応用 ─ キュー / BFS シミュレーション)</h1>
+<h2>概要</h2>
+<p>1 次元上に並んだマス列 (床) と、初期位置 X にあるボールを考える。 隣接する &#x27;.&#x27; (空きマス) に向かってボールが拡散していく様子を シミュレートし、最終的にボールが到達したマスを &#x27;@&#x27; にして出力する。</p>
+<h2>アルゴリズム</h2>
+<p>BFS。キューに「処理待ちのマス位置」を入れ、両隣の &#x27;.&#x27; を 訪れて &#x27;@&#x27; に塗り直してキューに追加する。</p>
+<h2>計算量</h2>
+<p>O(N)。</p></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B52.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +95,11 @@
         <ol><li>まず入力を隣接リスト G に変換する。</li><li>visited / dist で、訪問済みや距離を記録する。</li><li>DFS は深く、BFS は近い順に広げると読む。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> グリッド問題も、各マスを頂点だと思えば同じ形になります。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">データ構造</span><span class="tag">キュー</span><span class="tag">BFS</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A52.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A52: キュー — 先入れ先出し (FIFO) →</span>
+      </a>
       </div>
 
       <div class="visual visual-graph" aria-hidden="true">
@@ -96,17 +108,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B52: Ball Simulation (A52 応用 ─ キュー / BFS シミュレーション)
-# ---------------------------------------------------------------------
-# 【概要】1 次元上に並んだマス列 (床) と、初期位置 X にあるボールを考える。
-#         隣接する &#x27;.&#x27; (空きマス) に向かってボールが拡散していく様子を
-#         シミュレートし、最終的にボールが到達したマスを &#x27;@&#x27; にして出力する。
-# 【アルゴリズム】BFS。キューに「処理待ちのマス位置」を入れ、両隣の &#x27;.&#x27; を
-#                 訪れて &#x27;@&#x27; に塗り直してキューに追加する。
-# 【計算量】O(N)。
-# =====================================================================
-from collections import deque
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">from collections import deque
 # ---------------------------------------------------------------------
 # 【読み方の地図】
 # - 問題の型: データ構造 / キュー / BFS / 難易度目安: ★2
@@ -179,4 +181,24 @@ print(&quot;&quot;.join(A))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

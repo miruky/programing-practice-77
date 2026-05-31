@@ -65,6 +65,31 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_eb" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A55: 集合(順序付き) クエリ処理</h1>
+<h2>概要</h2>
+<p>整数集合に対する 3 種類のクエリを処理する: &quot;1 x&quot;: 集合に x を追加 (重複は無視) &quot;2 x&quot;: 集合から x を削除 &quot;3 x&quot;: 集合内で x 以上の最小要素を出力 (なければ -1)</p>
+<h2>データ構造</h2>
+<p>Python では順序付き集合の標準ライブラリがないため、 ソート済みリスト (sortedcontainers.SortedList) や、 組込み set + bisect を組合せて実装する。 ここでは &quot;並び順をキープしたリスト + bisect&quot; のアプローチを採る。</p>
+<h2>計算量</h2>
+<p>挿入/削除 O(N) (リストの shift)、検索 O(log N)</p>
+<h2>別解</h2>
+<p>sortedcontainers.SortedList を使うと挿入/削除も O(log N)。</p>
+<h2>補足</h2>
+<p>原典リポジトリには Python 実装がなく、C++ 版 (set) を 参考に当サイトで Python に書き起こした。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: データ構造 / 二分探索 / 難易度目安: ★3</li>
+<li>要約: lower_bound 相当を含む順序付き集合のクエリ処理。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。</li>
+<li>bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。</li>
+<li>LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A55.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +109,11 @@
         <ol><li>何が OK で何が NG かを言葉で決める。</li><li>left / right が常に条件を満たすように初期化する。</li><li>mid の判定結果で、境目がどちら側にあるかだけ更新する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 探索しているのは値そのものではなく、条件が切り替わる境目です。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">データ構造</span><span class="tag">二分探索</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A55.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A55: 順序付き集合 — 値の挿入/削除と「以上/以下」検索 →</span>
+      </a>
       </div>
 
       <div class="visual visual-line" aria-hidden="true">
@@ -92,36 +122,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A55: 集合(順序付き) クエリ処理
-# ---------------------------------------------------------------------
-# 【概要】整数集合に対する 3 種類のクエリを処理する:
-#   &quot;1 x&quot;: 集合に x を追加 (重複は無視)
-#   &quot;2 x&quot;: 集合から x を削除
-#   &quot;3 x&quot;: 集合内で x 以上の最小要素を出力 (なければ -1)
-# 【データ構造】Python では順序付き集合の標準ライブラリがないため、
-#   ソート済みリスト (sortedcontainers.SortedList) や、
-#   組込み set + bisect を組合せて実装する。
-#   ここでは &quot;並び順をキープしたリスト + bisect&quot; のアプローチを採る。
-# 【計算量】挿入/削除 O(N) (リストの shift)、検索 O(log N)
-# 【別解】sortedcontainers.SortedList を使うと挿入/削除も O(log N)。
-# 【補足】原典リポジトリには Python 実装がなく、C++ 版 (set) を
-#   参考に当サイトで Python に書き起こした。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: データ構造 / 二分探索 / 難易度目安: ★3
-# - 要約: lower_bound 相当を含む順序付き集合のクエリ処理。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 二分探索は値を探すというより、条件が NG から OK に切り替わる境目を探す。
-# - bisect_left は「その値を入れてもソートが崩れない一番左の位置」を返す。
-# - LIS や座標圧縮では、配列そのものではなく順位・置き場所を管理する。
-# ---------------------------------------------------------------------
-
-import bisect
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">import bisect
 
 # --- 入力 -----------------------------------------------------------
 Q = int(input())
@@ -185,4 +186,24 @@ for tp, x in queries:
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

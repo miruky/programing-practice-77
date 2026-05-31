@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>77 法則ライブラリ | 鉄則77 Python解説</title>
+<meta name="description" content="競技プログラミングの鉄則 77 個の法則を、初心者向けの図解と解説でまとめた一覧ページ。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<section class="hero">
+  <h1>77 法則ライブラリ</h1>
+  <p style="color: var(--text-1); max-width: 720px;">鉄則本に登場する 77 個の法則を、初心者向けの図解 (mermaid) と解説でまとめました。
+  本を読んでいなくても、各法則の使いどころ・やり方・落とし穴がここだけで分かるように作っています。</p>
+</section>
+<main class="chapters">
+
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #6366f1"></span>
+    <span class="num">1章</span>
+    <h2>アルゴリズムと計算量</h2>
+    <span class="summary">計算量・全探索の基礎を学ぶ章。アルゴリズムの第一歩。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A01.html" style="--card-color:#6366f1"><div class="law-card-id">A01</div><h3>標準入出力 — プログラムの入口と出口</h3><p>まず「読む・書く」だけの最小プログラムを書けるようになる</p></a><a class="law-card" href="A02.html" style="--card-color:#6366f1"><div class="law-card-id">A02</div><h3>線形探索 — 端から順に全部見る</h3><p>まずは全部見る。それで間に合うなら勝ち</p></a><a class="law-card" href="A03.html" style="--card-color:#6366f1"><div class="law-card-id">A03</div><h3>二重ループ全探索 — 2 つの軸を独立に試す</h3><p>2 重の for 文だけで多くの問題が殴れる</p></a><a class="law-card" href="A04.html" style="--card-color:#6366f1"><div class="law-card-id">A04</div><h3>進法変換 — 10 進数と 2 進数を行き来する</h3><p>数を「位」で分解する。コンピュータ世界の母国語</p></a><a class="law-card" href="A05.html" style="--card-color:#6366f1"><div class="law-card-id">A05</div><h3>三重ループ全探索 — O(N³) でもまだ戦える</h3><p>3 つの軸を独立に試したいとき</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #06b6d4"></span>
+    <span class="num">2章</span>
+    <h2>累積和</h2>
+    <span class="summary">区間クエリを高速化する累積和テクニック。1次元・2次元・いもす法まで。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A06.html" style="--card-color:#06b6d4"><div class="law-card-id">A06</div><h3>1 次元累積和 — 区間和を O(1) で答える</h3><p>先に「先頭からの合計」を作っておけば、引き算で区間和が出る</p></a><a class="law-card" href="A07.html" style="--card-color:#06b6d4"><div class="law-card-id">A07</div><h3>いもす法 — 区間加算を端点だけで処理する</h3><p>区間に +1 する代わりに、両端だけ +1 / −1 して最後に累積和</p></a><a class="law-card" href="A08.html" style="--card-color:#06b6d4"><div class="law-card-id">A08</div><h3>2 次元累積和 — 矩形の和を O(1) で答える</h3><p>左上から (i, j) までの合計を持っておけば、長方形は引き算 3 回で求まる</p></a><a class="law-card" href="A09.html" style="--card-color:#06b6d4"><div class="law-card-id">A09</div><h3>2 次元いもす法 — 矩形加算を 4 隅で表現</h3><p>長方形を毎回塗らない。四隅に + / − を置いて累積和で面に戻す</p></a><a class="law-card" href="A10.html" style="--card-color:#06b6d4"><div class="law-card-id">A10</div><h3>区間最大値クエリ — 前後 2 方向の累積最大値</h3><p>累積和の「max 版」。両端から max を取れば真ん中の答えが出る</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #10b981"></span>
+    <span class="num">3章</span>
+    <h2>二分探索</h2>
+    <span class="summary">ソート済み列の探索と「答えで二分探索」の発想を獲得する章。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A11.html" style="--card-color:#10b981"><div class="law-card-id">A11</div><h3>二分探索 — ソート済み列の真ん中を狙う</h3><p>毎回半分捨てれば、N=10^18 でも 60 回で答えに到達</p></a><a class="law-card" href="A12.html" style="--card-color:#10b981"><div class="law-card-id">A12</div><h3>答えで二分探索 — 「答えが x 以下か」を直接判定</h3><p>探すのは値じゃない。OK/NG の境目</p></a><a class="law-card" href="A13.html" style="--card-color:#10b981"><div class="law-card-id">A13</div><h3>しゃくとり法 — 左右の窓を一方向に動かす</h3><p>右端は戻らない。広げては縮めるだけで O(N)</p></a><a class="law-card" href="A14.html" style="--card-color:#10b981"><div class="law-card-id">A14</div><h3>半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙</h3><p>2^40 は無理。2^20 × 2 なら間に合う</p></a><a class="law-card" href="A15.html" style="--card-color:#10b981"><div class="law-card-id">A15</div><h3>座標圧縮 — 値を「順位」に置き換える</h3><p>値の絶対サイズに依存しない処理に書き換える定石</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #f59e0b"></span>
+    <span class="num">4章</span>
+    <h2>動的計画法</h2>
+    <span class="summary">DP の典型パターン（部分和・ナップサック・LCS・LIS など）を網羅。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A16.html" style="--card-color:#f59e0b"><div class="law-card-id">A16</div><h3>1 次元 DP の基本 — dp[i] の意味を 1 行で言える</h3><p>状態 → 遷移 → 答えの 3 段で書く</p></a><a class="law-card" href="A17.html" style="--card-color:#f59e0b"><div class="law-card-id">A17</div><h3>DP + 経路復元 — ゴールから戻って『どう来たか』を再構築</h3><p>DP は答えを出す。経路復元はその答えをたどる</p></a><a class="law-card" href="A18.html" style="--card-color:#f59e0b"><div class="law-card-id">A18</div><h3>部分和問題 — 「i 枚から合計 j 作れるか」の bool DP</h3><p>数値を作れるかを True/False で広げていく</p></a><a class="law-card" href="A19.html" style="--card-color:#f59e0b"><div class="law-card-id">A19</div><h3>ナップサック問題 — 重さと価値の 2 次元 DP</h3><p>DP の王様。重量制限のもとで価値を最大化</p></a><a class="law-card" href="A20.html" style="--card-color:#f59e0b"><div class="law-card-id">A20</div><h3>LCS — 最長共通部分列</h3><p>2 つの文字列の「共通骨格」を測る古典 DP</p></a><a class="law-card" href="A21.html" style="--card-color:#f59e0b"><div class="law-card-id">A21</div><h3>区間 DP — 区間 [l, r] を状態にする</h3><p>小さい区間から大きい区間へ。LEN を外ループに置くのが定石</p></a><a class="law-card" href="A22.html" style="--card-color:#f59e0b"><div class="law-card-id">A22</div><h3>すごろく型 DP — 前向き遷移で書く</h3><p>自分の dp が決まったら、次の dp を更新する</p></a><a class="law-card" href="A23.html" style="--card-color:#f59e0b"><div class="law-card-id">A23</div><h3>bitDP — 集合を整数 1 個に圧縮</h3><p>2^N 通りの集合を 0..2^N-1 の整数で表す</p></a><a class="law-card" href="A24.html" style="--card-color:#f59e0b"><div class="law-card-id">A24</div><h3>LIS — 最長増加部分列</h3><p>O(N log N) で部分列の最長を求める伝説のアルゴリズム</p></a><a class="law-card" href="A25.html" style="--card-color:#f59e0b"><div class="law-card-id">A25</div><h3>経路数え上げ — 2 次元 DP で数える典型</h3><p>格子上の経路数。障害物を `0` で消すだけ</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #ef4444"></span>
+    <span class="num">5章</span>
+    <h2>数学的問題</h2>
+    <span class="summary">素数判定・GCD・モジュラ逆元・ゲーム理論（Grundy 数）まで。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A26.html" style="--card-color:#ef4444"><div class="law-card-id">A26</div><h3>素数判定 — √N までの試し割り</h3><p>N の約数は必ず √N までに 1 つは入っている</p></a><a class="law-card" href="A27.html" style="--card-color:#ef4444"><div class="law-card-id">A27</div><h3>ユークリッド互除法 — 最大公約数を O(log) で</h3><p>`gcd(a, b) = gcd(b, a mod b)` を繰り返すだけ</p></a><a class="law-card" href="A28.html" style="--card-color:#ef4444"><div class="law-card-id">A28</div><h3>mod 計算 — 毎回余りを取って小さく保つ</h3><p>加減乗は mod の中でも成り立つ。除算だけは別扱い</p></a><a class="law-card" href="A29.html" style="--card-color:#ef4444"><div class="law-card-id">A29</div><h3>繰り返し二乗法 — a^b を O(log b) で</h3><p>b を 2 進法で分解して、必要なベキだけ掛ける</p></a><a class="law-card" href="A30.html" style="--card-color:#ef4444"><div class="law-card-id">A30</div><h3>mod 逆元 — フェルマーの小定理で割り算を作る</h3><p>素数 M なら b⁻¹ ≡ b^(M-2) (mod M)</p></a><a class="law-card" href="A31.html" style="--card-color:#ef4444"><div class="law-card-id">A31</div><h3>包除原理 — 3 または 5 の倍数を数える型</h3><p>A ∪ B = A + B − A ∩ B。重なりは 1 回だけ引く</p></a><a class="law-card" href="A32.html" style="--card-color:#ef4444"><div class="law-card-id">A32</div><h3>ゲーム後退解析 — 終端から勝ち負けを伝播</h3><p>勝てる状態 = 1 手で『相手が負ける状態』へ行ける</p></a><a class="law-card" href="A33.html" style="--card-color:#ef4444"><div class="law-card-id">A33</div><h3>Nim ゲーム — XOR が 0 でなければ先手必勝</h3><p>複数山の Nim は XOR 和で勝敗が決まる</p></a><a class="law-card" href="A34.html" style="--card-color:#ef4444"><div class="law-card-id">A34</div><h3>Grundy 数 — 独立ゲームを Nim に変換する</h3><p>各部分ゲームの Grundy 数の XOR が 0 なら後手必勝</p></a><a class="law-card" href="A35.html" style="--card-color:#ef4444"><div class="law-card-id">A35</div><h3>交互最善 DP — min と max を交互に切り替える</h3><p>先手は max、後手は min。階層で交互に</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #a855f7"></span>
+    <span class="num">6章</span>
+    <h2>考察テクニック</h2>
+    <span class="summary">全探索・貪欲・偶奇・上界下界など、思考力を鍛える章。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A36.html" style="--card-color:#a855f7"><div class="law-card-id">A36</div><h3>偶奇の不変量 — Parity は変わらない</h3><p>操作で「偶奇」が変わらないなら、その偶奇を見れば必ず答えが分かる</p></a><a class="law-card" href="A37.html" style="--card-color:#a855f7"><div class="law-card-id">A37</div><h3>貢献度分解 — 各要素を独立に数える</h3><p>「全部の和」を「各要素が答えに何回登場するか」で分解</p></a><a class="law-card" href="A38.html" style="--card-color:#a855f7"><div class="law-card-id">A38</div><h3>左右からの累積 — 各位置の上限を独立に求める</h3><p>左から見た条件と右から見た条件、両方を満たす最大値</p></a><a class="law-card" href="A39.html" style="--card-color:#a855f7"><div class="law-card-id">A39</div><h3>区間スケジューリング — 終了時刻でソート + 貪欲</h3><p>終了が早いものから取れば、必ず最適</p></a><a class="law-card" href="A40.html" style="--card-color:#a855f7"><div class="law-card-id">A40</div><h3>個数集計と組合せ数え上げ — 値ごとに数えて C(n, k) で合計</h3><p>同じ値の組を数えるなら、値ごとに分けて組合せを足す</p></a><a class="law-card" href="A41.html" style="--card-color:#a855f7"><div class="law-card-id">A41</div><h3>鳩ノ巣原理 — 「必ず同じ箱に 2 つ入る」</h3><p>N+1 個を N 個の箱に入れたら、必ずどこかに 2 個入る</p></a><a class="law-card" href="A42.html" style="--card-color:#a855f7"><div class="law-card-id">A42</div><h3>2 軸を全探索 — (a, b) の組を全部試す</h3><p>100 × 100 = 10^4 通りなら、毎回判定しても余裕</p></a><a class="law-card" href="A43.html" style="--card-color:#a855f7"><div class="law-card-id">A43</div><h3>上界の最大 — 「各物体の最短距離」の max</h3><p>「全体最小」を「個別最大」に分解</p></a><a class="law-card" href="A44.html" style="--card-color:#a855f7"><div class="law-card-id">A44</div><h3>遅延処理 — 物理操作の代わりにフラグ管理</h3><p>「実際に動かす」のはコストが大きい。代わりに方向や順序だけを記録</p></a><a class="law-card" href="A45.html" style="--card-color:#a855f7"><div class="law-card-id">A45</div><h3>不変量の発見 — 操作で保たれる量を見抜く</h3><p>A36 の発展形。総和、mod、bit ごとの偶奇など</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #ec4899"></span>
+    <span class="num">7章</span>
+    <h2>ヒューリスティック</h2>
+    <span class="summary">貪欲・局所探索・焼きなまし法・ビームサーチでスコアを伸ばす。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A46.html" style="--card-color:#ec4899"><div class="law-card-id">A46</div><h3>貪欲法 (Nearest Neighbor) — その場で最良を取る</h3><p>ヒューリスティック問題の最初の一歩</p></a><a class="law-card" href="A47.html" style="--card-color:#ec4899"><div class="law-card-id">A47</div><h3>山登り法 — 改善する変更だけ受理</h3><p>ランダムに動かして、良くなったら採用</p></a><a class="law-card" href="A48.html" style="--card-color:#ec4899"><div class="law-card-id">A48</div><h3>焼きなまし法 — 確率で悪化も受理する</h3><p>温度に応じて、悪い変更も少し受け入れる</p></a><a class="law-card" href="A49.html" style="--card-color:#ec4899"><div class="law-card-id">A49</div><h3>ビームサーチ — 状態を上位 W 件に絞って前進</h3><p>毎ターン上位 W 件だけ残し、その全候補を次に展開</p></a><a class="law-card" href="A50.html" style="--card-color:#ec4899"><div class="law-card-id">A50</div><h3>差分計算 — 全部計算し直さず差だけ更新</h3><p>変更したのは一部だけ。だから差だけ再計算</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #14b8a6"></span>
+    <span class="num">8章</span>
+    <h2>データ構造とクエリ処理</h2>
+    <span class="summary">スタック・キュー・ヒープ・ハッシュ・ダブリング・セグメント木まで。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A51.html" style="--card-color:#14b8a6"><div class="law-card-id">A51</div><h3>スタック — 後入れ先出し (LIFO)</h3><p>最後に入れたものを最初に取り出す</p></a><a class="law-card" href="A52.html" style="--card-color:#14b8a6"><div class="law-card-id">A52</div><h3>キュー — 先入れ先出し (FIFO)</h3><p>入った順に取り出す。BFS の中核</p></a><a class="law-card" href="A53.html" style="--card-color:#14b8a6"><div class="law-card-id">A53</div><h3>優先度付きキュー — 最小値 / 最大値を高速に取り出す</h3><p>ヒープ。挿入と最小値削除が O(log N)</p></a><a class="law-card" href="A54.html" style="--card-color:#14b8a6"><div class="law-card-id">A54</div><h3>連想配列 — 辞書による key-value 管理</h3><p>ハッシュで平均 O(1) アクセス</p></a><a class="law-card" href="A55.html" style="--card-color:#14b8a6"><div class="law-card-id">A55</div><h3>順序付き集合 — 値の挿入/削除と「以上/以下」検索</h3><p>C++ の std::set 相当。Python では SortedSet ライブラリ</p></a><a class="law-card" href="A56.html" style="--card-color:#14b8a6"><div class="law-card-id">A56</div><h3>ローリングハッシュ — 部分文字列を 1 個の数値に</h3><p>連続部分列の一致判定を O(1) に</p></a><a class="law-card" href="A57.html" style="--card-color:#14b8a6"><div class="law-card-id">A57</div><h3>ダブリング — 2^d 先の遷移を前計算</h3><p>K 回後の状態を O(log K) で</p></a><a class="law-card" href="A58.html" style="--card-color:#14b8a6"><div class="law-card-id">A58</div><h3>セグメント木 (RMQ) — 区間最大値を O(log N) で</h3><p>配列を木に変換。任意区間の集約と 1 点更新が log N</p></a><a class="law-card" href="A59.html" style="--card-color:#14b8a6"><div class="law-card-id">A59</div><h3>セグメント木 (RSQ) — 区間和に演算を取り替える</h3><p>A58 と同じ構造。max を sum に変えるだけ</p></a><a class="law-card" href="A60.html" style="--card-color:#14b8a6"><div class="law-card-id">A60</div><h3>スタックの活用 — 「自分以上の最後の日」を線形時間で</h3><p>ヒストグラム / 株価系の典型。Monotonic Stack</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #0ea5e9"></span>
+    <span class="num">9章</span>
+    <h2>グラフアルゴリズム</h2>
+    <span class="summary">DFS・BFS・ダイクストラ・Union-Find・最大フローを実装で学ぶ。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A61.html" style="--card-color:#0ea5e9"><div class="law-card-id">A61</div><h3>グラフの表現 — 隣接リストが基本</h3><p>頂点ごとに「繋がっている頂点のリスト」を持つ</p></a><a class="law-card" href="A62.html" style="--card-color:#0ea5e9"><div class="law-card-id">A62</div><h3>DFS — 深さ優先探索で連結判定</h3><p>行けるだけ進んで、戻ってきたら別の道</p></a><a class="law-card" href="A63.html" style="--card-color:#0ea5e9"><div class="law-card-id">A63</div><h3>BFS — 幅優先探索で最短歩数</h3><p>近い順に層を広げる。重みなし最短路の基本</p></a><a class="law-card" href="A64.html" style="--card-color:#0ea5e9"><div class="law-card-id">A64</div><h3>ダイクストラ法 — 重み付き最短路</h3><p>未確定の中で最小距離の頂点から確定していく</p></a><a class="law-card" href="A65.html" style="--card-color:#0ea5e9"><div class="law-card-id">A65</div><h3>木上の DP — 葉から根へ集計</h3><p>子の結果を集めて親へ伝える</p></a><a class="law-card" href="A66.html" style="--card-color:#0ea5e9"><div class="law-card-id">A66</div><h3>Union-Find — 連結成分の素集合データ構造</h3><p>2 つの要素が同じグループか? 結合する。それだけ</p></a><a class="law-card" href="A67.html" style="--card-color:#0ea5e9"><div class="law-card-id">A67</div><h3>MST — クラスカル法</h3><p>辺を小さい順にソート + Union-Find で連結化</p></a><a class="law-card" href="A68.html" style="--card-color:#0ea5e9"><div class="law-card-id">A68</div><h3>最大フロー — Ford-Fulkerson 法</h3><p>s から t まで増加路を見つけて流せるだけ流す</p></a><a class="law-card" href="A69.html" style="--card-color:#0ea5e9"><div class="law-card-id">A69</div><h3>二部マッチング — 最大フローへの帰着</h3><p>左右の頂点を二部分割し、s と t を加えて最大フロー</p></a><a class="law-card" href="A70.html" style="--card-color:#0ea5e9"><div class="law-card-id">A70</div><h3>状態 BFS — 2^N 通りの状態を頂点に持つ</h3><p>集合を整数で表し、状態空間グラフを BFS</p></a>
+  </div>
+</section>
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: #8b5cf6"></span>
+    <span class="num">10章</span>
+    <h2>総合問題・力試し問題</h2>
+    <span class="summary">ここまでの全アルゴリズムを総動員する応用問題集。</span>
+  </div>
+  <div class="laws-grid">
+    <a class="law-card" href="A71.html" style="--card-color:#8b5cf6"><div class="law-card-id">A71</div><h3>ソート + 貪欲 — 並べ替えで答えが決まる典型</h3><p>2 列の積和を最小化 = 昇順 × 降順</p></a><a class="law-card" href="A72.html" style="--card-color:#8b5cf6"><div class="law-card-id">A72</div><h3>ビット全探索 + 貪欲 — 一方を 2^N で網羅、他方を貪欲</h3><p>行は全探索、列は貪欲。組み合わせて最適化</p></a><a class="law-card" href="A73.html" style="--card-color:#8b5cf6"><div class="law-card-id">A73</div><h3>2 目的のダイクストラ — 重みに 10000 倍を仕込む</h3><p>第一基準 × 10000 + 第二基準。1 本に集約</p></a><a class="law-card" href="A74.html" style="--card-color:#8b5cf6"><div class="law-card-id">A74</div><h3>転倒数分解 — スライドパズルを行・列に分ける</h3><p>2 次元の問題を 2 つの 1 次元問題に</p></a><a class="law-card" href="A75.html" style="--card-color:#8b5cf6"><div class="law-card-id">A75</div><h3>締切付きジョブ DP — ソート + DP</h3><p>締切順に並べてから DP</p></a><a class="law-card" href="A76.html" style="--card-color:#8b5cf6"><div class="law-card-id">A76</div><h3>区間 DP の高速化 — 累積和で遷移を O(1) に</h3><p>DP 内の `Σ` を累積和で潰す典型</p></a><a class="law-card" href="A77.html" style="--card-color:#8b5cf6"><div class="law-card-id">A77</div><h3>切り方の最大化 — 「最小区間長 ≥ x」で二分探索</h3><p>A12 と同じ枠組み。OK/NG の境目を最大化</p></a>
+  </div>
+</section>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

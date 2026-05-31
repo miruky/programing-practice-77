@@ -69,6 +69,29 @@
       <span class="applied-banner-summary">ユークリッド互除法で GCD を求める。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B27: Calculate LCM (A27 応用 ─ 最小公倍数)</h1>
+<h2>概要</h2>
+<p>2 つの正整数 A, B の最小公倍数 (LCM) を求める。</p>
+<h2>アルゴリズム</h2>
+<p>LCM(A, B) = A · B ÷ GCD(A, B)。 GCD はユークリッド互除法で O(log min(A, B))。</p>
+<h2>計算量</h2>
+<p>O(log min(A, B))。</p>
+<h2>ポイント</h2>
+<p>A * B を先に計算してオーバーフローしないか確認 (Python は 多倍長整数なので問題ない)。割り算は // で整数除算。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 数学 / LCM / GCD / 難易度目安: ★2</li>
+<li>要約: GCD を求め、A×B÷GCD で最小公倍数 (LCM) を計算する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。</li>
+<li>小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。</li>
+<li>mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B27.py ─ Python 3</span>
     <div class="actions">
@@ -88,34 +111,16 @@
         <ol><li>何を数えたいかを集合や式に置き換える。</li><li>重複・余り・周期を確認する。</li><li>計算量が定数または log になっているか見る。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式変形だけを追うとつらいので、小さい例で 1 回手計算すると読みやすいです。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">数学</span><span class="tag">LCM</span><span class="tag">GCD</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A27.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A27: ユークリッド互除法 — 最大公約数を O(log) で →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B27: Calculate LCM (A27 応用 ─ 最小公倍数)
-# ---------------------------------------------------------------------
-# 【概要】2 つの正整数 A, B の最小公倍数 (LCM) を求める。
-# 【アルゴリズム】LCM(A, B) = A · B ÷ GCD(A, B)。
-#                 GCD はユークリッド互除法で O(log min(A, B))。
-# 【計算量】O(log min(A, B))。
-# 【ポイント】A * B を先に計算してオーバーフローしないか確認 (Python は
-#             多倍長整数なので問題ない)。割り算は // で整数除算。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 数学 / LCM / GCD / 難易度目安: ★2
-# - 要約: GCD を求め、A×B÷GCD で最小公倍数 (LCM) を計算する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 全探索ではなく、式・余り・周期・不変量に置き換えて一気に答えるタイプ。
-# - 小さい例で 1 回手計算すると、なぜその式になるかがかなり見えやすい。
-# - mod が出る問題では、足す・引く・掛けるたびに余りを取って値を小さく保つ。
-# ---------------------------------------------------------------------
-
-# 最大公約数 (GCD) ─ 互除法をループで書いた版。
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># 最大公約数 (GCD) ─ 互除法をループで書いた版。
 def GCD(A, B):
     while A &gt;= 1 and B &gt;= 1:
         if A &gt;= B:
@@ -160,4 +165,24 @@ print(A * B // GCD(A, B))
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

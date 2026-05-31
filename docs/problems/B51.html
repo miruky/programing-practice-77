@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">LIFO のスタックを deque で実装。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B51: Bracket (A51 応用 ─ スタックでの括弧対応)</h1>
+<h2>概要</h2>
+<p>&#x27;(&#x27; と &#x27;)&#x27; のみからなる文字列 S が与えられる。括弧の対応を 「(の位置 )の位置」の形で全て出力する。</p>
+<h2>アルゴリズム</h2>
+<p>左から走査し、&#x27;(&#x27; ならスタックに位置を積む。&#x27;)&#x27; を見たら スタックから 1 つ取り出して対応ペアとして出力する。</p>
+<h2>計算量</h2>
+<p>O(|S|)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: データ構造 / スタック / 難易度目安: ★2</li>
+<li>要約: 括弧列を 1 文字ずつ走査し、スタックで対応する &#x27;(&#x27; の位置を取り出す。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。</li>
+<li>各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。</li>
+<li>小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B51.py ─ Python 3</span>
     <div class="actions">
@@ -88,33 +109,16 @@
         <ol><li>入力で何が変数・配列に入るか確認する。</li><li>ループが何を全探索・更新しているか見る。</li><li>最後に答えへどう変換しているか確認する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 名前だけで追わず、各変数・配列に入っている意味を 1 行で言語化します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">データ構造</span><span class="tag">スタック</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A51.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A51: スタック — 後入れ先出し (LIFO) →</span>
+      </a>
       </div>
 
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B51: Bracket (A51 応用 ─ スタックでの括弧対応)
-# ---------------------------------------------------------------------
-# 【概要】&#x27;(&#x27; と &#x27;)&#x27; のみからなる文字列 S が与えられる。括弧の対応を
-#         「(の位置 )の位置」の形で全て出力する。
-# 【アルゴリズム】左から走査し、&#x27;(&#x27; ならスタックに位置を積む。&#x27;)&#x27; を見たら
-#                 スタックから 1 つ取り出して対応ペアとして出力する。
-# 【計算量】O(|S|)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: データ構造 / スタック / 難易度目安: ★2
-# - 要約: 括弧列を 1 文字ずつ走査し、スタックで対応する &#x27;(&#x27; の位置を取り出す。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - 入力、前処理、判定・更新、出力の 4 ブロックに分けて読む。
-# - 各変数・配列には「何を保存しているか」という役割があるので、名前だけで追わない。
-# - 小さい入力例を 1 つ作り、ループが 1 回進むごとに値がどう変わるかを見る。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 S = input()
 
 # --- スタックで括弧対応を取る (位置は 1-indexed で出力) -----------
@@ -150,4 +154,24 @@ for i in range(len(S)):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

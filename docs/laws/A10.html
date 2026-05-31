@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A10: 区間最大値クエリ — 前後 2 方向の累積最大値 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A10: 区間最大値クエリ — 前後 2 方向の累積最大値 ─ 累積和の「max 版」。両端から max を取れば真ん中の答えが出る。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #06b6d4">2章: 累積和</span> /
+    <strong>法則 A10</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A10</span>
+    <h1>区間最大値クエリ — 前後 2 方向の累積最大値</h1>
+    <p class="law-tagline">累積和の「max 版」。両端から max を取れば真ん中の答えが出る</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「i 番目だけ抜いたときの最大値」「区間 [l, r] の最大値」のように、<strong>累積和ではなく累積 max</strong> を持つと O(1) で答えられる問題があります。</p>
+<p>前から累積 max を <code>L[i]</code>、後ろから累積 max を <code>R[i]</code> と持っておけば、<code>max(L[i-1], R[i+1])</code> のように 2 つの累積を合わせて答えが作れる。「累積和」「累積 max」「累積 GCD」など、<strong>演算を取り替えるだけで同じ枠組み</strong>が使えるのが本質。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 累積 max を前計算</h2>
+    <div class="law-section-body">
+      <p><code>L[i] = max(A[1], ..., A[i])</code>、<code>R[i] = max(A[i], ..., A[N])</code>。それぞれ 1 回のパスで作れる。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[配列 A] --&gt; L[L: 左からの累積 max]
+  A --&gt; R[R: 右からの累積 max]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 「i を抜く」答え</h2>
+    <div class="law-section-body">
+      <p>i を除いた最大は <code>max(L[i-1], R[i+1])</code>。両端の場合は片方が空になるので注意 (番兵で <code>-∞</code> を置いておくとケース分けが消える)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  LIM[&quot;L[i-1]: i より前の max&quot;] --&gt; A[&quot;max&quot;]
+  RIM[&quot;R[i+1]: i より後の max&quot;] --&gt; A
+  A --&gt; ANS[i を抜いた最大値]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 累積 ××× の応用</h2>
+    <div class="law-section-body">
+      <p>累積 max / min / GCD / OR / AND など、<strong>結合則を持つ演算なら何でも累積できる</strong>。これがセグメント木 (A58, A59) の発想に直結する。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>番兵に <code>-∞</code> を置くと両端の場合分けが消える。Python なら <code>float(&#x27;-inf&#x27;)</code> または <code>-10**18</code>。</li>
+<li>累積 GCD は順番に関係なく結合できる (gcd 自体が結合則を持つ) ので OK。</li>
+<li>累積引き算は <strong>結合則がない</strong> のでこの枠組みは使えない。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A06.html">A06: 1 次元累積和 — 区間和を O(1) で答える</a><a class="law-chip" href="A58.html">A58: セグメント木 (RMQ) — 区間最大値を O(log N) で</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A10.html">A10</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A09.html"><div class="nav-label">前の法則</div><div class="nav-title">A09: 2 次元いもす法 — 矩形加算を 4 隅で表現</div></a>
+    <a class="next" href="A11.html"><div class="nav-label">次の法則</div><div class="nav-title">A11: 二分探索 — ソート済み列の真ん中を狙う</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

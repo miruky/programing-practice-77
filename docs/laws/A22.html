@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A22: すごろく型 DP — 前向き遷移で書く | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A22: すごろく型 DP — 前向き遷移で書く ─ 自分の dp が決まったら、次の dp を更新する。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #f59e0b">4章: 動的計画法</span> /
+    <strong>法則 A22</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A22</span>
+    <h1>すごろく型 DP — 前向き遷移で書く</h1>
+    <p class="law-tagline">自分の dp が決まったら、次の dp を更新する</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「現在位置 i から、1 個進む / 2 個進む / ...」のように<strong>「自分から次に配る」</strong> スタイルの DP は「前向き遷移」「push 型」と呼ばれます。</p>
+<p>A16 のように <strong>「自分が受け取る」</strong> スタイル (後ろ向き遷移、pull 型) と数学的に等価ですが、「次の遷移先が複数あって、それぞれを更新する」場合 (DAG 上の最長路など) は前向きの方が自然に書けます (C16 など)。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 全マスを INF で初期化</h2>
+    <div class="law-section-body">
+      <p><strong>到達不能 = INF</strong> で初期化、<code>dp[0] = 0</code> だけスタート地点。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[&quot;dp[0] = 0&quot;] --&gt; X[&quot;dp[1..N-1] = INF&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 前向き遷移</h2>
+    <div class="law-section-body">
+      <p><code>dp[i]</code> が確定したら、<code>dp[i+1]</code> と <code>dp[i+2]</code> を更新。</p>
+<pre><code class="language-python">for i in range(N):
+    if i+1 &lt; N: dp[i+1] = min(dp[i+1], dp[i] + A[i])
+    if i+2 &lt; N: dp[i+2] = min(dp[i+2], dp[i] + B[i])</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 後ろ向きとの違い</h2>
+    <div class="law-section-body">
+      <p>後ろ向き (A16): <code>dp[i] = min(dp[i-1]+A[i], dp[i-2]+B[i])</code>。前向き (A22): <code>dp[i+1] = min(dp[i+1], dp[i]+A[i])</code>。<strong>どちらも同じ答えを返す</strong>。書きやすい方を選ぶ。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  B[&quot;後ろ向き: 自分が貰う&quot;] -.等価.- F[&quot;前向き: 自分が配る&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>前向き遷移は配列を <code>min</code> で更新する形になるため、<strong>初期化を INF にしておく</strong> ことが必須。</li>
+<li>添字のはみ出し (<code>i+2 &gt;= N</code>) に注意。<code>if</code> で囲むか、配列を余分に取る。</li>
+<li>グラフ上の DP (DAG 上最長路など) は前向きの方が書きやすい。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A16.html">A16: 1 次元 DP の基本 — dp[i] の意味を 1 行で言える</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A22.html">A22</a><a class="law-chip" href="../problems/B22.html">B22</a><a class="law-chip" href="../problems/C16.html">C16</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A21.html"><div class="nav-label">前の法則</div><div class="nav-title">A21: 区間 DP — 区間 [l, r] を状態にする</div></a>
+    <a class="next" href="A23.html"><div class="nav-label">次の法則</div><div class="nav-title">A23: bitDP — 集合を整数 1 個に圧縮</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

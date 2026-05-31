@@ -65,6 +65,29 @@
     </a>
      <a class="source-link" style="margin-left:6px" href="https://atcoder.jp/contests/tessoku-book/tasks/tessoku_book_cg" target="_blank" rel="noopener noreferrer">AtCoder で問題を見る<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
   </div>
+  <section class="problem-doc" hidden><h1>A08: 2次元累積和</h1>
+<h2>概要</h2>
+<p>H×W のグリッドに対し、矩形領域の和を高速に答える。</p>
+<h2>アルゴリズム</h2>
+<p>2 次元累積和 Z[i][j] = 左上から (i, j) までの和。 作る式: Z[i][j] = X[i-1][j-1] + Z[i-1][j] + Z[i][j-1] - Z[i-1][j-1] 答える式: 矩形 (A,B)-(C,D) の和 = Z[C][D] - Z[A-1][D] - Z[C][B-1] + Z[A-1][B-1] どちらも「重なった左上を 1 回引く/戻す」と読む。</p>
+<h2>計算量</h2>
+<p>前計算 O(HW) + クエリ O(Q)。</p>
+<h2>ポイント</h2>
+<p>Z は (H+1)×(W+1) で確保、0 行・0 列を番兵にする。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: 累積和 / 2次元 / 難易度目安: ★2</li>
+<li>要約: 矩形領域の和を O(1) で求めるために 2 次元累積和を構築。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>Z[i][j] は左上から (i,j) までの合計。0 行目・0 列目は番兵の 0。</li>
+<li>作る式は「今 + 上 + 左 - 左上」。左上は上と左で 2 回足されるので引く。</li>
+<li>答える式は「右下 - 上 - 左 + 左上」。左上は 2 回引いたので戻す。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>A08.py ─ Python 3</span>
     <div class="actions">
@@ -84,6 +107,11 @@
         <ol><li>0 行目・0 列目を余分に持つ理由を先に確認する。</li><li>Z を作る式では「今のマス + 上 + 左 - 左上」と読む。</li><li>答えの式は「右下 - 上 - 左 + 左上」の順に分解する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> A-1 / B-1 が出るので、元配列は 0-index、累積和は 1-index と割り切って読むと混乱しにくいです。</p>
         <div class="explain-meta-line"><span>難易度目安: ★2</span><span><span class="tag">累積和</span><span class="tag">2次元</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A08.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A08: 2 次元累積和 — 矩形の和を O(1) で答える →</span>
+      </a>
       </div>
 
       <div class="visual visual-cumsum2d" aria-hidden="true">
@@ -93,33 +121,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# A08: 2次元累積和
-# ---------------------------------------------------------------------
-# 【概要】H×W のグリッドに対し、矩形領域の和を高速に答える。
-# 【アルゴリズム】2 次元累積和 Z[i][j] = 左上から (i, j) までの和。
-#   作る式:
-#     Z[i][j] = X[i-1][j-1] + Z[i-1][j] + Z[i][j-1] - Z[i-1][j-1]
-#   答える式:
-#     矩形 (A,B)-(C,D) の和 = Z[C][D] - Z[A-1][D] - Z[C][B-1] + Z[A-1][B-1]
-#   どちらも「重なった左上を 1 回引く/戻す」と読む。
-# 【計算量】前計算 O(HW) + クエリ O(Q)。
-# 【ポイント】Z は (H+1)×(W+1) で確保、0 行・0 列を番兵にする。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: 累積和 / 2次元 / 難易度目安: ★2
-# - 要約: 矩形領域の和を O(1) で求めるために 2 次元累積和を構築。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - Z[i][j] は左上から (i,j) までの合計。0 行目・0 列目は番兵の 0。
-# - 作る式は「今 + 上 + 左 - 左上」。左上は上と左で 2 回足されるので引く。
-# - 答える式は「右下 - 上 - 左 + 左上」。左上は 2 回引いたので戻す。
-# ---------------------------------------------------------------------
-
-# --- 入力 (前半) ----------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 (前半) ----------------------------------------------------
 H, W = map(int, input().split())
 X = [list(map(int, input().split())) for _ in range(H)]  # 元のグリッド (0-indexed)
 
@@ -174,4 +176,24 @@ for A, B, C, D in queries:
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

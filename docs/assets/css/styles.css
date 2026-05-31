@@ -1011,3 +1011,303 @@ footer a { color: var(--text-1); }
   .dp-flow span, .dp-flow strong, .flow-row span { min-width: 48px; font-size: 11px; }
   .dp-flow span::after, .flow-row span:not(:last-child)::after { right: -14px; }
 }
+
+/* =====================================================================
+   Markdown rendered docstring (各問題ページの問題仕様セクション)
+   ===================================================================== */
+.problem-doc {
+  background: linear-gradient(160deg, #0c1226, #07091a);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 24px 0;
+  box-shadow: var(--shadow-lg);
+}
+.problem-doc h1 {
+  font-size: 1.6rem;
+  margin: 0 0 12px;
+  color: var(--text-0);
+  border-bottom: 2px solid #1d2538;
+  padding-bottom: 8px;
+}
+.problem-doc h2 {
+  font-size: 1.15rem;
+  margin: 24px 0 10px;
+  color: #c7d2fe;
+  border-left: 4px solid var(--accent);
+  padding-left: 12px;
+}
+.problem-doc h3 {
+  font-size: 1.0rem;
+  margin: 18px 0 8px;
+  color: #a5b4fc;
+}
+.problem-doc h4 {
+  font-size: 0.95rem;
+  margin: 14px 0 6px;
+  color: var(--text-1);
+}
+.problem-doc p {
+  margin: 0 0 12px;
+  color: var(--text-1);
+  line-height: 1.75;
+}
+.problem-doc ul, .problem-doc ol {
+  margin: 4px 0 12px;
+  padding-left: 24px;
+  color: var(--text-1);
+  line-height: 1.85;
+}
+.problem-doc li { margin: 2px 0; }
+.problem-doc code {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.92em;
+  color: #fbbf24;
+}
+.problem-doc strong { color: #fef3c7; }
+.problem-doc blockquote {
+  margin: 12px 0;
+  padding: 8px 16px;
+  border-left: 4px solid var(--pink);
+  background: rgba(219, 39, 119, 0.08);
+  color: var(--text-1);
+  border-radius: 0 8px 8px 0;
+}
+.problem-doc pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+.problem-doc pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+.problem-doc pre.mermaid {
+  background: rgba(7, 9, 26, 0.6);
+  text-align: center;
+  padding: 16px;
+}
+
+/* =====================================================================
+   「この法則をもっと詳しく」ボタン (学習パネル内)
+   ===================================================================== */
+.law-detail-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #4f46e5, #db2777);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: white;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+}
+.law-detail-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.55);
+  color: white;
+}
+.law-detail-btn-kicker {
+  font-size: 0.78rem;
+  opacity: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.law-detail-btn-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* =====================================================================
+   法則ページ (docs/laws/AXX.html) のスタイル
+   ===================================================================== */
+.law-detail {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 28px 80px;
+}
+.law-hero {
+  margin: 24px 0 36px;
+  text-align: center;
+}
+.law-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  color: white;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.law-hero h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  color: var(--text-0);
+}
+.law-tagline {
+  color: var(--text-1);
+  font-size: 1.05rem;
+  margin: 0;
+}
+.law-intro {
+  background: linear-gradient(160deg, #111835, #07091a);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 0 0 32px;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-1);
+  line-height: 1.85;
+}
+.law-intro p { margin: 0 0 12px; }
+.law-intro p:last-child { margin-bottom: 0; }
+.law-intro strong { color: #fef3c7; }
+.law-intro code {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-family: "JetBrains Mono", monospace;
+  color: #fbbf24;
+}
+.law-section {
+  background: var(--bg-1s);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin: 0 0 24px;
+}
+.law-section h2 {
+  margin: 0 0 16px;
+  font-size: 1.3rem;
+  color: var(--text-0);
+  border-left: 4px solid var(--accent);
+  padding-left: 14px;
+}
+.law-section-body { color: var(--text-1); line-height: 1.85; }
+.law-section-body p { margin: 0 0 12px; }
+.law-section-body p:last-child { margin-bottom: 0; }
+.law-section-body code {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-family: "JetBrains Mono", monospace;
+  color: #fbbf24;
+}
+.law-section-body strong { color: #fef3c7; }
+.law-section-body ul, .law-section-body ol {
+  padding-left: 24px; margin: 8px 0 12px;
+}
+.law-section-body pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+.law-section-body pre code {
+  background: none; border: none; padding: 0; color: inherit;
+}
+.law-diagram {
+  margin: 18px 0 4px;
+  padding: 20px;
+  background: rgba(7, 9, 26, 0.6);
+  border: 1px dashed #2a3554;
+  border-radius: 10px;
+  text-align: center;
+}
+.law-diagram pre.mermaid { background: none; margin: 0; }
+.law-pitfalls {
+  background: rgba(219, 39, 119, 0.06);
+  border: 1px solid rgba(219, 39, 119, 0.25);
+  border-radius: var(--radius);
+  padding: 20px 26px;
+  margin: 24px 0;
+  color: var(--text-1);
+  line-height: 1.85;
+}
+.law-pitfalls h2 {
+  margin: 0 0 12px;
+  color: #f9a8d4;
+  font-size: 1.15rem;
+}
+.law-pitfalls ul { padding-left: 22px; margin: 0; }
+.law-related {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: var(--text-1);
+}
+.law-related strong { color: var(--text-0); margin-right: 6px; }
+.law-chip {
+  display: inline-block;
+  padding: 5px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text-1);
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+.law-chip:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* 法則一覧ページのグリッド */
+.laws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.law-card {
+  display: block;
+  padding: 16px 20px;
+  background: var(--bg-1s);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--text-0);
+  border-top: 3px solid var(--card-color, var(--accent));
+  transition: transform var(--transition), border-color var(--transition);
+}
+.law-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--card-color, var(--accent));
+}
+.law-card-id {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--card-color, var(--accent));
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.law-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.0rem;
+  color: var(--text-0);
+}
+.law-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-1);
+}

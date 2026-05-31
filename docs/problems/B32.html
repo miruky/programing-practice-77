@@ -69,6 +69,27 @@
       <span class="applied-banner-summary">勝ち負け状態を DP で後退解析する。</span>
     </a>
   </div>
+  <section class="problem-doc" hidden><h1>B32: Game 5 (A32 応用 ─ ゲームの後退解析)</h1>
+<h2>概要</h2>
+<p>石が N 個。2 人交互に A[0]..A[K-1] のいずれかの個数だけ取り、 取れなくなった方が負け。先手必勝か後手必勝かを判定する。</p>
+<h2>アルゴリズム</h2>
+<p>後退解析。dp[x] = 「石 x 個の局面で手番側が勝てるか」。 1 手で 必ず &quot;負け局面&quot; に遷移できれば勝ち、できなければ負け。</p>
+<h2>計算量</h2>
+<p>O(N · K)。</p>
+<h2>読み方の地図</h2>
+<ul>
+<li>問題の型: ゲーム / DP / 難易度目安: ★3</li>
+<li>要約: K 通りの取り方を持つ石取りゲームの勝敗を後退解析する。</li>
+<li>まず入力ブロックで、どの変数・配列に何が入るかを確認する。</li>
+<li>次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。</li>
+<li>最後に答えを出す式や出力ループだけを、入力例と照らして追う。</li>
+</ul>
+<h2>このコードで特に見る場所</h2>
+<ul>
+<li>dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。</li>
+<li>初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。</li>
+<li>遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。</li>
+</ul></section>
   <div class="code-actions">
     <span class="file-label"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v6h6"/></svg>B32.py ─ Python 3</span>
     <div class="actions">
@@ -88,6 +109,11 @@
         <ol><li>dp の添字が何を表すかを先に固定する。</li><li>初期状態だけを手で入れる。</li><li>小さい状態から大きい状態へ、使う/使わない・進む/進まないで遷移する。</li></ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> 式を先に暗記するより、dp[i] の意味を日本語で読めるかを優先します。</p>
         <div class="explain-meta-line"><span>難易度目安: ★3</span><span><span class="tag">ゲーム</span><span class="tag">DP</span></span></div>
+
+      <a class="law-detail-btn" href="../laws/A32.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">A32: ゲーム後退解析 — 終端から勝ち負けを伝播 →</span>
+      </a>
       </div>
 
       <div class="visual visual-dp" aria-hidden="true">
@@ -96,29 +122,7 @@
       </div>
     </div>
   </section>
-  <pre class="line-numbers code-block-full" hidden><code class="language-python"># =====================================================================
-# B32: Game 5 (A32 応用 ─ ゲームの後退解析)
-# ---------------------------------------------------------------------
-# 【概要】石が N 個。2 人交互に A[0]..A[K-1] のいずれかの個数だけ取り、
-#         取れなくなった方が負け。先手必勝か後手必勝かを判定する。
-# 【アルゴリズム】後退解析。dp[x] = 「石 x 個の局面で手番側が勝てるか」。
-#                 1 手で 必ず &quot;負け局面&quot; に遷移できれば勝ち、できなければ負け。
-# 【計算量】O(N · K)。
-# =====================================================================
-# ---------------------------------------------------------------------
-# 【読み方の地図】
-# - 問題の型: ゲーム / DP / 難易度目安: ★3
-# - 要約: K 通りの取り方を持つ石取りゲームの勝敗を後退解析する。
-# - まず入力ブロックで、どの変数・配列に何が入るかを確認する。
-# - 次に中心となる配列・状態・データ構造の意味を 1 行で言語化する。
-# - 最後に答えを出す式や出力ループだけを、入力例と照らして追う。
-# 【このコードで特に見る場所】
-# - dp の添字が何を意味するかを最初に日本語で固定する。ここが一番重要。
-# - 初期状態は「何も選んでいない」「スタート地点」など、手でわかる状態だけ入れる。
-# - 遷移は「使う/使わない」「前から来る/上から来る」など、直前の状態から読む。
-# ---------------------------------------------------------------------
-
-# --- 入力 -----------------------------------------------------------
+  <pre class="line-numbers code-block-full" hidden><code class="language-python"># --- 入力 -----------------------------------------------------------
 N, K = map(int, input().split())
 A = list(map(int, input().split()))
 
@@ -162,4 +166,24 @@ print(&quot;First&quot; if dp[N] else &quot;Second&quot;)
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

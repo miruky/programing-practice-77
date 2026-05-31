@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A47: 山登り法 — 改善する変更だけ受理 | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A47: 山登り法 — 改善する変更だけ受理 ─ ランダムに動かして、良くなったら採用。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #ec4899">7章: ヒューリスティック</span> /
+    <strong>法則 A47</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A47</span>
+    <h1>山登り法 — 改善する変更だけ受理</h1>
+    <p class="law-tagline">ランダムに動かして、良くなったら採用</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>ランダムに小さい変更を加え、スコアが改善した場合のみ採用</strong> する局所探索。「2-opt 反転」のような近傍操作と組み合わせて使う。</p>
+<p>実装は短いが、<strong>局所最適から抜け出せない弱点</strong> がある。焼きなまし (A48) はこの弱点を確率で「あえて悪化を受理」して回避する。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 初期解と現在スコア</h2>
+    <div class="law-section-body">
+      <p>貪欲 (A46) で初期解を作るか、ランダム順列から始める。現在の経路長を <code>current_score</code> として持つ。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 近傍操作 (2-opt)</h2>
+    <div class="law-section-body">
+      <p>ランダムな区間 <code>[l, r]</code> を選んで反転する。TSP では「2 本の辺を 2 本の別の辺に張り替える」操作に対応。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P1[&quot;P = ...A,B,...,C,D,...&quot;] --&gt;|区間 B..C 反転| P2[&quot;P&#x27; = ...A,C,...,B,D,...&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 改善判定</h2>
+    <div class="law-section-body">
+      <p>反転後のスコアを計算。改善なら採用、悪化なら反転を取り消す。</p>
+<pre><code class="language-python">if new_score &lt; current_score:
+    current_score = new_score  # 採用
+else:
+    P[l:r+1] = reversed(P[l:r+1])  # 取り消し</code></pre>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>反転スコア計算は 2 辺の差分だけで O(1) に高速化できる (TSP の差分計算)。</li>
+<li>局所最適に必ず陥る。脱出には焼きなまし (A48) や乱数再起動 (Restart)。</li>
+<li>乱数の seed を固定するとデバッグが楽。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A46.html">A46: 貪欲法 (Nearest Neighbor) — その場で最良を取る</a><a class="law-chip" href="A48.html">A48: 焼きなまし法 — 確率で悪化も受理する</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A47.html">A47</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A46.html"><div class="nav-label">前の法則</div><div class="nav-title">A46: 貪欲法 (Nearest Neighbor) — その場で最良を取る</div></a>
+    <a class="next" href="A48.html"><div class="nav-label">次の法則</div><div class="nav-title">A48: 焼きなまし法 — 確率で悪化も受理する</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

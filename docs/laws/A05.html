@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A05: 三重ループ全探索 — O(N³) でもまだ戦える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A05: 三重ループ全探索 — O(N³) でもまだ戦える ─ 3 つの軸を独立に試したいとき。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #6366f1">1章: アルゴリズムと計算量</span> /
+    <strong>法則 A05</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A05</span>
+    <h1>三重ループ全探索 — O(N³) でもまだ戦える</h1>
+    <p class="law-tagline">3 つの軸を独立に試したいとき</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「3 つの数の組 (x, y, z) を試して、合計が K になるか?」のような問題は三重 for で書けます。計算量は O(N³)。N=100 で 10^6 なので余裕、N=500 で 1.25×10^8 で Python だと際どい、というイメージ。</p>
+<p>三重ループまで膨らむときは、しばしば 1 つの軸を <strong>「2 つを決めれば 3 つ目は自動で決まる」</strong> という考えで O(N²) に落とせます。全探索でまず通してから、無駄を削っていくのが安全。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: O(N³) で間に合うかを最初に見積もる</h2>
+    <div class="law-section-body">
+      <p>N=100 で 10^6 (一瞬)、N=300 で 2.7×10^7 (やや遅い)、N=1000 で 10^9 (不可)。「N が小さい」と書いてあれば三重ループが想定解のことが多い。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  A[N=100&lt;br/&gt;10^6] --&gt; B[OK]
+  C[N=300&lt;br/&gt;2.7x10^7] --&gt; D[Python: 際どい]
+  E[N=1000&lt;br/&gt;10^9] --&gt; F[不可]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: O(N²) に落とす発想</h2>
+    <div class="law-section-body">
+      <p>x, y を決めた時点で <code>z = K - x - y</code> の 1 通りに固定できます。あとは <code>z</code> が有効か (集合に含まれるか) を <code>set</code> で O(1) チェックすれば全体 O(N²)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  X[&quot;x を選ぶ O(N)&quot;] --&gt; Y[&quot;y を選ぶ O(N)&quot;]
+  Y --&gt; Z[&quot;z=K-x-y を計算&quot;]
+  Z --&gt; S[&quot;set で存在判定 O(1)&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 重複の数え方に注意</h2>
+    <div class="law-section-body">
+      <p>(1,2,3) と (3,2,1) を区別するか? 同じ数を複数回使えるか? 問題文を最初に読んで、ループ範囲を <code>i &lt; j &lt; k</code> のように絞るかを判断する。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>三重 for は深くなるほど <strong>添字ミスが起きやすい</strong>。手元で N=3 程度で必ず手計算。</li>
+<li>「i, j, k が異なる」を要求されているなら <code>i, j, k</code> 全部に差をつける条件を入れる。</li>
+<li>O(N³) で間に合わないとわかった時点で、O(N²) や O(N log N) に落とせないか検討する。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A03.html">A03: 二重ループ全探索 — 2 つの軸を独立に試す</a><a class="law-chip" href="A11.html">A11: 二分探索 — ソート済み列の真ん中を狙う</a><a class="law-chip" href="A14.html">A14: 半分全列挙 — N 個を半分に分け、2^(N/2) で全列挙</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A05.html">A05</a><a class="law-chip" href="../problems/C08.html">C08</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A04.html"><div class="nav-label">前の法則</div><div class="nav-title">A04: 進法変換 — 10 進数と 2 進数を行き来する</div></a>
+    <a class="next" href="A06.html"><div class="nav-label">次の法則</div><div class="nav-title">A06: 1 次元累積和 — 区間和を O(1) で答える</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

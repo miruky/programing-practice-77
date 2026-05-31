@@ -11,15 +11,23 @@
 import json
 import html
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 CODES_DIR = DOCS / "codes"
 PROBLEMS_DIR = DOCS / "problems"
+LAWS_DIR = DOCS / "laws"
 META_PATH = ROOT / "scripts" / "problems.json"
 
+sys.path.insert(0, str(ROOT / "scripts"))
+import laws as laws_module
+LAWS = laws_module.LAWS
+LAW_FOR_C = laws_module.LAW_FOR_C
+
 PROBLEMS_DIR.mkdir(parents=True, exist_ok=True)
+LAWS_DIR.mkdir(parents=True, exist_ok=True)
 
 with META_PATH.open(encoding="utf-8") as f:
     META = json.load(f)
@@ -481,7 +489,12 @@ def visual_html(kind):
     return ""
 
 
-def learning_panel_html(entry):
+def learning_panel_html(entry, law_id=None, law_link_prefix="../laws"):
+    """学習パネル + 「詳しく見る」ボタン。
+
+    law_id があれば対応する法則ページへのリンクを生成。
+    法則タイトルもボタンに併記して「何の法則か」を明示する。
+    """
     kind = guide_kind(entry)
     guide = GUIDE_DEFS[kind]
     steps = "".join(f"<li>{esc(s)}</li>" for s in guide["steps"])
@@ -489,6 +502,16 @@ def learning_panel_html(entry):
     visual = visual_html(kind)
     diff = effective_difficulty(entry["id"])
     diff_text = f"★{diff}" if diff else "未設定"
+
+    law_button = ""
+    if law_id and law_id in LAWS:
+        law = LAWS[law_id]
+        law_button = f'''
+      <a class="law-detail-btn" href="{law_link_prefix}/{law_id}.html">
+        <span class="law-detail-btn-kicker">この法則をもっと詳しく</span>
+        <span class="law-detail-btn-title">{esc(law_id)}: {esc(law["title"])} →</span>
+      </a>'''
+
     return f'''
   <section class="explain-panel" hidden>
     <div class="explain-panel-head">
@@ -501,6 +524,7 @@ def learning_panel_html(entry):
         <ol>{steps}</ol>
         <p class="explain-pitfall"><strong>詰まりやすい点:</strong> {esc(guide["pitfall"])}</p>
         <div class="explain-meta-line"><span>難易度目安: {esc(diff_text)}</span><span>{tags}</span></div>
+        {law_button}
       </div>
       {visual}
     </div>
@@ -584,6 +608,203 @@ def strip_python_comments(code: str) -> str:
     return "\n".join(collapsed).strip("\n") + "\n"
 
 
+# =====================================================================
+#  先頭 docstring 抽出 (各 .py の冒頭 # コメントブロックを Markdown 化)
+# =====================================================================
+def split_header_docstring(code: str):
+    """コードを (header_md, code_without_header) に分割する。
+
+    先頭の # コメントブロックを「ドキュメント」として切り出し、
+    残りのコード本体を返す。
+
+    Markdown ルール:
+        - `# # title`          → H1
+        - `# ## section`       → H2
+        - `# - bullet`         → ul li
+        - `# 1. item`          → ol li
+        - `# > note`           → blockquote
+        - `# ===...` の罫線    → スキップ
+        - その他                → 段落
+    """
+    lines = code.split("\n")
+    md_lines = []
+    rest_idx = 0
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        if stripped.startswith("#"):
+            # # の後ろの 1 個の空白だけ削る
+            body = stripped[1:]
+            if body.startswith(" "):
+                body = body[1:]
+            md_lines.append(body)
+            rest_idx = i + 1
+            continue
+        # 空行 or コード行 → docstring 終了 (Python 慣例)
+        rest_idx = i
+        break
+
+    md = "\n".join(md_lines)
+    rest = "\n".join(lines[rest_idx:]).lstrip("\n")
+    return md, rest
+
+
+def md_to_html(md: str) -> str:
+    """Mermaid 図を保持したまま最小限の Markdown → HTML 変換。
+
+    対応:
+        - # / ## / ### / #### 見出し
+        - - / * の箇条書き
+        - 1. 番号付きリスト
+        - > 引用
+        - ```mermaid ... ``` (mermaid 図)
+        - ```lang ... ``` (コードブロック)
+        - `inline code`
+        - **bold**
+        - 段落 (空行で区切る)
+        - --- / === の罫線 (スキップ)
+    """
+    if not md.strip():
+        return ""
+
+    lines = md.split("\n")
+    out = []
+    i = 0
+    in_ul = False
+    in_ol = False
+
+    def close_lists():
+        nonlocal in_ul, in_ol
+        if in_ul:
+            out.append("</ul>")
+            in_ul = False
+        if in_ol:
+            out.append("</ol>")
+            in_ol = False
+
+    def inline(text):
+        """インライン記法 (code, bold) を HTML 化。先に escape してから記法置換。"""
+        s = html.escape(text)
+        # **bold**  (** を強制)
+        s = re.sub(r"\*\*([^*\n]+)\*\*", r"<strong>\1</strong>", s)
+        # `code`
+        s = re.sub(r"`([^`\n]+)`", r"<code>\1</code>", s)
+        return s
+
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+
+        # 罫線
+        if re.fullmatch(r"[=\-]{3,}", stripped):
+            close_lists()
+            i += 1
+            continue
+
+        # コードフェンス
+        m = re.match(r"^```(\w*)\s*$", stripped)
+        if m:
+            close_lists()
+            lang = m.group(1) or "text"
+            i += 1
+            block = []
+            while i < len(lines) and not re.match(r"^```\s*$", lines[i].strip()):
+                block.append(lines[i])
+                i += 1
+            i += 1  # closing ```
+            body = "\n".join(block)
+            if lang == "mermaid":
+                # mermaid 図はそのまま <pre class="mermaid"> で出す
+                out.append(f'<pre class="mermaid">{html.escape(body)}</pre>')
+            else:
+                # 通常のコードブロック (Prism でハイライト)
+                klass = f"language-{lang}"
+                out.append(
+                    f'<pre><code class="{klass}">{html.escape(body)}</code></pre>'
+                )
+            continue
+
+        # 見出し
+        m = re.match(r"^(#{1,4})\s+(.*)$", stripped)
+        if m:
+            close_lists()
+            level = len(m.group(1))
+            out.append(f"<h{level}>{inline(m.group(2))}</h{level}>")
+            i += 1
+            continue
+
+        # 箇条書き
+        m = re.match(r"^[-*]\s+(.*)$", stripped)
+        if m:
+            if not in_ul:
+                close_lists()
+                out.append("<ul>")
+                in_ul = True
+            out.append(f"<li>{inline(m.group(1))}</li>")
+            i += 1
+            continue
+
+        # 番号付きリスト
+        m = re.match(r"^\d+\.\s+(.*)$", stripped)
+        if m:
+            if not in_ol:
+                close_lists()
+                out.append("<ol>")
+                in_ol = True
+            out.append(f"<li>{inline(m.group(1))}</li>")
+            i += 1
+            continue
+
+        # 引用
+        m = re.match(r"^>\s+(.*)$", stripped)
+        if m:
+            close_lists()
+            out.append(f"<blockquote>{inline(m.group(1))}</blockquote>")
+            i += 1
+            continue
+
+        # 空行
+        if stripped == "":
+            close_lists()
+            i += 1
+            continue
+
+        # 段落: 空行か特殊行が来るまで集める
+        close_lists()
+        para = [stripped]
+        i += 1
+        while i < len(lines):
+            nxt = lines[i].strip()
+            if nxt == "" or re.match(r"^(#{1,4})\s", nxt) or \
+               re.match(r"^[-*]\s", nxt) or re.match(r"^\d+\.\s", nxt) or \
+               re.match(r"^>\s", nxt) or re.match(r"^```", nxt) or \
+               re.fullmatch(r"[=\-]{3,}", nxt):
+                break
+            para.append(nxt)
+            i += 1
+        # 段落内改行は <br/> ではなく空白で繋ぐ (Markdown 流)
+        joined = " ".join(para)
+        out.append(f"<p>{inline(joined)}</p>")
+
+    close_lists()
+    return "\n".join(out)
+
+
+# =====================================================================
+#  問題 → 法則 ID マッピング (A は self, B は base, C は LAW_FOR_C)
+# =====================================================================
+def law_id_for(entry):
+    pid = entry["id"]
+    if pid in LAWS:
+        return pid                          # A 問題自身
+    if pid in APPLIED_BY_ID:
+        return APPLIED_BY_ID[pid]["base"]   # B → base A
+    if pid in FINAL_BY_ID:
+        return LAW_FOR_C.get(pid)           # C → 手動マッピング
+    if pid in EXTRAS_BY_ID:
+        return EXTRAS_BY_ID[pid]["base"]    # 補足 → base A
+    return None
+
+
 def base_head(title, description="", favicon_path="assets/favicon.svg"):
     return f'''<!DOCTYPE html>
 <html lang="ja">
@@ -599,6 +820,31 @@ def base_head(title, description="", favicon_path="assets/favicon.svg"):
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
 '''
+
+
+def mermaid_script_block():
+    """各 HTML の末尾に挿入する mermaid 初期化スクリプト"""
+    return '''
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script>'''
 
 
 def common_header(home_path="."):
@@ -820,7 +1066,12 @@ def build_problem_pages():
 def build_problem_page(entry, prev_id, next_id):
     code_path = CODES_DIR / entry["code_file"]
     code = code_path.read_text(encoding="utf-8") if code_path.exists() else ""
-    stripped_code = strip_python_comments(code) if code else ""
+    # 先頭 docstring を抽出し、コード部分から取り除く
+    header_md, body_code = split_header_docstring(code) if code else ("", "")
+    header_html = md_to_html(header_md)
+    # 「コメントを表示」用 (= 元の docstring + 本体)、「コメントを隠す」用 (= 本体のみのストリップ)
+    full_code = body_code if body_code else code
+    stripped_code = strip_python_comments(body_code) if body_code else (strip_python_comments(code) if code else "")
     chapter = CHAPTER_BY_ID[entry["chapter"]]
 
     tags_html = "".join(f'<span class="tag">{esc(t)}</span>' for t in entry["tags"])
@@ -897,6 +1148,7 @@ def build_problem_page(entry, prev_id, next_id):
     </div>{atc_meta_html}
   </div>
   {applied_link_block_for_base(entry['id']) if (not entry.get('is_extra') and not is_final) else ''}
+  {('<section class="problem-doc" hidden>' + header_html + '</section>') if header_html else ''}
   <div class="code-actions">
     <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
@@ -904,8 +1156,8 @@ def build_problem_page(entry, prev_id, next_id):
       <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
-  {learning_panel_html(entry)}
-  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
+  {learning_panel_html(entry, law_id=law_id_for(entry), law_link_prefix="../laws")}
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(full_code)}</code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
 
   <div class="nav-arrows">
@@ -922,8 +1174,9 @@ def build_problem_page(entry, prev_id, next_id):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
 '''
+    html_out += mermaid_script_block()
+    html_out += '</body></html>\n'
     write_html(PROBLEMS_DIR / f"{entry['id']}.html", html_out)
 
 
@@ -982,7 +1235,10 @@ def build_applied_pages():
 def build_applied_page(entry, prev_id, next_id):
     code_path = CODES_DIR / entry["code_file"]
     code = code_path.read_text(encoding="utf-8") if code_path.exists() else ""
-    stripped_code = strip_python_comments(code) if code else ""
+    header_md, body_code = split_header_docstring(code) if code else ("", "")
+    header_html = md_to_html(header_md)
+    full_code = body_code if body_code else code
+    stripped_code = strip_python_comments(body_code) if body_code else (strip_python_comments(code) if code else "")
     chapter = CHAPTER_BY_ID[entry["chapter"]]
 
     tags_html = "".join(f'<span class="tag">{esc(t)}</span>' for t in entry["tags"])
@@ -1052,6 +1308,7 @@ def build_applied_page(entry, prev_id, next_id):
     </div>
   </div>
   {base_link_block_for_applied(entry['base'])}
+  {('<section class="problem-doc" hidden>' + header_html + '</section>') if header_html else ''}
   <div class="code-actions">
     <span class="file-label">{ICON_FILE}{esc(entry['code_file'])} ─ Python 3</span>
     <div class="actions">
@@ -1059,8 +1316,8 @@ def build_applied_page(entry, prev_id, next_id):
       <button id="copy-code" type="button">{ICON_CLIPBOARD}<span class="label">コードをコピー</span></button>
     </div>
   </div>
-  {learning_panel_html(entry)}
-  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(code)}</code></pre>
+  {learning_panel_html(entry, law_id=law_id_for(entry), law_link_prefix="../laws")}
+  <pre class="line-numbers code-block-full" hidden><code class="language-python">{esc(full_code)}</code></pre>
   <pre class="line-numbers code-block-stripped"><code class="language-python">{esc(stripped_code)}</code></pre>
 
   <div class="nav-arrows">
@@ -1076,9 +1333,196 @@ def build_applied_page(entry, prev_id, next_id):
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 <script src="../assets/js/main.js"></script>
-</body></html>
 '''
+    html_out += mermaid_script_block()
+    html_out += '</body></html>\n'
     write_html(PROBLEMS_DIR / f"{entry['id']}.html", html_out)
+
+
+# =====================================================================
+#  77 法則ページの生成
+# =====================================================================
+def build_law_pages():
+    """laws.py の LAWS から、各法則の解説ページを docs/laws/ 配下に生成。"""
+    # どの問題がこの法則を使っているか
+    law_to_problems = {lid: [] for lid in LAWS}
+    for e in ALL_ENTRIES:
+        lid = law_id_for(e)
+        if lid and lid in law_to_problems:
+            law_to_problems[lid].append(e["id"])
+    for a in APPLIED_ENTRIES:
+        lid = law_id_for(a)
+        if lid and lid in law_to_problems:
+            law_to_problems[lid].append(a["id"])
+
+    law_ids_sorted = sorted(LAWS.keys())
+    for i, lid in enumerate(law_ids_sorted):
+        prev_lid = law_ids_sorted[i - 1] if i > 0 else None
+        next_lid = law_ids_sorted[i + 1] if i + 1 < len(law_ids_sorted) else None
+        build_law_page(lid, prev_lid, next_lid, law_to_problems.get(lid, []))
+
+
+def build_law_page(law_id, prev_id, next_id, applied_problems):
+    law = LAWS[law_id]
+    base_problem = PROBLEMS_BY_ID.get(law_id)
+    chapter_id = base_problem["chapter"] if base_problem else None
+    chapter = CHAPTER_BY_ID.get(chapter_id) if chapter_id else None
+
+    description = f"{law_id}: {law['title']} ─ {law['tagline']}。鉄則77 の法則を初心者にもわかりやすく図解。"
+    title = f"{law_id}: {law['title']} | 鉄則77 法則ライブラリ"
+
+    html_out = base_head(title, description, favicon_path="../assets/favicon.svg")
+    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += '</head><body>\n'
+    html_out += common_header("..")
+
+    intro_html = md_to_html(law["intro"])
+    pitfalls_html = md_to_html(law["pitfalls"])
+
+    sections_html = ""
+    for s in law["sections"]:
+        body_html = md_to_html(s["body"])
+        diagram_html = ""
+        if "diagram" in s:
+            diagram_html = f'<div class="law-diagram"><pre class="mermaid">{esc(s["diagram"])}</pre></div>'
+        sections_html += f'''
+  <section class="law-section">
+    <h2>{esc(s["heading"])}</h2>
+    <div class="law-section-body">
+      {body_html}
+    </div>
+    {diagram_html}
+  </section>'''
+
+    # 関連法則チップ
+    related_html = ""
+    if law["related"]:
+        chips = ""
+        for r in law["related"]:
+            if r in LAWS:
+                chips += f'<a class="law-chip" href="{r}.html">{r}: {esc(LAWS[r]["title"])}</a>'
+        related_html = f'<div class="law-related"><strong>関連法則:</strong>{chips}</div>'
+
+    # 適用問題チップ
+    problems_html = ""
+    if applied_problems:
+        chips = ""
+        for p in sorted(set(applied_problems)):
+            chips += f'<a class="law-chip" href="../problems/{p}.html">{p}</a>'
+        problems_html = f'<div class="law-related"><strong>この法則を使う問題:</strong>{chips}</div>'
+
+    # ナビ
+    def law_nav(target, label, klass):
+        if target is None:
+            return f'<a class="{klass} disabled"><div class="nav-label">{label}</div><div class="nav-title">─</div></a>'
+        return (f'<a class="{klass}" href="{target}.html">'
+                f'<div class="nav-label">{label}</div>'
+                f'<div class="nav-title">{target}: {esc(LAWS[target]["title"])}</div>'
+                '</a>')
+
+    breadcrumb_chap = ""
+    if chapter:
+        breadcrumb_chap = (
+            f'<span style="color: {chapter["color"]}">'
+            f'{chapter["id"]}章: {esc(chapter["title"])}</span> /'
+        )
+
+    html_out += f'''
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    {breadcrumb_chap}
+    <strong>法則 {esc(law_id)}</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 {esc(law_id)}</span>
+    <h1>{esc(law["title"])}</h1>
+    <p class="law-tagline">{esc(law["tagline"])}</p>
+  </div>
+
+  <section class="law-intro">
+    {intro_html}
+  </section>
+
+  {sections_html}
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    {pitfalls_html}
+  </section>
+
+  {related_html}
+  {problems_html}
+
+  <div class="nav-arrows">
+    {law_nav(prev_id, "前の法則", "prev")}
+    {law_nav(next_id, "次の法則", "next")}
+  </div>
+</main>
+'''
+    html_out += footer_html()
+    html_out += '''
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+'''
+    html_out += mermaid_script_block()
+    html_out += '</body></html>\n'
+    write_html(LAWS_DIR / f"{law_id}.html", html_out)
+
+
+def build_laws_index():
+    """法則一覧ページ docs/laws/index.html"""
+    title = "77 法則ライブラリ | 鉄則77 Python解説"
+    description = "競技プログラミングの鉄則 77 個の法則を、初心者向けの図解と解説でまとめた一覧ページ。"
+    html_out = base_head(title, description, favicon_path="../assets/favicon.svg")
+    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += '</head><body>\n'
+    html_out += common_header("..")
+    # 章ごとに法則カードを並べる
+    sections = ""
+    for c in CHAPTERS:
+        chap_problems = PROBLEMS_BY_CHAPTER.get(c["id"], [])
+        cards = ""
+        for p in chap_problems:
+            lid = p["id"]
+            if lid not in LAWS:
+                continue
+            law = LAWS[lid]
+            cards += (
+                f'<a class="law-card" href="{lid}.html" style="--card-color:{c["color"]}">'
+                f'<div class="law-card-id">{lid}</div>'
+                f'<h3>{esc(law["title"])}</h3>'
+                f'<p>{esc(law["tagline"])}</p>'
+                f'</a>'
+            )
+        if cards:
+            sections += f'''
+<section class="chapter-section">
+  <div class="chapter-head">
+    <span class="accent-bar" style="background: {c['color']}"></span>
+    <span class="num">{c['id']}章</span>
+    <h2>{esc(c['title'])}</h2>
+    <span class="summary">{esc(c['summary'])}</span>
+  </div>
+  <div class="laws-grid">
+    {cards}
+  </div>
+</section>'''
+    html_out += '''
+<section class="hero">
+  <h1>77 法則ライブラリ</h1>
+  <p style="color: var(--text-1); max-width: 720px;">鉄則本に登場する 77 個の法則を、初心者向けの図解 (mermaid) と解説でまとめました。
+  本を読んでいなくても、各法則の使いどころ・やり方・落とし穴がここだけで分かるように作っています。</p>
+</section>
+<main class="chapters">
+''' + sections + '''
+</main>
+'''
+    html_out += footer_html()
+    html_out += mermaid_script_block()
+    html_out += '</body></html>\n'
+    write_html(LAWS_DIR / "index.html", html_out)
 
 
 # =====================================================================
@@ -1091,6 +1535,10 @@ def main():
     build_problem_pages()
     print(f"Generating {len(APPLIED_ENTRIES)} applied (B) problem pages...")
     build_applied_pages()
+    print(f"Generating {len(LAWS)} law pages...")
+    build_law_pages()
+    print("Generating laws/index.html...")
+    build_laws_index()
     print("Done!")
 
 

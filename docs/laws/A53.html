@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A53: 優先度付きキュー — 最小値 / 最大値を高速に取り出す ─ ヒープ。挿入と最小値削除が O(log N)。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #14b8a6">8章: データ構造とクエリ処理</span> /
+    <strong>法則 A53</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A53</span>
+    <h1>優先度付きキュー — 最小値 / 最大値を高速に取り出す</h1>
+    <p class="law-tagline">ヒープ。挿入と最小値削除が O(log N)</p>
+  </div>
+
+  <section class="law-intro">
+    <p><strong>最小値 (または最大値) を効率的に取り出す</strong> ことに特化したデータ構造。二分ヒープが標準的な実装で、挿入と取り出しが共に O(log N)。</p>
+<p>Python は <code>heapq</code> モジュール。<strong>最小ヒープ専用</strong> なので、最大値が欲しいときは <strong>−1 倍して入れる</strong> トリックを使う。ダイクストラ (A64)、ジョブスケジューリング (B53) などで必須。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 操作</h2>
+    <div class="law-section-body">
+      <ul>
+<li><strong>push</strong>: <code>heappush(h, x)</code> — O(log N)</li>
+<li><strong>pop min</strong>: <code>heappop(h)</code> — O(log N)</li>
+<li><strong>peek min</strong>: <code>h[0]</code> — O(1)</li>
+</ul>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  P[heappush] --&gt; H[ヒープ内部で並べ替え]
+  H --&gt; R[&quot;h[0] が常に最小&quot;]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 最大ヒープへの変換</h2>
+    <div class="law-section-body">
+      <p>Python は最小ヒープしかないので、<strong>−1 倍</strong> して入れる。</p>
+<pre><code class="language-python">heapq.heappush(h, -x)
+max_x = -heapq.heappop(h)</code></pre>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: タプルで複合キー</h2>
+    <div class="law-section-body">
+      <p><code>(priority, payload)</code> のタプルを入れると、優先度順にソートされる。ダイクストラの <code>(距離, 頂点)</code> ペアが典型例。</p>
+    </div>
+
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li><code>heapq</code> は <strong>最小ヒープのみ</strong>。最大が必要なら <code>-x</code> で入れる。</li>
+<li><code>h[1]</code> は 2 番目に小さい値ではない (ヒープ構造のため)。</li>
+<li>既存のリストを <code>heapify(h)</code> でヒープ化すると O(N) (一個ずつ push より速い)。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong><a class="law-chip" href="A64.html">A64: ダイクストラ法 — 重み付き最短路</a></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A53.html">A53</a><a class="law-chip" href="../problems/B53.html">B53</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A52.html"><div class="nav-label">前の法則</div><div class="nav-title">A52: キュー — 先入れ先出し (FIFO)</div></a>
+    <a class="next" href="A54.html"><div class="nav-label">次の法則</div><div class="nav-title">A54: 連想配列 — 辞書による key-value 管理</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>

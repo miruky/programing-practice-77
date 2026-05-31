@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A37: 貢献度分解 — 各要素を独立に数える | 鉄則77 法則ライブラリ</title>
+<meta name="description" content="A37: 貢献度分解 — 各要素を独立に数える ─ 「全部の和」を「各要素が答えに何回登場するか」で分解。鉄則77 の法則を初心者にもわかりやすく図解。" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+</head><body>
+<header class="site-header">
+  <a href="../index.html" class="brand">
+    <span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 22 L12 32 L22 42"/><path d="M42 22 L52 32 L42 42"/><path d="M37 18 L27 46"/></g></svg></span>
+    <span>
+      競技プログラミングの鉄則77<br />
+      <small>Python 実装ぜんぶ解説サイト</small>
+    </span>
+  </a>
+  <nav>
+    <a href="../index.html">問題一覧</a>
+    <a class="source-link" href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">原著リポジトリ<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
+  </nav>
+</header>
+<main class="law-detail">
+  <nav class="breadcrumb">
+    <a href="../index.html">問題一覧</a> /
+    <span style="color: #a855f7">6章: 考察テクニック</span> /
+    <strong>法則 A37</strong>
+  </nav>
+
+  <div class="law-hero">
+    <span class="law-pill">法則 A37</span>
+    <h1>貢献度分解 — 各要素を独立に数える</h1>
+    <p class="law-tagline">「全部の和」を「各要素が答えに何回登場するか」で分解</p>
+  </div>
+
+  <section class="law-intro">
+    <p>「ペアの和を全部足し合わせろ」「各組み合わせのコストの合計」といった集計問題で、<strong>「個々の要素が答えに何回貢献するか」</strong> を独立に計算してから合計する技法。</p>
+<p>二重ループで全ペアを足すと O(N²) ですが、<strong>「i 番目の数は答えに何回足されるか?」</strong> を直接式で出せれば一気に O(N) や O(N log N)。桁ごとの集計 (B37) や転倒数の解析にも応用が利く視点。</p>
+  </section>
+
+
+  <section class="law-section">
+    <h2>Step 1: 全部を 1 つの要素ごとに分解</h2>
+    <div class="law-section-body">
+      <p>答え = Σ (各要素 × その要素が貢献する回数)。例: 全ペア和 Σ (a_i + a_j) なら、各 a_i は (N-1) 回足される → 答え = (N-1) × Σ a_i。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  S[全ペア和] --&gt; D[&quot;a_i × (a_i が登場する回数)&quot;]
+  D --&gt; SUM[各 i について合計]</pre></div>
+  </section>
+  <section class="law-section">
+    <h2>Step 2: 「i 番目の貢献度」を式で出す</h2>
+    <div class="law-section-body">
+      <p>問題によっては、要素 i の貢献回数が組合せ的に決まる (C(N-1, k-1) など)。貢献度の式さえ立てば、全体は <strong>一巡 O(N)</strong> で計算できる。</p>
+    </div>
+
+  </section>
+  <section class="law-section">
+    <h2>Step 3: 桁ごと / 集合ごとへの一般化</h2>
+    <div class="law-section-body">
+      <p>数値の桁ごとに「桁 d に数字 v が現れる回数」のように、<strong>問題を独立な軸に分解</strong> すると同じ枠組み (B37)。</p>
+    </div>
+    <div class="law-diagram"><pre class="mermaid">flowchart LR
+  N[数値 N の桁和合計] --&gt; D[各桁を独立に集計]
+  D --&gt; S[&quot;Σ (桁 d に数字 v が現れる回数 × v)&quot;]</pre></div>
+  </section>
+
+  <section class="law-pitfalls">
+    <h2>詰まりやすい点</h2>
+    <ul>
+<li>「i 番目の貢献回数」を <strong>問題文の図</strong> から導く。手で N=3〜5 を試すと法則が見える。</li>
+<li>重複が絡む場合は組合せの公式を慎重に。</li>
+<li>貢献度ベースの計算ができれば、大きな N でも一発で答えが出ることが多い。</li>
+</ul>
+  </section>
+
+  <div class="law-related"><strong>関連法則:</strong></div>
+  <div class="law-related"><strong>この法則を使う問題:</strong><a class="law-chip" href="../problems/A37.html">A37</a><a class="law-chip" href="../problems/B37.html">B37</a></div>
+
+  <div class="nav-arrows">
+    <a class="prev" href="A36.html"><div class="nav-label">前の法則</div><div class="nav-title">A36: 偶奇の不変量 — Parity は変わらない</div></a>
+    <a class="next" href="A38.html"><div class="nav-label">次の法則</div><div class="nav-title">A38: 左右からの累積 — 各位置の上限を独立に求める</div></a>
+  </div>
+</main>
+<footer>
+  © 2024+ 当サイトはオープンソースのコード解説集です。出題および C++/Java の原典コードは
+  <a href="https://github.com/E869120/kyopro-tessoku" target="_blank" rel="noopener noreferrer">E869120/kyopro-tessoku</a>
+  に帰属します。Python コードは本サイト側で日本語コメントを追加しています。
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "dark",
+    themeVariables: {
+      darkMode: true,
+      background: "#07091a",
+      primaryColor: "#1f2740",
+      primaryTextColor: "#eef1f8",
+      primaryBorderColor: "#4f46e5",
+      lineColor: "#a4b0c8",
+      secondaryColor: "#0e7490",
+      tertiaryColor: "#161c30",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+    },
+    securityLevel: "loose",
+    flowchart: { useMaxWidth: true, htmlLabels: true }
+  });
+</script></body></html>
