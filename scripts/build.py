@@ -10,6 +10,7 @@
 """
 import json
 import html
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -20,6 +21,18 @@ CODES_DIR = DOCS / "codes"
 PROBLEMS_DIR = DOCS / "problems"
 LAWS_DIR = DOCS / "laws"
 META_PATH = ROOT / "scripts" / "problems.json"
+
+
+def _file_hash(path: Path, length: int = 8) -> str:
+    """指定ファイルの内容から短いハッシュを生成 (キャッシュバスティング用)。"""
+    if not path.exists():
+        return "0"
+    h = hashlib.md5(path.read_bytes()).hexdigest()
+    return h[:length]
+
+
+CSS_VER = _file_hash(DOCS / "assets" / "css" / "styles.css")
+JS_VER = _file_hash(DOCS / "assets" / "js" / "main.js")
 
 sys.path.insert(0, str(ROOT / "scripts"))
 import laws as laws_module
@@ -129,7 +142,22 @@ def esc(s):
 
 
 def write_html(path, content):
-    """生成 HTML の各行末尾空白を削ってから保存する。"""
+    """生成 HTML の各行末尾空白を削り、CSS/JS にバージョン付きで保存する。
+
+    bake in cache-busting: assets/css/styles.css → assets/css/styles.css?v=HASH
+                           assets/js/main.js   → assets/js/main.js?v=HASH
+    """
+    # ?v= が既に付いているものは触らない
+    content = re.sub(
+        r'(assets/css/styles\.css)(?!\?)',
+        rf'\1?v={CSS_VER}',
+        content
+    )
+    content = re.sub(
+        r'(assets/js/main\.js)(?!\?)',
+        rf'\1?v={JS_VER}',
+        content
+    )
     normalized = "\n".join(line.rstrip() for line in content.splitlines()) + "\n"
     path.write_text(normalized, encoding="utf-8")
 
@@ -817,13 +845,13 @@ def base_head(title, description="", favicon_path="assets/favicon.svg"):
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Noto+Sans+JP:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&amp;family=Noto+Serif+JP:wght@400;500;600&amp;family=Noto+Sans+JP:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
 '''
 
 
 def mermaid_script_block():
-    """各 HTML の末尾に挿入する mermaid 初期化スクリプト (新パレット)"""
+    """各 HTML の末尾に挿入する mermaid 初期化スクリプト (light theme + clay)"""
     return '''
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
@@ -831,23 +859,23 @@ def mermaid_script_block():
     startOnLoad: true,
     theme: "base",
     themeVariables: {
-      darkMode: true,
-      background: "#0b0d14",
-      primaryColor: "#1d2230",
-      primaryTextColor: "#e7ebf5",
-      primaryBorderColor: "#7c5cff",
-      lineColor: "#9aa3bd",
-      secondaryColor: "#262c3d",
-      tertiaryColor: "#11141d",
-      mainBkg: "#1d2230",
-      secondBkg: "#262c3d",
-      tertiaryBkg: "#11141d",
-      nodeBorder: "#7c5cff",
-      clusterBkg: "#161a26",
-      clusterBorder: "#2a3147",
-      labelTextColor: "#e7ebf5",
-      edgeLabelBackground: "#11141d",
-      fontFamily: "Inter, 'Noto Sans JP', sans-serif",
+      darkMode: false,
+      background: "#faf6ee",
+      primaryColor: "#faf6ee",
+      primaryTextColor: "#1c1b1a",
+      primaryBorderColor: "#cc785c",
+      lineColor: "#5d5953",
+      secondaryColor: "#efebe1",
+      tertiaryColor: "#f5f2eb",
+      mainBkg: "#faf6ee",
+      secondBkg: "#efebe1",
+      tertiaryBkg: "#f5f2eb",
+      nodeBorder: "#cc785c",
+      clusterBkg: "#f5f2eb",
+      clusterBorder: "#cc785c",
+      labelTextColor: "#1c1b1a",
+      edgeLabelBackground: "#faf6ee",
+      fontFamily: "'Source Serif 4', 'Noto Serif JP', serif",
       fontSize: "14px"
     },
     securityLevel: "loose",
@@ -929,7 +957,7 @@ def build_index():
         "競技プログラミングの鉄則77 | Python 実装ぜんぶ解説",
         "鉄則77 の全77問+補足コードを、日本語の解説コメント付きで読めるサイト",
     )
-    html_out += '<link rel="stylesheet" href="assets/css/styles.css" />\n'
+    html_out += f'<link rel=\"stylesheet\" href=\"assets/css/styles.css?v={CSS_VER}\" />\n'
     html_out += '</head><body>\n'
     html_out += common_header(".")
     html_out += '''
@@ -1098,7 +1126,7 @@ def build_problem_page(entry, prev_id, next_id):
         title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説 (力試し問題)"
 
     html_out = base_head(title, description_meta, favicon_path="../assets/favicon.svg")
-    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += f'<link rel=\"stylesheet\" href=\"../assets/css/styles.css?v={CSS_VER}\" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
 
@@ -1271,7 +1299,7 @@ def build_applied_page(entry, prev_id, next_id):
     title = f"{entry['id']}: {entry['title']} | 鉄則77 Python解説 (応用問題)"
 
     html_out = base_head(title, description_meta, favicon_path="../assets/favicon.svg")
-    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += f'<link rel=\"stylesheet\" href=\"../assets/css/styles.css?v={CSS_VER}\" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
 
@@ -1381,7 +1409,7 @@ def build_law_page(law_id, prev_id, next_id, applied_problems):
     title = f"{law_id}: {law['title']} | 鉄則77 法則ライブラリ"
 
     html_out = base_head(title, description, favicon_path="../assets/favicon.svg")
-    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += f'<link rel=\"stylesheet\" href=\"../assets/css/styles.css?v={CSS_VER}\" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
 
@@ -1485,7 +1513,7 @@ def build_laws_index():
     title = "77 法則ライブラリ | 鉄則77 Python解説"
     description = "競技プログラミングの鉄則 77 個の法則を、初心者向けの図解と解説でまとめた一覧ページ。"
     html_out = base_head(title, description, favicon_path="../assets/favicon.svg")
-    html_out += '<link rel="stylesheet" href="../assets/css/styles.css" />\n'
+    html_out += f'<link rel=\"stylesheet\" href=\"../assets/css/styles.css?v={CSS_VER}\" />\n'
     html_out += '</head><body>\n'
     html_out += common_header("..")
     # 章ごとに法則カードを並べる
