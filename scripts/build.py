@@ -823,26 +823,35 @@ def base_head(title, description="", favicon_path="assets/favicon.svg"):
 
 
 def mermaid_script_block():
-    """各 HTML の末尾に挿入する mermaid 初期化スクリプト"""
+    """各 HTML の末尾に挿入する mermaid 初期化スクリプト (新パレット)"""
     return '''
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
   mermaid.initialize({
     startOnLoad: true,
-    theme: "dark",
+    theme: "base",
     themeVariables: {
       darkMode: true,
-      background: "#07091a",
-      primaryColor: "#1f2740",
-      primaryTextColor: "#eef1f8",
-      primaryBorderColor: "#4f46e5",
-      lineColor: "#a4b0c8",
-      secondaryColor: "#0e7490",
-      tertiaryColor: "#161c30",
-      fontFamily: "Inter, 'Noto Sans JP', sans-serif"
+      background: "#0b0d14",
+      primaryColor: "#1d2230",
+      primaryTextColor: "#e7ebf5",
+      primaryBorderColor: "#7c5cff",
+      lineColor: "#9aa3bd",
+      secondaryColor: "#262c3d",
+      tertiaryColor: "#11141d",
+      mainBkg: "#1d2230",
+      secondBkg: "#262c3d",
+      tertiaryBkg: "#11141d",
+      nodeBorder: "#7c5cff",
+      clusterBkg: "#161a26",
+      clusterBorder: "#2a3147",
+      labelTextColor: "#e7ebf5",
+      edgeLabelBackground: "#11141d",
+      fontFamily: "Inter, 'Noto Sans JP', sans-serif",
+      fontSize: "14px"
     },
     securityLevel: "loose",
-    flowchart: { useMaxWidth: true, htmlLabels: true }
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: "basis" }
   });
 </script>'''
 
